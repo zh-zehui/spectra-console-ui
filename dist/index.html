@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#101412">
+  <title>SPECTRA · 频谱智能观测台</title>
+  <meta name="description" content="探索指定频段中的信号活动，查看分割、识别与证据相互促进的过程。">
+  <link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="responsive.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <a class="brand" href="#" aria-label="SPECTRA 首页"><svg viewBox="0 0 32 32" fill="none"><path d="M3 17h4l3-10 5 20 5-22 3 12h6" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/></svg><span>SPECTRA<small>频谱智能观测台</small></span></a>
+    <div class="workspace"><span class="workspace-icon">S</span><div>边缘分析工作空间<small>Jetson · 接收分析</small></div><span class="chevron">⌄</span></div>
+    <div class="nav-label">工作空间</div>
+    <nav><button class="nav-item active" data-view="workbench"><span>▧</span>分析工作台<kbd>01</kbd></button><button class="nav-item" data-view="history"><span>◷</span>任务记录<em>3</em></button><button class="nav-item" data-view="tools"><span>⌘</span>工具与能力</button></nav>
+    <div class="nav-label recent-title">最近任务<span>＋</span></div>
+    <button class="recent active" data-preset="24"><span class="task-dot"></span><span>2.4 GHz 环境观测<small>100 MHz · 演示样例</small></span></button>
+    <button class="recent" data-preset="58"><span class="task-dot violet"></span><span>5.8 GHz 宽带观测<small>100 MHz · 演示样例</small></span></button>
+    <div class="sidebar-bottom"><div class="device-status"><span class="status-dot"></span>交互演示模式<span class="pill">DEMO</span></div><p>未连接设备，不会启动射频采集。<br>示例标签不代表现场识别结果。</p><button id="presentation" class="presentation-button">⤢&nbsp; 展示模式 <span>↗</span></button><div class="sidebar-footer"><span>◈</span> Official DeepSeek Harness</div></div>
+  </aside>
+
+  <main>
+    <header class="topbar"><div class="breadcrumb">工作空间 <span>/</span> <strong id="page-crumb">分析工作台</strong></div><div class="topbar-right"><span class="demo-badge"><i></i>交互原型 · 示例数据</span><button id="help" class="icon-button" aria-label="界面说明">?</button></div></header>
+    <div class="main-content">
+      <section id="workbench" class="view active">
+        <div class="page-heading"><div><div class="eyebrow">SPECTRUM INTELLIGENCE</div><h1>让每一段信号，都有迹可循<span class="heading-dot">.</span></h1><p>从频谱活动到信号证据，观察分割与识别如何共同收敛。</p></div><button id="export-report" class="button secondary">↓&nbsp; 导出演示报告</button></div>
+
+        <section class="task-composer panel">
+          <div class="composer-heading"><span class="spark">✧</span><strong>描述你的观测任务</strong><span>自然语言驱动 · 参数可精确控制</span></div>
+          <div class="prompt-row"><textarea id="prompt" aria-label="分析任务提示词" rows="2">分析中心频率 2.4 GHz、100 MHz 带宽内的信号活动。识别已知协议，描述未知信号，并根据识别证据复查分割结果。</textarea><button id="run-task" class="button primary"><span>▶</span>开始演示</button></div>
+          <div class="parameter-row"><label>中心频率<div class="number-field"><input id="center" type="number" value="2400" min="1" max="6000" step=".1"><span>MHz</span></div></label><label>完整带宽<div class="number-field"><input id="bandwidth" type="number" value="100" min=".01" max="160" step=".1"><span>MHz</span></div></label><label>观察时间<div class="number-field"><input id="duration" type="number" value="100" min="1" max="10000" step="1"><span>ms</span></div></label><div class="range-note"><span>实际观察范围</span><strong id="range-label">2350 — 2450 MHz</strong></div><div class="preset-buttons"><button data-preset="24" class="chip selected">2.4 GHz</button><button data-preset="58" class="chip">5.8 GHz</button></div></div>
+          <p id="validation-message" role="alert" class="validation-message"></p>
+        </section>
+
+        <div class="section-heading"><div><span class="live-mark"></span><h2>观测结果</h2><span class="task-reference" id="task-reference">DEMO-2400-001</span></div><div class="result-status" id="result-status">演示结果已就绪<span>示例观察 100 ms</span></div></div>
+        <div class="metrics"><div class="metric"><span>观察带宽 <i>↔</i></span><strong id="metric-bandwidth">100<small>MHz</small></strong><div id="metric-range">2350–2450 MHz</div></div><div class="metric"><span>活动事件 <i>▥</i></span><strong id="metric-events">24<small>个示例</small></strong><div>时频活动，不等于设备数量</div></div><div class="metric"><span>示例协议证据 <i>◇</i></span><strong id="metric-protocols">2<small>类</small></strong><div id="metric-protocol-label">Wi-Fi · Bluetooth LE</div></div><div class="metric"><span>反馈迭代 <i>⟳</i></span><strong id="metric-iterations">2<small>轮</small></strong><div>保留初始观测与未知活动</div></div></div>
+
+        <div class="analysis-layout">
+          <section class="panel spectrum-panel">
+            <div class="panel-header"><div><h2>时频观测图</h2><span class="subtle">SPECTROGRAM</span></div><div class="panel-actions"><button id="reset-zoom" class="text-button">↺ 重置视图</button><button id="fullscreen-chart" class="icon-button" aria-label="放大时频图">⤢</button></div></div>
+            <div class="chart-toolbar"><div class="segmented" id="stage-switch"><button data-stage="0">初始分割</button><button data-stage="1">反馈复查</button><button data-stage="2" class="active">最终结果</button></div><div class="chart-controls"><label><input type="checkbox" id="show-boxes" checked><span>分割边界</span></label><label><input type="checkbox" id="show-labels" checked><span>识别标签</span></label></div></div>
+            <div class="chart-context"><div><span class="tiny-dot"></span><span id="stage-caption">第 2 轮 · 证据反馈后的候选边界</span></div><span>滚轮缩放 · 拖动平移 · 点击查看证据</span></div>
+            <div class="spectrum-shell"><div class="axis-label">相对功率</div><canvas id="psd" aria-label="相对功率谱" role="img"></canvas><div class="waterfall-wrap"><div class="time-axis-label">时间 / ms</div><canvas id="waterfall" tabindex="0" aria-label="可交互时频图，信号区域也可从下方目录选择" role="img"></canvas><div id="chart-tooltip" class="chart-tooltip"></div><div id="empty-chart" class="empty-chart" hidden>当前频段内没有此演示场景的数据</div></div></div>
+            <div class="chart-footer"><div class="legend"><span><i class="wifi-color"></i>Wi-Fi 示例</span><span><i class="ble-color"></i>BLE 示例</span><span><i class="unknown-color"></i>未知 / 待验证</span><span><i class="initial-color"></i>初始候选</span></div><div class="color-scale"><span>低</span><i></i><span>高</span><span>相对能量</span></div></div>
+            <div class="iteration-player"><button id="play-iterations" class="player-button" aria-label="播放分割识别迭代">▶</button><div class="iteration-steps"><button data-stage="0"><i></i><span>初始检测<small>碎片化候选</small></span></button><span class="step-line"></span><button data-stage="1"><i></i><span>识别反馈<small>检查边界与证据</small></span></button><span class="step-line"></span><button data-stage="2" class="active"><i></i><span>复查结果<small>保留确认与未知</small></span></button></div><span class="player-duration">迭代回放</span></div>
+          </section>
+
+          <aside class="panel evidence-panel"><div class="panel-header"><h2>信号证据</h2><span class="outlined-badge" id="evidence-level">演示校验</span></div><div id="evidence-content"></div></aside>
+        </div>
+
+        <div class="bottom-layout">
+          <section class="panel signals-panel"><div class="panel-header"><div><h2>信号目录</h2><span class="count-badge" id="signal-count">6</span></div><div class="filter-chips" id="signal-filter"><button data-filter="all" class="active">全部</button><button data-filter="verified">示例确认</button><button data-filter="unknown">未知 / 候选</button></div></div><div class="table-scroll"><table><thead><tr><th>信号 / 候选</th><th>频率</th><th>活动特征</th><th>证据级别</th><th>反馈动作</th></tr></thead><tbody id="signal-rows"></tbody></table></div><div class="table-note">◈&nbsp; 波形特征不等于协议确认；未知活动始终保留。点击任意行查看对应时频区域。</div></section>
+          <section class="panel timing-panel"><div class="panel-header"><h2>各阶段耗时</h2><span class="subtle">演示示意</span></div><div class="timing-total"><strong>104.0<small>s</small></strong><span>任务墙钟<span>阶段可能重叠，不直接相加</span></span></div><div id="timing-bars"></div><div class="timing-note">模型流耗时为外部可观察时间，不代表模型内部思考时间。</div></section>
+        </div>
+        <footer class="page-footer"><span>◈ SPECTRA / 从观测到证据</span><span>交互设计原型 · 未连接 Jetson API · 不执行射频操作</span></footer>
+      </section>
+
+      <section id="history" class="view"><div class="page-heading"><div><div class="eyebrow">TASK ARCHIVE</div><h1>每次观测，都可回溯。</h1><p>保留参数、分割版本、验证证据与耗时记录。</p></div></div><div id="history-list" class="history-list"></div></section>
+      <section id="tools" class="view"><div class="page-heading"><div><div class="eyebrow">ANALYSIS CAPABILITIES</div><h1>按证据选择工具。</h1><p>区分已经实现的能力、实验性工具与待接入协议。</p></div></div><div class="tools-notice">这里展示的是项目能力说明。此原型没有连接设备，也不会调用这些工具。</div><div id="tool-grid" class="tool-grid"></div></section>
+    </div>
+  </main>
+</div>
+<div id="toast" role="status" aria-live="polite"></div>
+<dialog id="help-dialog"><button class="dialog-close" aria-label="关闭说明">×</button><div class="eyebrow">ABOUT THIS PROTOTYPE</div><h2>一张图，看懂证据如何形成。</h2><p>当前为交互设计原型，时频能量、分割边界、识别标签与耗时均为明确标注的演示示例，不是现场采集结果。</p><ol><li>输入提示词、中心频率与完整带宽，点击「开始演示」。</li><li>切换初始分割、反馈复查与最终结果，或播放迭代过程。</li><li>在时频图或信号目录中选择区域，查看识别证据与边界变化。</li><li>使用展示模式收起导航；导出 JSON 演示报告用于讨论。</li></ol><p>后续接入独立任务 API；Harness 继续无界面运行。原型不会存储 API 密钥、连接 Jetson 或启动 USRP。</p><button class="button primary dialog-confirm">开始探索</button></dialog>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+qa/
+outputs/
+node_modules/
+*.log
+*.zip
+.openai/*local*
