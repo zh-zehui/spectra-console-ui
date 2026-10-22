@@ -1,7 +1,8 @@
+param([switch]$NoBrowser)
 $ErrorActionPreference = 'Stop'
 $spectraUrl = 'http://127.0.0.1:8780'
 ssh -o BatchMode=yes Jetson-server-new 'bash /home/sribd/spectrum_agent/scripts/ensure-ui-stack.sh'
-if ($LASTEXITCODE -ne 0) { throw '无法启动 Jetson 服务，请确认 Wi-Fi 与 SSH 连接。' }
+if ($LASTEXITCODE -ne 0) { throw 'Cannot start Jetson services. Check Wi-Fi and SSH.' }
 $spectraReady = $false
 try { $spectraReady = (Invoke-RestMethod "$spectraUrl/edge/health" -TimeoutSec 3).connected } catch {}
 if (-not $spectraReady) {
@@ -11,5 +12,5 @@ if (-not $spectraReady) {
         try { if ((Invoke-RestMethod "$spectraUrl/edge/health" -TimeoutSec 2).connected) { $spectraReady=$true; break } } catch {}
     }
 }
-if (-not $spectraReady) { throw '隧道未就绪，请检查本机 8780 端口占用及 SSH。' }
-Start-Process $spectraUrl
+if (-not $spectraReady) { throw 'Tunnel unavailable. Check local port 8780 and SSH.' }
+if (-not $NoBrowser) { Start-Process $spectraUrl }
