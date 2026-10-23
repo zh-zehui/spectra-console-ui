@@ -82,6 +82,16 @@ function renderCatalogSummary(){
   const boxes=chartBoxes(),frames=boxes.filter(s=>s.status==='verified').length;
   const ref=(r.report.scene_refinements||[]).find(x=>x.evidence_id===state.fineWindow),fineTotal=ref?ref.mapped_events.length:r.fine_total_count;
   $('#catalog-summary').textContent=state.stage===0?'初始粗层：显示 '+boxes.length+' / '+r.initial_total_count+' 个粗区域 · 整段IQ覆盖 · '+scale.time_cell_us+'μs × '+scale.frequency_cell_mhz+'MHz网格':state.stage===1?'局部细层：显示 '+boxes.length+' / '+fineTotal+' 个细候选 · 已细查 '+r.refinement_count+' 处；尚未作为全局边界采用':'工作粗层：'+r.event_count+' 个活动区域 · 绘制 '+(boxes.length-frames)+' 个粗框 + '+frames+' 条帧标记 · 局部细候选另层显示';
+  const fusion=r.boundary_fusion;
+  if(fusion&&state.stage===2){
+   const adopted=boxes.filter(s=>s.boundary_role==='adopted_fine').length,residual=boxes.filter(s=>s.boundary_role==='unresolved_residual').length;
+   const reasons={dense_fine_candidates:'细候选过密',empty_fine_candidates:'无细候选',partition_piece_budget:'分区数量超过保护上限',fine_quality_warning:'细分质量警告',invalid_fine_geometry:'无效细边界',no_fine_candidates_inside_parent_review:'细候选不在目标窗口内'};
+   const rejected=fusion.decisions.filter(d=>!d.accepted).map(d=>d.parent_group_id+'：'+(reasons[d.status]||d.status));
+   $('#catalog-summary').textContent=(r.boundary_composition==='mixed'?'融合工作边界：':'保留粗工作边界：')+r.event_count+' 个区域 · 采用 '+adopted+' 个细边界 · 未解释残余 '+residual+' 个 · '+frames+' 条帧标记';
+   $('#metric-events').parentElement.querySelector('span').textContent='工作边界区域';
+   $('#stage-caption').textContent='局部采用 '+fusion.accepted_parent_count+' 处；拒绝 '+fusion.rejected_parent_count+' 处'+(rejected.length?'（'+rejected.join('；')+'）':'')+'。未细查和未解释范围保留为未知；区域数不是信号数量。';
+   return;
+  }
   $('#stage-caption').textContent=state.stage===0?'全段连续STFT → 功率聚合 → 粗活动包络（不是单帧边界）':state.stage===1?'Harness选择区域与时间窗口 → 原IQ滤波 → 局部细候选（不可与粗框直接比数量）':'粗父层与局部子层分开保留；未细查和未知活动仍需验证';
   return;
  }
