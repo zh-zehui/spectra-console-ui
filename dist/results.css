@@ -1,2 +1,4 @@
 .table-scroll{max-height:410px;overflow:auto}.signals-panel th{position:sticky;top:0;z-index:2}.table-note{min-height:40px}.result-status{max-width:60%;line-height:1.7;text-align:right}.chart-context>div{min-width:0}.chart-context>div>span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.mode-switch .chip{white-space:nowrap}
 @media(max-width:650px){.result-status{font-size:8px;max-width:52%}.table-scroll{max-height:390px}}
+
+.catalog-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 16px;border-bottom:1px solid var(--line)}.catalog-bar[hidden]{display:none}.catalog-bar>span{font-size:10px;color:var(--muted);line-height:1.8;flex:1;min-width:140px}
