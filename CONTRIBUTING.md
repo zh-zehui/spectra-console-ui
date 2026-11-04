@@ -1,6 +1,6 @@
 # 参与维护
 
-本仓库维护 SPECTRA 的静态前端与 Windows 设备连接入口。Jetson 任务 API、可视化网关和协议分析工具不在本仓库中。
+本仓库维护 SPECTRA 的静态前端、历史实采记录的公开摘录与 Windows 设备连接入口。Jetson 任务 API、可视化网关和协议分析工具不在本仓库中。
 
 ## 开发与检查
 
@@ -14,7 +14,7 @@ npm start
 
 打开终端显示的本地地址。直接编辑 `dist/` 中的 HTML、CSS 和 JavaScript，无需打包。
 
-提交前运行 `npm run check` 和 `npm test`。`npm run screenshots` 会运行相同的浏览器检查，并更新 `docs/screenshots/` 的演示截图。Windows 已安装 Edge 时检查会直接使用 Edge；其他系统使用 Playwright Chromium。
+提交前运行 `npm run check` 和 `npm test`。`npm run screenshots` 会运行相同的浏览器检查，并更新 `docs/screenshots/` 的演示与归档页面截图；不会重取原工作台的实采截图。Windows 已安装 Edge 时检查会直接使用 Edge；其他系统使用 Playwright Chromium。
 
 ## 分支和提交
 
@@ -25,6 +25,8 @@ npm start
 ## 数据和演示
 
 保持演示模式的示例标记；真实结果中的 unknown、partial、failed 状态需要如实保留。不要把设备地址、访问令牌、SSH 私钥、原始 IQ 或本地任务报告加入提交。`qa/`、`outputs/` 和 `.spectra-launcher.json` 为本地工作文件。
+
+`dist/measured/` 是历史实采数据的只读公开摘录，更新时遵循 [实采说明](docs/measured-results.md) 的字段白名单与来源检查。不要把 PHY 报头或特征候选计作校验帧；复用同一段 IQ 的任务不算独立采集。浏览器检查会同时验证归档来源、计数和零设备请求行为。
 
 ## 展示部署
 

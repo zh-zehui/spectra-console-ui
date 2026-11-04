@@ -1,0 +1,95 @@
+import assert from 'node:assert/strict';
+import { readFile, access } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
+import { chromium } from 'playwright';
+import { createServer } from '../scripts/serve.mjs';
+
+const index = JSON.parse(await readFile(new URL('../dist/measured/data/index.json', import.meta.url), 'utf8'));
+assert.equal(index.history.length, 19);
+assert.equal(index.history.filter(t => t.status === 'partial').length, 2);
+assert.equal(index.cases.length, 4);
+assert.equal(index.unique_capture_count, 3);
+const privateKeys = new Set(['payload', 'payload_hex', 'mac_address', 'device_info', 'mboard_serial', 'module_serial', 'api_key', 'password', 'iq_path', 'path', 'report']);
+function assertPublicFields(value) {
+  if (!value || typeof value !== 'object') return;
+  for (const [key, child] of Object.entries(value)) { assert.ok(!privateKeys.has(key), `Private field ${key}`); assertPublicFields(child); }
+}
+const datasets = new Map();
+for (const item of index.cases) {
+  const value = JSON.parse(await readFile(new URL('../dist/measured/data/' + item.dataset, import.meta.url), 'utf8'));
+  assertPublicFields(value);
+  assert.equal(value.provenance.simulated, false);
+  assert.equal(value.provenance.data_origin, 'rf');
+  assert.equal(value.acquisition.complete, true);
+  assert.equal(value.spectrogram.time_order, 'earliest_row_first');
+  assert.equal(value.spectrogram.rows, value.spectrogram.db.length);
+  assert.ok(value.spectrogram.db.every(row => row.length === value.spectrogram.columns && row.every(Number.isFinite)));
+  assert.equal(value.counts.wifi_frames, value.signals.filter(s => s.status === 'verified' && s.type === 'wifi').length);
+  assert.equal(value.counts.ble_frames, value.signals.filter(s => s.status === 'verified' && s.type === 'ble').length);
+  assert.equal(value.counts.phy_headers, value.signals.filter(s => s.status === 'header').length);
+  assert.equal(value.counts.signature_matches, value.signals.filter(s => s.status === 'signature').length);
+  assert.ok(value.signals.every(s => [s.time_start_ms, s.time_stop_ms, s.frequency_low_mhz, s.frequency_high_mhz].every(Number.isFinite) && s.time_start_ms <= s.time_stop_ms && s.frequency_low_mhz <= s.frequency_high_mhz));
+  await access(new URL('../dist/measured/images/' + value.screenshot, import.meta.url));
+  datasets.set(value.slug, value);
+}
+// Two analysis cases share one recording; never invent another acquisition.
+assert.equal(datasets.get('mixed-link').provenance.capture_id, datasets.get('wifi-58').provenance.capture_id);
+assert.deepEqual(datasets.get('mixed-link').spectrogram.db, datasets.get('wifi-58').spectrogram.db);
+assert.equal(datasets.get('wifi-ble-24').counts.wifi_frames, 81);
+assert.equal(datasets.get('wifi-ble-24').counts.ble_frames, 71);
+assert.equal(datasets.get('link-candidate').counts.signature_matches, 190);
+assert.equal(datasets.get('link-candidate').counts.wifi_frames, 0);
+
+const server = createServer();
+await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+const base = `http://127.0.0.1:${server.address().port}`;
+const edge = 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe';
+let browser;
+try {
+  browser = await chromium.launch({ headless: true, ...(process.platform === 'win32' && existsSync(edge) ? { executablePath: edge } : {}) });
+  const page = await browser.newPage({ viewport: { width: 1600, height: 1100 } });
+  const errors = [], writes = [], hardware = [], failedAssets = [];
+  page.on('pageerror', e => errors.push(e.message));
+  page.on('request', request => { if (request.method() !== 'GET') writes.push(request.url()); if (request.url().includes('/edge/')) hardware.push(request.url()); });
+  page.on('response', response => { if (!response.ok() && response.url().startsWith(base)) failedAssets.push(response.url()); });
+  await page.goto(base + '/measured/', { waitUntil: 'networkidle' });
+  await page.waitForFunction(() => document.querySelector('#case-detail').getAttribute('aria-busy') === 'false');
+  assert.equal(await page.locator('#history-rows tr').count(), 19);
+  assert.match(await page.locator('#case-title').innerText(), /2.4 GHz/);
+  assert.match(await page.locator('#evidence-counts').innerText(), /152/);
+  assert.ok(await page.locator('#spectrogram').evaluate(canvas => { const d = canvas.getContext('2d').getImageData(100, 100, 1, 1).data; return d[3] === 255; }));
+  const box = await page.locator('#spectrogram').boundingBox();
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  assert.match(await page.locator('#chart-readout').innerText(), /预览格/);
+  for (const item of index.cases) {
+    await page.locator(`[data-case="${item.slug}"]`).click();
+    await page.waitForFunction(id => document.querySelector('#case-id').textContent.startsWith(id) && document.querySelector('#case-detail').getAttribute('aria-busy') === 'false', item.task_id);
+    assert.equal(await page.locator('#download-data').getAttribute('href'), 'data/' + item.dataset);
+    for (const filter of ['verified', 'header', 'signature', 'unknown']) {
+      await page.locator(`[data-filter="${filter}"]`).click();
+      const count = datasets.get(item.slug).signals.filter(s => s.status === filter).length;
+      assert.equal(await page.locator('#evidence-rows [data-signal]').count(), Math.min(12, count));
+    }
+  }
+  await page.locator('[data-filter="verified"]').click();
+  assert.match(await page.locator('#evidence-rows').innerText(), /未记录/);
+  await page.locator('#history-filter').selectOption('partial');
+  assert.equal(await page.locator('#history-rows tr').count(), 2);
+  assert.equal(await page.locator('#history-rows .case-open').count(), 0);
+  await page.locator('#history-filter').selectOption('all');
+  await page.locator('[data-case="mixed-link"]').click();
+  await page.waitForFunction(() => document.querySelector('#case-title').textContent.includes('Wi-Fi 与图传') && document.querySelector('#case-detail').getAttribute('aria-busy') === 'false');
+  await page.locator('[data-filter="signature"]').click();
+  await page.locator('#overlay').uncheck();
+  await page.locator('#overlay').check();
+  if (process.argv.includes('--screenshots')) await page.screenshot({ path: 'docs/screenshots/measured-archive.png', fullPage: true });
+  await page.locator('.original-ui summary').click();
+  await page.waitForFunction(() => document.querySelector('#original-image').complete && document.querySelector('#original-image').naturalWidth > 0);
+  await page.setViewportSize({ width: 390, height: 844 });
+  assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 2), false);
+  assert.deepEqual(errors, []); assert.deepEqual(writes, []); assert.deepEqual(hardware, []); assert.deepEqual(failedAssets, []);
+  console.log('PASS: measured provenance, evidence counts, shared IQ, 4 task views, history states, filters, STFT, images and mobile; zero device requests or writes');
+} finally {
+  await browser?.close();
+  await new Promise(resolve => server.close(resolve));
+}

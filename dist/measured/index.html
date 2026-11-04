@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#101412">
+  <meta name="description" content="SPECTRA 历史实采任务：真实 IQ 的时频预览、校验帧、PHY 报头与图传候选证据。">
+  <title>历史实采任务 · SPECTRA</title>
+  <link rel="stylesheet" href="archive.css">
+</head>
+<body>
+  <header><a class="brand" href="../">SPECTRA <span>/ FIELD RECORDINGS</span></a><nav><a href="../">交互演示 ↗</a><a href="https://github.com/zh-zehui/spectra-console-ui">GitHub ↗</a></nav></header>
+  <main>
+    <div class="intro"><p class="eyebrow">HISTORICAL TASKS · MEASURED RF</p><h1>真实观测，留下证据<span>.</span></h1><p>从已保存的实采 IQ 到任务分析结果。查看时频能量、校验帧与候选证据，沿任务来源核对每一步。</p><div class="archive-label">● 历史实采归档 <span>只读 · 不连接现场设备 · 不发起采集</span></div></div>
+    <div class="stats" id="archive-stats" aria-label="归档概况"></div>
+    <div class="workspace">
+      <aside><div class="section-label">精选任务 / <span id="case-count">—</span></div><div id="case-list"></div><p class="aside-note">分析日期与采集日期分别保留。多个任务可能复用同一份 IQ，不能当作多次独立采集。</p><a class="subtle-link" href="#history">查看完整任务列表 ↓</a></aside>
+      <section id="case-detail" aria-live="polite" aria-busy="true">
+        <div class="case-heading"><div><p class="eyebrow" id="case-kind">LOADING RECORD</p><h2 id="case-title">正在读取实采记录…</h2></div><a class="download" id="download-data">下载本案 JSON ↓</a></div>
+        <p class="case-description" id="case-description"></p>
+        <div class="record-id" id="case-id"></div>
+        <dl class="parameters" id="parameters"></dl>
+        <div class="panel chart-panel"><div class="panel-heading"><h3>原 IQ 时频预览</h3><span id="chart-resolution"></span></div><div class="chart-controls"><span id="chart-range"></span><label><input id="overlay" type="checkbox" checked>叠加当前页证据</label></div><canvas id="spectrogram" role="img" aria-label="当前历史任务实采 IQ 的 STFT 时频预览"></canvas><p class="chart-readout" id="chart-readout">移动指针可查看预览采样格的频率、时间与相对功率。</p><div class="chart-footer"><span>最新采样在上 · 相对功率未标定</span><span class="scale">低 <i></i> 高</span></div></div>
+        <div class="evidence-counts" id="evidence-counts"></div>
+        <div class="panel evidence-panel"><div class="panel-heading"><h3>证据观测</h3><div class="filters" id="evidence-filters"><button data-filter="verified" class="active">校验帧</button><button data-filter="header">PHY 报头</button><button data-filter="signature">特征候选</button><button data-filter="unknown">粗活动</button></div></div><p class="evidence-note" id="evidence-note"></p><div class="table-scroll"><table><thead><tr><th>证据</th><th>频率范围 / MHz</th><th>时间范围 / ms</th><th>依据层级</th></tr></thead><tbody id="evidence-rows"></tbody></table></div><p class="table-note" id="evidence-page"></p></div>
+        <details class="panel provenance" open><summary>采集来源与分析范围</summary><dl id="provenance"></dl><p id="coverage-note"></p></details>
+        <details class="panel original-ui"><summary>查看原工作台实采截图（10–20 ms 局部 STFT）</summary><a id="original-link" target="_blank" rel="noopener"><img id="original-image" alt="原工作台读取历史实采任务后的时频图与证据面板截图" loading="lazy"></a></details>
+      </section>
+    </div>
+    <section class="panel history-panel" id="history"><div class="panel-heading"><div><p class="eyebrow">TASK ARCHIVE</p><h2>任务记录</h2></div><label class="history-status">状态 <select id="history-filter"><option value="all">全部</option><option value="succeeded">succeeded</option><option value="partial">partial</option></select></label></div><p class="evidence-note">保留导出时网关可见记录及原始状态；时间为网关记录时间（UTC），不等于每项任务都重新采集。提供详细归档的任务可点击打开。</p><div class="table-scroll"><table><thead><tr><th>任务 ID</th><th>中心 / 带宽</th><th>记录时间 / UTC</th><th>状态</th><th>归档</th></tr></thead><tbody id="history-rows"></tbody></table></div><p class="table-note" id="history-summary"></p></section>
+    <div class="limits"><h3>如何解读这些记录</h3><p>校验帧、PHY 报头和 ZC 参考特征匹配属于不同证据层级。图传候选尚未完成协议 CRC、载荷或视频解码；名义通道宽度不等于独立标定的占用带宽。特征模板来自同一采集记录的短窗口，匹配数包含模板分析所用区间，不是独立测试准确率。粗活动区域与帧证据重叠，不能确认整片区域的协议。计数不是设备数量，也不是识别准确率。</p><p>本页保存原 IQ 生成的最大池化 STFT 预览与经过字段筛选的证据记录，不发布原始 IQ、解码地址、载荷或设备序列号。导出方法与限制见 <a href="https://github.com/zh-zehui/spectra-console-ui/blob/main/docs/measured-results.md">实采案例说明 ↗</a>。</p></div>
+    <footer><span>SPECTRA / 从观测到证据</span><span id="exported-at"></span></footer>
+    <p id="load-error" role="alert" hidden></p>
+  </main>
+  <script src="archive.js"></script>
+</body>
+</html>

@@ -1,0 +1,336 @@
+{
+  "schema": "spectra-measured-index/v1",
+  "exported_at_utc": "2026-11-04T03:49:54.987Z",
+  "source": "GET /edge/tasks and GET /edge/tasks/{id}/visual from the existing Jetson gateway",
+  "history_scope": "Tasks visible in the gateway history response at export time, not all runs or all past captures.",
+  "history_date_semantics": "The gateway list date is a task record timestamp, not necessarily the RF capture timestamp.",
+  "unique_capture_count": 3,
+  "cases": [
+    {
+      "id": "task_batch24_dsh_31b06ee649b1",
+      "slug": "wifi-ble-24",
+      "title": "2.4 GHz · Wi-Fi 与 BLE",
+      "description": "同一段实采 IQ 中并行查看 Wi-Fi MAC FCS 与 BLE CRC 证据，保留未解释的粗活动。",
+      "screenshot": "measured-24ghz.png",
+      "task_id": "task_batch24_dsh_31b06ee649b1",
+      "status": "succeeded",
+      "acquisition": {
+        "receiver_model": "X310",
+        "center_mhz": 2400,
+        "analysis_low_mhz": 2350,
+        "analysis_high_mhz": 2450,
+        "analysis_bandwidth_mhz": 100,
+        "sample_rate_msps": 200,
+        "sample_count": 20000000,
+        "duration_ms": 100,
+        "complete": true,
+        "overflow_count": 0,
+        "gap_count": 0,
+        "power_calibrated": false,
+        "frontend_passband_calibrated": false
+      },
+      "counts": {
+        "detected_regions": 141,
+        "wifi_frames": 81,
+        "ble_frames": 71,
+        "phy_headers": 7,
+        "signature_matches": 0
+      },
+      "provenance": {
+        "data_origin": "rf",
+        "simulated": false,
+        "capture_id": "capture_ff299a60dd584a3b",
+        "source_task_id": "task_6642f2a7797a4dd7acdb81ec243c7009",
+        "analysis_mode": "recorded_iq_reanalysis",
+        "new_rf_capture": false,
+        "captured_at_utc": "2026-10-23T11:54:59.814965+00:00",
+        "capture_sha256": "e3bc7a71d7765f74ebaa95084f43d681d44975ac5c5e32035efa76794a876860",
+        "source_visual_sha256": "66110e4a27afbcefad96aa2ef74b67289de3510b12386da000287d953359ffd3"
+      },
+      "dataset": "wifi-ble-24.json"
+    },
+    {
+      "id": "task_batch_dsh_b02578c6283b",
+      "slug": "wifi-58",
+      "title": "5.8 GHz · 宽带协议检查",
+      "description": "160 MHz 分析范围内的 Wi-Fi 校验帧与独立 PHY 报头证据。计划检查完成不代表所有信号均已识别。",
+      "screenshot": "measured-58ghz.png",
+      "task_id": "task_batch_dsh_b02578c6283b",
+      "status": "succeeded",
+      "acquisition": {
+        "receiver_model": "X310",
+        "center_mhz": 5800,
+        "analysis_low_mhz": 5720,
+        "analysis_high_mhz": 5880,
+        "analysis_bandwidth_mhz": 160,
+        "sample_rate_msps": 200,
+        "sample_count": 100000000,
+        "duration_ms": 500,
+        "complete": true,
+        "overflow_count": 0,
+        "gap_count": 0,
+        "power_calibrated": false,
+        "frontend_passband_calibrated": false
+      },
+      "counts": {
+        "detected_regions": 493,
+        "wifi_frames": 1007,
+        "ble_frames": 0,
+        "phy_headers": 99,
+        "signature_matches": 0
+      },
+      "provenance": {
+        "data_origin": "rf",
+        "simulated": false,
+        "capture_id": "capture_bae61ab9ed89459e",
+        "source_task_id": "task_4d7af074d5bd406e9d9dd781f242cd17",
+        "analysis_mode": "recorded_iq_reanalysis",
+        "new_rf_capture": false,
+        "captured_at_utc": "2026-10-28T10:48:49.112247+00:00",
+        "capture_sha256": "f6e2cc22c42421e5d0114e199c2d8799724ba5aa939993aaa8d0c90ca4900fae",
+        "source_visual_sha256": "1ff99296f69ac909a698ce0853b6059d6e1caf289a3cd4d82806191dbd65904a"
+      },
+      "dataset": "wifi-58.json"
+    },
+    {
+      "id": "task_drone_dsh_5b1ddaa81022",
+      "slug": "mixed-link",
+      "title": "5.8 GHz · Wi-Fi 与图传候选",
+      "description": "在已有 Wi-Fi 证据上追加 196 条样本特征匹配，保持两类证据独立；此任务与宽带协议案例复用同一段 IQ。",
+      "screenshot": "measured-mixed-link.png",
+      "task_id": "task_drone_dsh_5b1ddaa81022",
+      "status": "succeeded",
+      "acquisition": {
+        "receiver_model": "X310",
+        "center_mhz": 5800,
+        "analysis_low_mhz": 5720,
+        "analysis_high_mhz": 5880,
+        "analysis_bandwidth_mhz": 160,
+        "sample_rate_msps": 200,
+        "sample_count": 100000000,
+        "duration_ms": 500,
+        "complete": true,
+        "overflow_count": 0,
+        "gap_count": 0,
+        "power_calibrated": false,
+        "frontend_passband_calibrated": false
+      },
+      "counts": {
+        "detected_regions": 331,
+        "wifi_frames": 1240,
+        "ble_frames": 0,
+        "phy_headers": 99,
+        "signature_matches": 196
+      },
+      "provenance": {
+        "data_origin": "rf",
+        "simulated": false,
+        "capture_id": "capture_bae61ab9ed89459e",
+        "source_task_id": "task_9668c13363904f8092ca082554958600",
+        "analysis_mode": "continue_recorded_analysis",
+        "new_rf_capture": false,
+        "captured_at_utc": "2026-10-28T10:48:49.112247+00:00",
+        "capture_sha256": "f6e2cc22c42421e5d0114e199c2d8799724ba5aa939993aaa8d0c90ca4900fae",
+        "source_visual_sha256": "edfd9ee179237bff3bc827ebf22e00c4c87ff240692482d13c03126276119d3d"
+      },
+      "dataset": "mixed-link.json"
+    },
+    {
+      "id": "task_drone_third_368a63db4548",
+      "slug": "link-candidate",
+      "title": "5.8 GHz · 20 MHz 图传候选",
+      "description": "另一段实采记录中的 ZC601/root252 特征匹配。190 条参考符号匹配仍不等于协议 CRC 或视频解码。",
+      "screenshot": "measured-link-candidate.png",
+      "task_id": "task_drone_third_368a63db4548",
+      "status": "succeeded",
+      "acquisition": {
+        "receiver_model": "X310",
+        "center_mhz": 5800,
+        "analysis_low_mhz": 5720,
+        "analysis_high_mhz": 5880,
+        "analysis_bandwidth_mhz": 160,
+        "sample_rate_msps": 200,
+        "sample_count": 100000000,
+        "duration_ms": 500,
+        "complete": true,
+        "overflow_count": 0,
+        "gap_count": 0,
+        "power_calibrated": false,
+        "frontend_passband_calibrated": false
+      },
+      "counts": {
+        "detected_regions": 459,
+        "wifi_frames": 0,
+        "ble_frames": 0,
+        "phy_headers": 0,
+        "signature_matches": 190
+      },
+      "provenance": {
+        "data_origin": "rf",
+        "simulated": false,
+        "capture_id": "capture_36c0da36e5a14595",
+        "source_task_id": "task_e7bb08a92f9440da91c043ab85f5b1b6",
+        "analysis_mode": "recorded_iq_reanalysis",
+        "new_rf_capture": false,
+        "captured_at_utc": "2026-10-28T10:41:22.599701+00:00",
+        "capture_sha256": "c067220f83b63a62c3580cfe76524f0d355ea7dd0721872926fc6569c7f93405",
+        "source_visual_sha256": "4f6126df3786639e65fe4997b8266191523e597d37a7aa57c2bba43ffa1cbc2b"
+      },
+      "dataset": "link-candidate.json"
+    }
+  ],
+  "history": [
+    {
+      "task_id": "task_agile_full_292630d126a1",
+      "center_mhz": 5800,
+      "bandwidth_mhz": 160,
+      "recorded_at_utc": "2026-10-30T02:57:20.948765+00:00",
+      "status": "succeeded",
+      "case_slug": null
+    },
+    {
+      "task_id": "task_49fb52faa41f40f8a492211d85969bad",
+      "center_mhz": 5800,
+      "bandwidth_mhz": 160,
+      "recorded_at_utc": "2026-10-30T02:01:38.602335+00:00",
+      "status": "partial",
+      "case_slug": null
+    },
+    {
+      "task_id": "task_drone_third_368a63db4548",
+      "center_mhz": 5800,
+      "bandwidth_mhz": 160,
+      "recorded_at_utc": "2026-10-30T01:13:04.494866+00:00",
+      "status": "succeeded",
+      "case_slug": "link-candidate"
+    },
+    {
+      "task_id": "task_drone_third_034768b8fef0",
+      "center_mhz": 5800,
+      "bandwidth_mhz": 160,
+      "recorded_at_utc": "2026-10-30T01:08:57.040704+00:00",
+      "status": "succeeded",
+      "case_slug": null
+    },
+    {
+      "task_id": "task_drone_second_317c661bb584",
+      "center_mhz": 5800,
+      "bandwidth_mhz": 160,
+      "recorded_at_utc": "2026-10-30T00:54:34.503170+00:00",
+      "status": "succeeded",
+      "case_slug": null
+    },
+    {
+      "task_id": "task_drone_dsh_5b1ddaa81022",
+      "center_mhz": 5800,
+      "bandwidth_mhz": 160,
+      "recorded_at_utc": "2026-10-29T15:38:36.903428+00:00",
+      "status": "succeeded",
+      "case_slug": "mixed-link"
+    },
+    {
+      "task_id": "task_9668c13363904f8092ca082554958600",
+      "center_mhz": 5800,
+      "bandwidth_mhz": 160,
+      "recorded_at_utc": "2026-10-29T00:47:35.681293+00:00",
+      "status": "succeeded",
+      "case_slug": null
+    },
+    {
+      "task_id": "task_c2d7a74fd5634bdba4d075f4b527147d",
+      "center_mhz": 5800,
+      "bandwidth_mhz": 160,
+      "recorded_at_utc": "2026-10-29T00:34:40.684182+00:00",
+      "status": "succeeded",
+      "case_slug": null
+    },
+    {
+      "task_id": "task_batch24_dsh_31b06ee649b1",
+      "center_mhz": 2400,
+      "bandwidth_mhz": 100,
+      "recorded_at_utc": "2026-10-28T15:50:56.549686+00:00",
+      "status": "succeeded",
+      "case_slug": "wifi-ble-24"
+    },
+    {
+      "task_id": "task_batch_dsh_b02578c6283b",
+      "center_mhz": 5800,
+      "bandwidth_mhz": 160,
+      "recorded_at_utc": "2026-10-28T15:42:59.617950+00:00",
+      "status": "succeeded",
+      "case_slug": "wifi-58"
+    },
+    {
+      "task_id": "task_4d7af074d5bd406e9d9dd781f242cd17",
+      "center_mhz": 5800,
+      "bandwidth_mhz": 160,
+      "recorded_at_utc": "2026-10-28T10:48:58.994013+00:00",
+      "status": "succeeded",
+      "case_slug": null
+    },
+    {
+      "task_id": "task_962288f3229a48468017cdd4dca54aab",
+      "center_mhz": 5800,
+      "bandwidth_mhz": 160,
+      "recorded_at_utc": "2026-10-28T10:46:07.087592+00:00",
+      "status": "succeeded",
+      "case_slug": null
+    },
+    {
+      "task_id": "task_e7bb08a92f9440da91c043ab85f5b1b6",
+      "center_mhz": 5800,
+      "bandwidth_mhz": 160,
+      "recorded_at_utc": "2026-10-28T10:41:31.919539+00:00",
+      "status": "succeeded",
+      "case_slug": null
+    },
+    {
+      "task_id": "task_661bcc9ae9534d2184602e9ba6988913",
+      "center_mhz": 5800,
+      "bandwidth_mhz": 160,
+      "recorded_at_utc": "2026-10-28T10:38:30.537871+00:00",
+      "status": "succeeded",
+      "case_slug": null
+    },
+    {
+      "task_id": "task_c5cc43805b45495fb69ed13285592986",
+      "center_mhz": 5800,
+      "bandwidth_mhz": 160,
+      "recorded_at_utc": "2026-10-28T10:23:15.729648+00:00",
+      "status": "succeeded",
+      "case_slug": null
+    },
+    {
+      "task_id": "task_e34b141c8a95485f8a026e945fce20c3",
+      "center_mhz": 2400,
+      "bandwidth_mhz": 160,
+      "recorded_at_utc": "2026-10-27T00:40:10.711140+00:00",
+      "status": "succeeded",
+      "case_slug": null
+    },
+    {
+      "task_id": "task_1795880356654fc9b90fb05c49520684",
+      "center_mhz": 5800,
+      "bandwidth_mhz": 100,
+      "recorded_at_utc": "2026-10-23T12:18:26.456773+00:00",
+      "status": "succeeded",
+      "case_slug": null
+    },
+    {
+      "task_id": "task_6642f2a7797a4dd7acdb81ec243c7009",
+      "center_mhz": 2400,
+      "bandwidth_mhz": 100,
+      "recorded_at_utc": "2026-10-23T12:00:19.420146+00:00",
+      "status": "succeeded",
+      "case_slug": null
+    },
+    {
+      "task_id": "task_batch24_942770ffa981",
+      "center_mhz": 2400,
+      "bandwidth_mhz": 100,
+      "recorded_at_utc": null,
+      "status": "partial",
+      "case_slug": null
+    }
+  ]
+}
