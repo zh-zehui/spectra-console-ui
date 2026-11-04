@@ -1,8 +1,9 @@
 'use strict';
+import { createRaster, maximumDb, pixelBounds, visibleSignals } from './plot.mjs';
 const $ = selector => document.querySelector(selector);
 const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const state = { index: null, current: null, filter: 'verified', rows: [], selected: null, loadId: 0 };
-const colors = { verified: '#6cd8bf', header: '#b29ae3', signature: '#f092d1', unknown: '#e3ba76' };
+const state = { index: null, current: null, filter: 'verified', rows: [], selected: null, loadId: 0, windowLoadId: 0, windows: null, view: null, windowCache: new Map(), enabled: new Set(['verified', 'header', 'signature', 'unknown']) };
+const colors = { verified: '#6cd8bf', header: '#e3ba76', signature: '#f092d1', unknown: '#e3ba76' };
 const category = { verified: '完整性校验', header: '仅 PHY 报头', signature: '参考特征匹配', unknown: '粗活动 · 未确认' };
 const date = value => value ? value.replace('T', ' ').replace(/\.\d+(?:\+00:00|Z)$/, ' UTC').replace(/(?:\+00:00|Z)$/, ' UTC') : '未记录';
 const pair = (label, value) => `<div><dt>${escapeHTML(label)}</dt><dd>${escapeHTML(value)}</dd></div>`;
@@ -52,8 +53,6 @@ async function loadCase() {
   $('#download-data').download = definition.dataset;
   const a = current.acquisition;
   $('#parameters').innerHTML = pair('分析范围 / MHz', `${a.analysis_low_mhz}–${a.analysis_high_mhz}`) + pair('采样率 / MS/s', a.sample_rate_msps) + pair('记录时长 / ms', a.duration_ms) + pair('采集复样本', format(a.sample_count));
-  $('#chart-resolution').textContent = `${current.spectrogram.rows} × ${current.spectrogram.columns} · 最大池化`;
-  $('#chart-range').textContent = `${a.analysis_bandwidth_mhz} MHz 分析范围 · 全部 ${a.duration_ms} ms 记录`;
   const counts = current.counts;
   $('#evidence-counts').innerHTML = [[counts.wifi_frames + counts.ble_frames, `校验帧 · Wi-Fi ${counts.wifi_frames} / BLE ${counts.ble_frames}`], [counts.phy_headers, '独立 PHY 报头'], [counts.signature_matches, '特征候选 · 非协议 CRC'], [counts.detected_regions, '粗活动区域 · 非设备数']].map(([n, label]) => `<div>${escapeHTML(label)}<strong>${format(n)}</strong></div>`).join('');
   const p = current.provenance;
@@ -61,22 +60,55 @@ async function loadCase() {
   const plans = current.protocol_coverage.plans;
   const hopping = current.hopping_evidence || [];
   $('#coverage-note').textContent = `协议计划检查：${plans.map(plan => `${plan.completed_units}/${plan.total_units} 项，失败 ${plan.failed_units}`).join('；')}。图传候选检查：${hopping.map(e => `${e.coverage.completed_units}/${e.coverage.total_units} 个时间单元，${format(e.coverage.reference_checks)} 次参考检查`).join('；')}。完整检查仅指声明的窗口/候选频点与配置，不表示全部信号已识别，也不确认发射机身份。`;
-  $('#original-image').src = 'images/' + current.screenshot + '?v=complete-layers';
-  $('#original-link').href = 'images/' + current.screenshot + '?v=complete-layers';
-  renderEvidence();
+  $('#original-image').src = 'images/' + current.screenshot;
+  $('#original-link').href = 'images/' + current.screenshot;
+  const windows = await readJSON('data/windows-index.json?v=window-preview');
+  if (id !== state.loadId) return;
+  if (windows.task_id !== current.task_id) throw Error('时间窗口不属于当前任务');
+  state.windows = windows;
+  $('#time-window').innerHTML = windows.views.map(view => `<option value="${escapeHTML(view.id)}">${escapeHTML(view.label)}</option>`).join('');
+  $('#time-window').value = windows.default_view_id;
+  await loadWindow();
   $('#case-detail').setAttribute('aria-busy', 'false');
+}
+
+async function loadWindow() {
+  const generation = ++state.windowLoadId;
+  const current = state.current;
+  const definition = state.windows.views.find(view => view.id === $('#time-window').value);
+  if (!definition) return;
+  state.view = null;
+  $('#spectrogram').setAttribute('aria-busy', 'true');
+  $('#chart-range').textContent = `正在读取 ${definition.label} 的历史 STFT…`;
+  draw();
+  let spec = current.spectrogram;
+  if (definition.file) {
+    let record = state.windowCache.get(definition.file);
+    if (!record) { record = await readJSON('data/' + definition.file); state.windowCache.set(definition.file, record); }
+    if (record.task_id !== current.task_id || record.start_ms !== definition.start_ms || record.end_ms !== definition.end_ms) throw Error('局部 STFT 时间范围不匹配');
+    spec = record.spectrogram;
+  }
+  if (generation !== state.windowLoadId || current !== state.current) return;
+  state.view = { ...definition, low_mhz: current.acquisition.analysis_low_mhz, high_mhz: current.acquisition.analysis_high_mhz, spec };
+  $('#chart-resolution').textContent = `${spec.rows} × ${spec.columns} · ${definition.file ? '原 IQ 局部 STFT' : '全记录最大池化预览'}`;
+  $('#chart-range').textContent = `${definition.start_ms}–${definition.end_ms} ms · ${current.acquisition.analysis_bandwidth_mhz} MHz 分析范围`;
+  $('#spectrogram').dataset.windowStart = definition.start_ms;
+  $('#spectrogram').dataset.windowEnd = definition.end_ms;
+  renderEvidence();
+  $('#spectrogram').setAttribute('aria-busy', 'false');
 }
 
 function renderEvidence() {
   const current = state.current;
-  const all = current.signals.filter(signal => signal.status === state.filter);
+  if (!state.view) return;
+  const all = visibleSignals(current.signals, state.view).filter(signal => signal.status === state.filter);
   state.rows = all.slice(0, 12);
   if (!state.rows.some(signal => signal.id === state.selected)) state.selected = state.rows[0]?.id || null;
   document.querySelectorAll('[data-filter]').forEach(button => { const active = button.dataset.filter === state.filter; button.classList.toggle('active', active); button.setAttribute('aria-pressed', String(active)); });
   const notes = { verified: 'Wi-Fi MAC FCS / BLE CRC 校验通过的帧观测。帧位置为未独立标定的同步估计，验证通带不等于实测占用带宽。', header: '仅表示 PHY 报头校验结果，不能计作 MAC FCS 通过或完整载荷解码。', signature: '参考符号 / ZC 特征匹配。样本归属依赖现场信息，未完成协议 CRC、载荷或视频解码。', unknown: '能量检测形成的粗活动包络，可能包含多个重叠信号，未确认为单一协议或设备。' };
   $('#evidence-note').textContent = notes[state.filter];
   $('#evidence-rows').innerHTML = state.rows.map(signal => `<tr data-signal="${escapeHTML(signal.id)}" tabindex="0" class="${signal.id === state.selected ? 'selected' : ''}"><td style="color:${colors[signal.status]}">${escapeHTML(signal.frame_subtype || ({wifi:'Wi-Fi',ble:'BLE',drone:'图传候选'}[signal.type]) || category[signal.status])}</td><td>${signal.frequency_low_mhz.toFixed(2)}–${signal.frequency_high_mhz.toFixed(2)}</td><td>${signal.time_start_ms.toFixed(5)}–${signal.time_stop_ms.toFixed(5)}</td><td>${category[signal.status]}</td></tr>`).join('') || '<tr><td colspan="4">此任务未记录该类证据。</td></tr>';
-  $('#evidence-page').textContent = `当前展示 ${state.rows.length} / ${all.length} 条${category[state.filter]}记录；完整条目见本案 JSON。图中仅叠加当前页，短时证据以细线提示。`;
+  $('#evidence-page').textContent = `当前窗口列表显示 ${state.rows.length} / ${all.length} 条${category[state.filter]}记录。图上绘制当前窗口全部已开启图层的证据，不受列表前 12 条限制。`;
   document.querySelectorAll('[data-signal]').forEach(row => {
     row.onclick = () => { state.selected = row.dataset.signal; renderEvidence(); };
     row.onkeydown = event => { if (event.key === 'Enter') row.click(); };
@@ -92,39 +124,37 @@ function draw() {
   const ratio = Math.min(devicePixelRatio || 1, 2);
   canvas.width = Math.round(g.width * ratio); canvas.height = Math.round(g.height * ratio);
   const ctx = canvas.getContext('2d'); ctx.scale(ratio, ratio);
-  const current = state.current, spec = current.spectrogram, a = current.acquisition;
-  const raster = document.createElement('canvas'); raster.width = spec.columns; raster.height = spec.rows;
-  const rasterCtx = raster.getContext('2d'), image = rasterCtx.createImageData(spec.columns, spec.rows);
-  const stops = [[12,28,23],[30,80,54],[86,134,73],[170,195,112],[236,218,155]];
-  for (let y = 0; y < spec.rows; y++) for (let x = 0; x < spec.columns; x++) {
-    const fraction = Math.max(0, Math.min(1, (spec.db[y][x] - spec.min_db) / (spec.max_db - spec.min_db)));
-    const value = fraction * (stops.length - 1), segment = Math.min(stops.length - 2, Math.floor(value)), mix = value - segment;
-    const pixel = ((spec.rows - 1 - y) * spec.columns + x) * 4;
-    for (let channel = 0; channel < 3; channel++) image.data[pixel + channel] = stops[segment][channel] * (1 - mix) + stops[segment + 1][channel] * mix;
-    image.data[pixel + 3] = 255;
-  }
+  if (!state.view) { ctx.fillStyle = '#94a69a'; ctx.font = '12px sans-serif'; ctx.fillText('正在读取所选时间窗口…', g.left, g.top + 25); canvas.dataset.renderedCounts = '{}'; return; }
+  const current = state.current, view = state.view, spec = view.spec, a = current.acquisition;
+  const raster = document.createElement('canvas'); raster.width = Math.max(1, Math.floor(g.plotWidth)); raster.height = Math.max(1, Math.floor(g.plotHeight));
+  const rasterCtx = raster.getContext('2d'), image = rasterCtx.createImageData(raster.width, raster.height);
+  image.data.set(createRaster(spec, view, raster.width, raster.height));
   rasterCtx.putImageData(image, 0, 0);
-  const sourceX = (a.analysis_low_mhz - spec.low_mhz) / (spec.high_mhz - spec.low_mhz) * spec.columns;
-  const sourceWidth = a.analysis_bandwidth_mhz / (spec.high_mhz - spec.low_mhz) * spec.columns;
   ctx.imageSmoothingEnabled = false;
-  ctx.drawImage(raster, sourceX, 0, sourceWidth, spec.rows, g.left, g.top, g.plotWidth, g.plotHeight);
+  ctx.drawImage(raster, g.left, g.top, g.plotWidth, g.plotHeight);
   ctx.strokeStyle = 'rgba(200,220,200,.09)'; ctx.fillStyle = '#9cad9c'; ctx.font = '9px Consolas,monospace';
   for (let i = 0; i <= 4; i++) {
     const y = g.top + g.plotHeight * i / 4;
     ctx.beginPath(); ctx.moveTo(g.left, y); ctx.lineTo(g.left + g.plotWidth, y); ctx.stroke();
-    ctx.textAlign = 'right'; ctx.fillText((a.duration_ms * (1 - i / 4)).toFixed(0), g.left - 7, y + 3);
+    ctx.textAlign = 'right'; ctx.fillText((view.end_ms - (view.end_ms - view.start_ms) * i / 4).toFixed(view.file ? 1 : 0), g.left - 7, y + 3);
     const x = g.left + g.plotWidth * i / 4;
     ctx.textAlign = 'center'; ctx.fillText((a.analysis_low_mhz + a.analysis_bandwidth_mhz * i / 4).toFixed(0), x, g.top + g.plotHeight + 18);
   }
   ctx.textAlign = 'left'; ctx.fillText('ms', 12, 10); ctx.textAlign = 'right'; ctx.fillText('MHz', g.width - 8, g.height - 4);
-  if ($('#overlay').checked) {
+  const plotted = $('#overlay').checked ? visibleSignals(current.signals, view, state.enabled) : [];
+  const counts = plotted.reduce((out, signal) => { out[signal.status] = (out[signal.status] || 0) + 1; return out; }, {});
+  canvas.dataset.renderedCounts = JSON.stringify(counts);
+  canvas.dataset.renderedEvidence = plotted.length;
+  $('#chart-evidence-summary').textContent = `当前窗口：${counts.verified || 0} 条校验帧 · ${counts.header || 0} 条 PHY 报头 · ${counts.signature || 0} 条图传候选 · ${counts.unknown || 0} 个粗区域。重叠观测可能共用图框。`;
+  if (plotted.length) {
     ctx.save(); ctx.beginPath(); ctx.rect(g.left, g.top, g.plotWidth, g.plotHeight); ctx.clip();
-    for (const signal of state.rows) {
+    for (const signal of plotted) {
       const x = g.left + (signal.frequency_low_mhz - a.analysis_low_mhz) / a.analysis_bandwidth_mhz * g.plotWidth;
-      const y = g.top + (1 - signal.time_stop_ms / a.duration_ms) * g.plotHeight;
+      const y = g.top + (view.end_ms - signal.time_stop_ms) / (view.end_ms - view.start_ms) * g.plotHeight;
       const width = (signal.frequency_high_mhz - signal.frequency_low_mhz) / a.analysis_bandwidth_mhz * g.plotWidth;
-      const height = (signal.time_stop_ms - signal.time_start_ms) / a.duration_ms * g.plotHeight;
+      const height = (signal.time_stop_ms - signal.time_start_ms) / (view.end_ms - view.start_ms) * g.plotHeight;
       ctx.strokeStyle = colors[signal.status]; ctx.lineWidth = signal.id === state.selected ? 2 : 1;
+      ctx.setLineDash(signal.status === 'unknown' ? [5, 3] : signal.boundary_kind === 'extraction_window' ? [9, 4] : []);
       if (height < 1) { ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + width, y); ctx.stroke(); }
       else ctx.strokeRect(x, y, width, height);
     }
@@ -133,17 +163,20 @@ function draw() {
 }
 
 $('#spectrogram').onpointermove = event => {
-  if (!state.current) return;
+  if (!state.current || !state.view) return;
   const g = geometry(), bounds = event.currentTarget.getBoundingClientRect();
   const x = (event.clientX - bounds.left - g.left) / g.plotWidth, y = (event.clientY - bounds.top - g.top) / g.plotHeight;
   if (x < 0 || x > 1 || y < 0 || y > 1) return;
-  const a = state.current.acquisition, spec = state.current.spectrogram;
+  const a = state.current.acquisition, view = state.view, spec = view.spec;
   const frequency = a.analysis_low_mhz + x * a.analysis_bandwidth_mhz;
-  const row = Math.min(spec.rows - 1, Math.floor((1 - y) * spec.rows));
-  const column = Math.max(0, Math.min(spec.columns - 1, Math.floor((frequency - spec.low_mhz) / (spec.high_mhz - spec.low_mhz) * spec.columns)));
-  $('#chart-readout').textContent = `${frequency.toFixed(2)} MHz · 文件采样时间 ${(a.duration_ms * (1 - y)).toFixed(3)} ms · 预览格 ${spec.db[row][column].toFixed(2)} dB（相对值，非校准 dBm）`;
+  const width = Math.floor(g.plotWidth), height = Math.floor(g.plotHeight);
+  const pixel = pixelBounds(view, Math.min(width - 1, Math.floor(x * width)), Math.min(height - 1, Math.floor(y * height)), width, height);
+  const power = maximumDb(spec, pixel.frequencyStart, pixel.frequencyStop, pixel.timeStart, pixel.timeStop, view.start_ms, view.end_ms);
+  $('#chart-readout').textContent = `${frequency.toFixed(2)} MHz · 文件采样时间 ${(view.end_ms - y * (view.end_ms - view.start_ms)).toFixed(3)} ms · 预览格 ${power.toFixed(2)} dB（相对值，非校准 dBm）`;
 };
 $('#overlay').onchange = draw;
+$('#time-window').onchange = () => loadWindow().catch(showError);
+document.querySelectorAll('[data-layer]').forEach(input => input.onchange = () => { if (input.checked) state.enabled.add(input.dataset.layer); else state.enabled.delete(input.dataset.layer); draw(); });
 $('#history-filter').onchange = renderHistory;
 document.querySelectorAll('[data-filter]').forEach(button => button.onclick = () => { state.filter = button.dataset.filter; renderEvidence(); });
 window.addEventListener('resize', draw);

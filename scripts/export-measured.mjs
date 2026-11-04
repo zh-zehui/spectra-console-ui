@@ -8,7 +8,7 @@ import assert from 'node:assert/strict';
 const input = resolve(process.argv[2] || 'qa');
 const output = resolve('dist/measured/data');
 const definitions = [
-  { id: 'task_agile_full_292630d126a1', slug: 'agile-full', title: '5.8 GHz · 全时段实采分析', description: '指定历史任务：1 秒实采 IQ，5720–5880 MHz 分析范围。保留 Wi-Fi 校验帧、PHY 报头与变频图传参考特征候选，检查覆盖及频率变化均可核对。', screenshot: 'measured-agile-990.png', default_filter: 'signature' }
+  { id: 'task_agile_full_292630d126a1', slug: 'agile-full', title: '5.8 GHz · 全时段实采分析', description: '指定历史任务：1 秒实采 IQ，5720–5880 MHz 分析范围。保留 Wi-Fi 校验帧、PHY 报头与变频图传参考特征候选，检查覆盖及频率变化均可核对。', screenshot: 'measured-agile-990-all-layers.png', default_filter: 'signature' }
 ];
 const parse = async path => JSON.parse((await readFile(path, 'utf8')).replace(/^\uFEFF/, ''));
 const history = await parse(resolve(input, 'agile-task-history.json'));

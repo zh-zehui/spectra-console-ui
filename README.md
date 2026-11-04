@@ -12,7 +12,7 @@
 
 [**查看历史实采任务 ↗**](https://zh-zehui.github.io/spectra-console-ui/measured/) · [交互演示](https://zh-zehui.github.io/spectra-console-ui/) · [边缘端源码](edge/) · [Jetson 部署](docs/edge-deployment.md)
 
-![task_agile_full_292630d126a1：990–1000 ms 全图层实采截图](dist/measured/images/measured-agile-990.png?v=complete-layers)
+![task_agile_full_292630d126a1：990–1000 ms 全图层实采截图](dist/measured/images/measured-agile-990-all-layers.png)
 
 </div>
 
@@ -34,7 +34,7 @@ SPECTRA 是面向频谱分析的独立可视化操作层，将任务描述、时
 
 **同一任务 980–990 ms 的局部 STFT，可与上方 990–1000 ms 对照：**
 
-![task_agile_full_292630d126a1：980–990 ms 全图层实采截图](dist/measured/images/measured-agile-980.png?v=complete-layers)
+![task_agile_full_292630d126a1：980–990 ms 全图层实采截图](dist/measured/images/measured-agile-980-all-layers.png)
 
 四张截图均在对应局部 STFT 加载完成后截取，开启校验帧、PHY 报头、图传候选和粗分割图层，并逐项核对当前窗口的证据：
 
@@ -45,20 +45,15 @@ SPECTRA 是面向频谱分析的独立可视化操作层，将任务描述、时
 | 980–990 ms | 75 | 6 | 5 | 14 |
 | 990–1000 ms | 51 | 10 | 4 | 15 |
 
-<details>
-<summary>查看前段与中段的完整图层截图</summary>
-
 **10–20 ms：**
 
-![前段 10–20 ms 的全部识别与分割图层](dist/measured/images/measured-agile-10.png)
+![前段 10–20 ms 的全部识别与分割图层](dist/measured/images/measured-agile-10-all-layers.png)
 
 **500–510 ms：**
 
-![中段 500–510 ms 的全部识别与分割图层](dist/measured/images/measured-agile-500.png)
+![中段 500–510 ms 的全部识别与分割图层](dist/measured/images/measured-agile-500-all-layers.png)
 
-</details>
-
-实采页可查看这一个任务的完整时频预览、筛选证据、下载公开 JSON，并核对采集时间与来源。局部截图从原 IQ 读取相应窗口；页面预览覆盖完整 1000 ms。
+实采页可切换这一个任务的四个 10 ms 局部时频窗口及完整 0–1000 ms 记录。局部视图使用已保存的原 IQ STFT 数值，当前窗口的所有已开启证据图层均参与绘制，不受下方列表前 12 条限制；同时提供证据筛选、JSON 下载和采集来源核对。
 
 参考序列在约 987.48–992.48 ms 出现 5736 → 5758 → 5755.5 MHz 的候选变化，关联仅依据时序相容性，不确认同一发射机或解码跳频规律。本任务没有检出带宽变化；特征匹配也不等于协议 CRC 或视频解码。[查看此任务的来源与证据限制](docs/measured-results.md)。
 
@@ -75,20 +70,20 @@ SPECTRA 是面向频谱分析的独立可视化操作层，将任务描述、时
 
 ## 交互演示预览（示例数据）
 
-![使用示例数据的交互演示工作台](docs/screenshots/workbench.png)
+以下为示例模式缩略图，点击可查看原图；实采结果见上方指定任务。
 
-**初始分割：保留碎片化候选，观察分析起点。**
-
-![初始分割阶段，宽带活动被分为多个候选区域](docs/screenshots/initial-segmentation.png)
-
-**证据复查：选择未知活动，查看依据和仍需验证的部分。**
-
-![信号目录与证据面板联动，保留未知候选](docs/screenshots/evidence.png)
+<table>
+<tr>
+<td align="center"><a href="docs/screenshots/workbench.png"><img src="docs/screenshots/workbench.png" alt="示例工作台缩略图" width="240"></a><br>示例工作台</td>
+<td align="center"><a href="docs/screenshots/initial-segmentation.png"><img src="docs/screenshots/initial-segmentation.png" alt="初始分割缩略图" width="240"></a><br>初始分割</td>
+<td align="center"><a href="docs/screenshots/evidence.png"><img src="docs/screenshots/evidence.png" alt="证据联动缩略图" width="240"></a><br>证据联动</td>
+</tr>
+</table>
 
 <details>
 <summary>查看移动端长截图</summary>
 
-<img src="docs/screenshots/mobile.png" alt="390 像素宽屏幕下的 SPECTRA 交互界面" width="360">
+<a href="docs/screenshots/mobile.png"><img src="docs/screenshots/mobile.png" alt="移动端示例缩略图，点击查看原图" width="180"></a>
 
 </details>
 

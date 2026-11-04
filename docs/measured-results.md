@@ -59,23 +59,25 @@ GitHub 实采展示仅使用 **`task_agile_full_292630d126a1`**，原来的四�
 
 **10–20 ms：**
 
-![前段 10–20 ms 的全部识别与分割图层](../dist/measured/images/measured-agile-10.png)
+![前段 10–20 ms 的全部识别与分割图层](../dist/measured/images/measured-agile-10-all-layers.png)
 
 **500–510 ms：**
 
-![中段 500–510 ms 的全部识别与分割图层](../dist/measured/images/measured-agile-500.png)
+![中段 500–510 ms 的全部识别与分割图层](../dist/measured/images/measured-agile-500-all-layers.png)
 
 **980–990 ms：**
 
-![指定任务 980–990 ms 的全部识别与分割图层](../dist/measured/images/measured-agile-980.png?v=complete-layers)
+![指定任务 980–990 ms 的全部识别与分割图层](../dist/measured/images/measured-agile-980-all-layers.png)
 
 **990–1000 ms：**
 
-![同一任务 990–1000 ms 的全部识别与分割图层](../dist/measured/images/measured-agile-990.png?v=complete-layers)
+![同一任务 990–1000 ms 的全部识别与分割图层](../dist/measured/images/measured-agile-990-all-layers.png)
 
 ## 公开数据的范围
 
-`agile-full.json` 从该任务的 `/visual` GET 响应提取，包含真实 STFT 数值、8337 条分层证据记录、采集参数、来源、检查进度和参考频率变化摘要。192×512 的最大池化 STFT 覆盖整段 1000 ms；上方截图则是从同一原 IQ 读取的 10 ms 局部 STFT，分辨率不同。
+`agile-full.json` 从该任务的 `/visual` GET 响应提取，包含真实 STFT 数值、8337 条分层证据记录、采集参数、来源、检查进度和参考频率变化摘要。192×512 的最大池化 STFT 覆盖整段 1000 ms。另发布四份 `window-*.json`，分别是 10–20、500–510、980–990、990–1000 ms 的真实 512×512 局部 STFT，来源为同一任务的只读 `waterfall-window` 接口。
+
+“原 IQ 时频预览”默认选择 990–1000 ms，可切换四个局部窗口或完整记录。时间轴、相对功率配色和按显示像素最大池化的方法与设备工作台一致；缩小图面时仍保留覆盖像素内的最大值，不跳过短时能量行。证据图层独立控制，绘制当前窗口内全部开启的证据，不受列表前 12 条限制。四个窗口的绘制数量与截图核对记录一致。
 
 原始数值保持不变。公开文件不携带解码地址、载荷、设备序列号、私人路径或凭据；原始 IQ 文件仍未上传。`source_visual_sha256` 对应本机保存的完整网关响应，可供持有原响应的人核对。
 
@@ -87,8 +89,9 @@ GitHub 实采展示仅使用 **`task_agile_full_292630d126a1`**，原来的四�
 
 ```sh
 node scripts/export-measured.mjs qa
+node scripts/export-measured-windows.mjs qa
 npm run check
 npm test
 ```
 
-导出器只读取本地响应文件，公开索引只保留这一个任务。更新只读展示截图可运行 `node tests/measured.mjs --screenshots`；原工作台截图需读取该历史任务的相应时间窗口。
+局部响应保存在 `qa/agile-window-10.json`、`qa/agile-window-500.json`、`qa/agile-window-980.json` 和 `qa/agile-window-990.json`。导出器只读取这些本地响应文件，公开索引只保留这一个任务。更新只读展示截图可运行 `node tests/measured.mjs --screenshots`；原工作台截图需读取该历史任务的相应时间窗口。

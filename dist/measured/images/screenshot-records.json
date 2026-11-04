@@ -53,7 +53,7 @@
         "sample_stop": 4000000,
         "rows": 512
       },
-      "image": "measured-agile-10.png"
+      "image": "measured-agile-10-all-layers.png"
     },
     {
       "start_ms": 500,
@@ -107,7 +107,7 @@
         "sample_stop": 102000000,
         "rows": 512
       },
-      "image": "measured-agile-500.png"
+      "image": "measured-agile-500-all-layers.png"
     },
     {
       "start_ms": 980,
@@ -161,7 +161,7 @@
         "sample_stop": 198000000,
         "rows": 512
       },
-      "image": "measured-agile-980.png"
+      "image": "measured-agile-980-all-layers.png"
     },
     {
       "start_ms": 990,
@@ -215,7 +215,7 @@
         "sample_stop": 200000000,
         "rows": 512
       },
-      "image": "measured-agile-990.png"
+      "image": "measured-agile-990-all-layers.png"
     }
   ],
   "errors": [],

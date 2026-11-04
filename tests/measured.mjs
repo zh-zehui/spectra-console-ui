@@ -3,6 +3,17 @@ import { readFile, access } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { chromium } from 'playwright';
 import { createServer } from '../scripts/serve.mjs';
+import { createRaster, maximumDb, palette, pixelBounds } from '../dist/measured/plot.mjs';
+
+// A short, narrow peak must survive reduction to fewer display pixels.
+const grid = { rows: 4, columns: 4, low_mhz: 0, high_mhz: 4, min_db: 0, max_db: 100, db: [[1,2,3,4],[5,100,7,8],[9,10,11,12],[13,14,15,16]] };
+assert.equal(maximumDb(grid, 1, 2, 0, 1, 0, 4), 2);
+assert.equal(maximumDb(grid, 0, 2, 0, 2, 0, 4), 100);
+const bounds = pixelBounds({ start_ms: 990, end_ms: 1000, low_mhz: 5720, high_mhz: 5880 }, 0, 0, 2, 2);
+assert.deepEqual(bounds, { frequencyStart: 5720, frequencyStop: 5800, timeStart: 995, timeStop: 1000 });
+const raster = createRaster(grid, { start_ms: 0, end_ms: 4, low_mhz: 0, high_mhz: 4 }, 2, 2);
+assert.deepEqual([...raster.slice(8, 12)], [...palette(1), 255]); // Earliest half at bottom, with its peak retained.
+assert.deepEqual([...raster.slice(0, 4)], [...palette(.14), 255]);
 
 const index = JSON.parse(await readFile(new URL('../dist/measured/data/index.json', import.meta.url), 'utf8'));
 const taskID = 'task_agile_full_292630d126a1';
@@ -63,6 +74,21 @@ for (const snapshot of screenshotRecords.snapshots) {
   assert.equal(snapshot.stft.sample_stop, snapshot.end_ms * 200000);
   await access(new URL('../dist/measured/images/' + snapshot.image, import.meta.url));
 }
+const windows = JSON.parse(await readFile(new URL('../dist/measured/data/windows-index.json', import.meta.url), 'utf8'));
+assert.equal(windows.task_id, taskID);
+assert.equal(windows.default_view_id, '990');
+for (const view of windows.views.filter(view => view.file)) {
+  const value = JSON.parse(await readFile(new URL('../dist/measured/data/' + view.file, import.meta.url), 'utf8'));
+  assert.equal(value.task_id, taskID);
+  assert.equal(value.source, 'recorded-iq-window-stft');
+  assert.equal(value.start_ms, view.start_ms);
+  assert.equal(value.end_ms, view.end_ms);
+  assert.equal(value.sample_start, value.start_ms * 200000);
+  assert.equal(value.sample_stop, value.end_ms * 200000);
+  assert.equal(value.spectrogram.rows, 512);
+  assert.ok(value.spectrogram.db.every(row => row.length === 512 && row.every(Number.isFinite)));
+  assertPublicFields(value);
+}
 
 const server = createServer();
 await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
@@ -83,6 +109,19 @@ try {
   assert.match(await page.locator('#case-id').innerText(), new RegExp(taskID));
   assert.match(await page.locator('#evidence-counts').innerText(), /5,767/);
   assert.match(await page.locator('#coverage-note').innerText(), /100\/100/);
+  assert.equal(await page.locator('#time-window').inputValue(), '990');
+  const renderedCounts = () => page.locator('#spectrogram').evaluate(canvas => JSON.parse(canvas.dataset.renderedCounts));
+  assert.deepEqual(await renderedCounts(), { unknown: 15, verified: 51, header: 10, signature: 4 });
+  for (const view of windows.views) {
+    await page.locator('#time-window').selectOption(view.id);
+    await page.waitForFunction(start => document.querySelector('#spectrogram').getAttribute('aria-busy') === 'false' && Number(document.querySelector('#spectrogram').dataset.windowStart) === start, view.start_ms);
+    const visible = task.signals.filter(s => s.time_start_ms < view.end_ms && s.time_stop_ms > view.start_ms && s.frequency_high_mhz > task.acquisition.analysis_low_mhz && s.frequency_low_mhz < task.acquisition.analysis_high_mhz);
+    const expected = visible.reduce((out, s) => { out[s.status] = (out[s.status] || 0) + 1; return out; }, {});
+    assert.deepEqual(await renderedCounts(), expected);
+  }
+  await page.locator('[data-layer="header"]').uncheck();
+  assert.deepEqual(await renderedCounts(), { unknown: 15, verified: 51, signature: 4 });
+  await page.locator('[data-layer="header"]').check();
   assert.ok(await page.locator('#spectrogram').evaluate(canvas => { const d = canvas.getContext('2d').getImageData(100, 100, 1, 1).data; return d[3] === 255; }));
   const box = await page.locator('#spectrogram').boundingBox();
   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
@@ -93,8 +132,9 @@ try {
     assert.equal(await page.locator('#download-data').getAttribute('href'), 'data/' + item.dataset);
     for (const filter of ['verified', 'header', 'signature', 'unknown']) {
       await page.locator(`[data-filter="${filter}"]`).click();
-      const count = datasets.get(item.slug).signals.filter(s => s.status === filter).length;
+      const count = datasets.get(item.slug).signals.filter(s => s.status === filter && s.time_start_ms < 1000 && s.time_stop_ms > 990).length;
       assert.equal(await page.locator('#evidence-rows [data-signal]').count(), Math.min(12, count));
+      assert.deepEqual(await renderedCounts(), { unknown: 15, verified: 51, header: 10, signature: 4 });
     }
   }
   await page.locator('[data-filter="verified"]').click();

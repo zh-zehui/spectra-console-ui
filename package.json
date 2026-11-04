@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "node scripts/serve.mjs",
-    "check": "node --check dist/app.js && node --check dist/measured/archive.js && node --check scripts/serve.mjs && node --check scripts/export-measured.mjs && node --check tests/demo.mjs && node --check tests/measured.mjs && node --check edge/plugins/spectrum-tools/index.mjs",
+    "check": "node --check dist/app.js && node --check dist/measured/archive.js && node --check dist/measured/plot.mjs && node --check scripts/serve.mjs && node --check scripts/export-measured.mjs && node --check scripts/export-measured-windows.mjs && node --check tests/demo.mjs && node --check tests/measured.mjs && node --check edge/plugins/spectrum-tools/index.mjs",
     "test": "node tests/demo.mjs && node tests/measured.mjs",
     "screenshots": "node tests/demo.mjs --screenshots && node tests/measured.mjs --screenshots"
   },

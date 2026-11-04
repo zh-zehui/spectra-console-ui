@@ -1,0 +1,45 @@
+{
+  "task_id": "task_agile_full_292630d126a1",
+  "default_view_id": "990",
+  "views": [
+    {
+      "id": "full",
+      "label": "全记录 · 0–1000 ms",
+      "start_ms": 0,
+      "end_ms": 1000,
+      "source": "recorded-iq-full-stft-preview"
+    },
+    {
+      "id": "10",
+      "label": "10–20 ms",
+      "start_ms": 10,
+      "end_ms": 20,
+      "source": "recorded-iq-window-stft",
+      "file": "window-10.json"
+    },
+    {
+      "id": "500",
+      "label": "500–510 ms",
+      "start_ms": 500,
+      "end_ms": 510,
+      "source": "recorded-iq-window-stft",
+      "file": "window-500.json"
+    },
+    {
+      "id": "980",
+      "label": "980–990 ms",
+      "start_ms": 980,
+      "end_ms": 990,
+      "source": "recorded-iq-window-stft",
+      "file": "window-980.json"
+    },
+    {
+      "id": "990",
+      "label": "990–1000 ms",
+      "start_ms": 990,
+      "end_ms": 1000,
+      "source": "recorded-iq-window-stft",
+      "file": "window-990.json"
+    }
+  ]
+}

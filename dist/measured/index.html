@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#101412">
   <meta name="description" content="SPECTRA 历史实采任务：真实 IQ 的时频预览、校验帧、PHY 报头与图传候选证据。">
   <title>历史实采任务 · SPECTRA</title>
-  <link rel="stylesheet" href="archive.css?v=agile-full">
+  <link rel="stylesheet" href="archive.css?v=window-preview-v2">
 </head>
 <body>
   <header><a class="brand" href="../">SPECTRA <span>/ FIELD RECORDINGS</span></a><nav><a href="../">交互演示 ↗</a><a href="https://github.com/zh-zehui/spectra-console-ui">GitHub ↗</a></nav></header>
@@ -20,14 +20,14 @@
         <p class="case-description" id="case-description"></p>
         <div class="record-id" id="case-id"></div>
         <dl class="parameters" id="parameters"></dl>
-        <div class="panel chart-panel"><div class="panel-heading"><h3>原 IQ 时频预览</h3><span id="chart-resolution"></span></div><div class="chart-controls"><span id="chart-range"></span><label><input id="overlay" type="checkbox" checked>叠加当前页证据</label></div><canvas id="spectrogram" role="img" aria-label="当前历史任务实采 IQ 的 STFT 时频预览"></canvas><p class="chart-readout" id="chart-readout">移动指针可查看预览采样格的频率、时间与相对功率。</p><div class="chart-footer"><span>最新采样在上 · 相对功率未标定</span><span class="scale">低 <i></i> 高</span></div></div>
+        <div class="panel chart-panel"><div class="panel-heading"><h3>原 IQ 时频预览</h3><span id="chart-resolution"></span></div><div class="chart-controls"><label>时间窗口 <select id="time-window" aria-label="实采时间窗口"></select></label><span id="chart-range"></span><label><input id="overlay" type="checkbox" checked>显示证据框</label></div><div class="layer-controls"><label><input data-layer="verified" type="checkbox" checked>校验帧</label><label><input data-layer="header" type="checkbox" checked>PHY 报头</label><label><input data-layer="signature" type="checkbox" checked>图传候选</label><label><input data-layer="unknown" type="checkbox" checked>粗活动区域</label></div><canvas id="spectrogram" role="img" aria-label="当前历史任务实采 IQ 的 STFT 时频预览" aria-busy="true"></canvas><p id="chart-evidence-summary" class="evidence-note"></p><p class="chart-readout" id="chart-readout">移动指针可查看预览采样格的频率、时间与相对功率。</p><div class="chart-footer"><span>最新采样在上 · 相对功率未标定</span><span class="scale">低 <i></i> 高</span></div></div>
         <div class="evidence-counts" id="evidence-counts"></div>
         <div class="panel evidence-panel"><div class="panel-heading"><h3>证据观测</h3><div class="filters" id="evidence-filters"><button data-filter="verified" class="active">校验帧</button><button data-filter="header">PHY 报头</button><button data-filter="signature">特征候选</button><button data-filter="unknown">粗活动</button></div></div><p class="evidence-note" id="evidence-note"></p><div class="table-scroll"><table><thead><tr><th>证据</th><th>频率范围 / MHz</th><th>时间范围 / ms</th><th>依据层级</th></tr></thead><tbody id="evidence-rows"></tbody></table></div><p class="table-note" id="evidence-page"></p></div>
         <details class="panel provenance" open><summary>采集来源与分析范围</summary><dl id="provenance"></dl><p id="coverage-note"></p></details>
         <details class="panel original-ui" open><summary>990–1000 ms · 全部图层：51 校验帧 / 10 PHY 报头 / 4 图传候选 / 15 粗区域</summary><a id="original-link" target="_blank" rel="noopener"><img id="original-image" alt="指定任务 990–1000 ms 的全部校验帧、PHY 报头、图传特征与粗分割图层" loading="lazy"></a></details>
-        <details class="panel original-ui"><summary>10–20 ms · 全部图层：69 校验帧 / 4 PHY 报头 / 5 图传候选 / 18 粗区域</summary><a href="images/measured-agile-10.png" target="_blank" rel="noopener"><img src="images/measured-agile-10.png" alt="前段 10–20 ms 完整图层实采截图" loading="lazy"></a></details>
-        <details class="panel original-ui"><summary>500–510 ms · 全部图层：100 校验帧 / 8 PHY 报头 / 5 图传候选 / 10 粗区域</summary><a href="images/measured-agile-500.png" target="_blank" rel="noopener"><img src="images/measured-agile-500.png" alt="中段 500–510 ms 完整图层实采截图" loading="lazy"></a></details>
-        <details class="panel original-ui"><summary>980–990 ms · 全部图层：75 校验帧 / 6 PHY 报头 / 5 图传候选 / 14 粗区域</summary><a href="images/measured-agile-980.png?v=complete-layers" target="_blank" rel="noopener"><img src="images/measured-agile-980.png?v=complete-layers" alt="末段 980–990 ms 完整图层实采截图" loading="lazy"></a></details>
+        <details class="panel original-ui"><summary>10–20 ms · 全部图层：69 校验帧 / 4 PHY 报头 / 5 图传候选 / 18 粗区域</summary><a href="images/measured-agile-10-all-layers.png" target="_blank" rel="noopener"><img src="images/measured-agile-10-all-layers.png" alt="前段 10–20 ms 完整图层实采截图" loading="lazy"></a></details>
+        <details class="panel original-ui"><summary>500–510 ms · 全部图层：100 校验帧 / 8 PHY 报头 / 5 图传候选 / 10 粗区域</summary><a href="images/measured-agile-500-all-layers.png" target="_blank" rel="noopener"><img src="images/measured-agile-500-all-layers.png" alt="中段 500–510 ms 完整图层实采截图" loading="lazy"></a></details>
+        <details class="panel original-ui"><summary>980–990 ms · 全部图层：75 校验帧 / 6 PHY 报头 / 5 图传候选 / 14 粗区域</summary><a href="images/measured-agile-980-all-layers.png" target="_blank" rel="noopener"><img src="images/measured-agile-980-all-layers.png" alt="末段 980–990 ms 完整图层实采截图" loading="lazy"></a></details>
       </section>
     </div>
     <section class="panel history-panel" id="history"><div class="panel-heading"><div><p class="eyebrow">TASK ARCHIVE</p><h2>任务记录</h2></div><label class="history-status">状态 <select id="history-filter"><option value="all">全部</option><option value="succeeded">succeeded</option><option value="partial">partial</option></select></label></div><p class="evidence-note">仅公开指定任务及其原始状态；时间为网关记录时间（UTC），原始采集时间单独保留。</p><div class="table-scroll"><table><thead><tr><th>任务 ID</th><th>中心 / 带宽</th><th>记录时间 / UTC</th><th>状态</th><th>归档</th></tr></thead><tbody id="history-rows"></tbody></table></div><p class="table-note" id="history-summary"></p></section>
@@ -35,6 +35,6 @@
     <footer><span>SPECTRA / 从观测到证据</span><span id="exported-at"></span></footer>
     <p id="load-error" role="alert" hidden></p>
   </main>
-  <script src="archive.js?v=complete-layers"></script>
+  <script type="module" src="archive.js?v=window-preview-v2"></script>
 </body>
 </html>
