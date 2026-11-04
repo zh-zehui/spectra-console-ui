@@ -1,0 +1,223 @@
+{
+  "task_id": "task_agile_full_292630d126a1",
+  "snapshots": [
+    {
+      "start_ms": 10,
+      "end_ms": 20,
+      "available_counts": {
+        "unknown": 1683,
+        "verified": 5767,
+        "header": 492,
+        "signature": 395
+      },
+      "enabled_counts": {
+        "unknown": 1683,
+        "verified": 5767,
+        "header": 492,
+        "signature": 395
+      },
+      "visible_counts": {
+        "unknown": 18,
+        "verified": 69,
+        "header": 4,
+        "signature": 5
+      },
+      "expected_counts": {
+        "unknown": 18,
+        "verified": 69,
+        "header": 4,
+        "signature": 5
+      },
+      "all_visible_ids_included": true,
+      "layers": [
+        {
+          "id": "show-boxes",
+          "enabled": true
+        },
+        {
+          "id": "show-frame-layer",
+          "enabled": true
+        },
+        {
+          "id": "show-header-layer",
+          "enabled": true
+        },
+        {
+          "id": "show-drone-layer",
+          "enabled": true
+        }
+      ],
+      "stft": {
+        "source": "recorded-iq-window-stft",
+        "sample_start": 2000000,
+        "sample_stop": 4000000,
+        "rows": 512
+      },
+      "image": "measured-agile-10.png"
+    },
+    {
+      "start_ms": 500,
+      "end_ms": 510,
+      "available_counts": {
+        "unknown": 1683,
+        "verified": 5767,
+        "header": 492,
+        "signature": 395
+      },
+      "enabled_counts": {
+        "unknown": 1683,
+        "verified": 5767,
+        "header": 492,
+        "signature": 395
+      },
+      "visible_counts": {
+        "unknown": 10,
+        "verified": 100,
+        "header": 8,
+        "signature": 5
+      },
+      "expected_counts": {
+        "unknown": 10,
+        "verified": 100,
+        "header": 8,
+        "signature": 5
+      },
+      "all_visible_ids_included": true,
+      "layers": [
+        {
+          "id": "show-boxes",
+          "enabled": true
+        },
+        {
+          "id": "show-frame-layer",
+          "enabled": true
+        },
+        {
+          "id": "show-header-layer",
+          "enabled": true
+        },
+        {
+          "id": "show-drone-layer",
+          "enabled": true
+        }
+      ],
+      "stft": {
+        "source": "recorded-iq-window-stft",
+        "sample_start": 100000000,
+        "sample_stop": 102000000,
+        "rows": 512
+      },
+      "image": "measured-agile-500.png"
+    },
+    {
+      "start_ms": 980,
+      "end_ms": 990,
+      "available_counts": {
+        "unknown": 1683,
+        "verified": 5767,
+        "header": 492,
+        "signature": 395
+      },
+      "enabled_counts": {
+        "unknown": 1683,
+        "verified": 5767,
+        "header": 492,
+        "signature": 395
+      },
+      "visible_counts": {
+        "unknown": 14,
+        "verified": 75,
+        "header": 6,
+        "signature": 5
+      },
+      "expected_counts": {
+        "unknown": 14,
+        "verified": 75,
+        "header": 6,
+        "signature": 5
+      },
+      "all_visible_ids_included": true,
+      "layers": [
+        {
+          "id": "show-boxes",
+          "enabled": true
+        },
+        {
+          "id": "show-frame-layer",
+          "enabled": true
+        },
+        {
+          "id": "show-header-layer",
+          "enabled": true
+        },
+        {
+          "id": "show-drone-layer",
+          "enabled": true
+        }
+      ],
+      "stft": {
+        "source": "recorded-iq-window-stft",
+        "sample_start": 196000000,
+        "sample_stop": 198000000,
+        "rows": 512
+      },
+      "image": "measured-agile-980.png"
+    },
+    {
+      "start_ms": 990,
+      "end_ms": 1000,
+      "available_counts": {
+        "unknown": 1683,
+        "verified": 5767,
+        "header": 492,
+        "signature": 395
+      },
+      "enabled_counts": {
+        "unknown": 1683,
+        "verified": 5767,
+        "header": 492,
+        "signature": 395
+      },
+      "visible_counts": {
+        "unknown": 15,
+        "verified": 51,
+        "header": 10,
+        "signature": 4
+      },
+      "expected_counts": {
+        "unknown": 15,
+        "verified": 51,
+        "header": 10,
+        "signature": 4
+      },
+      "all_visible_ids_included": true,
+      "layers": [
+        {
+          "id": "show-boxes",
+          "enabled": true
+        },
+        {
+          "id": "show-frame-layer",
+          "enabled": true
+        },
+        {
+          "id": "show-header-layer",
+          "enabled": true
+        },
+        {
+          "id": "show-drone-layer",
+          "enabled": true
+        }
+      ],
+      "stft": {
+        "source": "recorded-iq-window-stft",
+        "sample_start": 198000000,
+        "sample_stop": 200000000,
+        "rows": 512
+      },
+      "image": "measured-agile-990.png"
+    }
+  ],
+  "errors": [],
+  "writes": 0
+}

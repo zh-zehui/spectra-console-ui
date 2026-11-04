@@ -12,7 +12,7 @@
 
 [**查看历史实采任务 ↗**](https://zh-zehui.github.io/spectra-console-ui/measured/) · [交互演示](https://zh-zehui.github.io/spectra-console-ui/) · [边缘端源码](edge/) · [Jetson 部署](docs/edge-deployment.md)
 
-![task_agile_full_292630d126a1：990–1000 ms 原 IQ 局部时频图与变频图传特征候选](dist/measured/images/measured-agile-990.png)
+![task_agile_full_292630d126a1：990–1000 ms 全图层实采截图](dist/measured/images/measured-agile-990.png?v=complete-layers)
 
 </div>
 
@@ -34,7 +34,29 @@ SPECTRA 是面向频谱分析的独立可视化操作层，将任务描述、时
 
 **同一任务 980–990 ms 的局部 STFT，可与上方 990–1000 ms 对照：**
 
-![task_agile_full_292630d126a1：980–990 ms 原 IQ 局部时频图](dist/measured/images/measured-agile-980.png)
+![task_agile_full_292630d126a1：980–990 ms 全图层实采截图](dist/measured/images/measured-agile-980.png?v=complete-layers)
+
+四张截图均在对应局部 STFT 加载完成后截取，开启校验帧、PHY 报头、图传候选和粗分割图层，并逐项核对当前窗口的证据：
+
+| 时间窗口 | Wi-Fi 校验帧 | PHY 报头 | 图传候选 | 粗活动区域 |
+| --- | --- | --- | --- | --- |
+| 10–20 ms | 69 | 4 | 5 | 18 |
+| 500–510 ms | 100 | 8 | 5 | 10 |
+| 980–990 ms | 75 | 6 | 5 | 14 |
+| 990–1000 ms | 51 | 10 | 4 | 15 |
+
+<details>
+<summary>查看前段与中段的完整图层截图</summary>
+
+**10–20 ms：**
+
+![前段 10–20 ms 的全部识别与分割图层](dist/measured/images/measured-agile-10.png)
+
+**500–510 ms：**
+
+![中段 500–510 ms 的全部识别与分割图层](dist/measured/images/measured-agile-500.png)
+
+</details>
 
 实采页可查看这一个任务的完整时频预览、筛选证据、下载公开 JSON，并核对采集时间与来源。局部截图从原 IQ 读取相应窗口；页面预览覆盖完整 1000 ms。
 

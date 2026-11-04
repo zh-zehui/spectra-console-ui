@@ -61,8 +61,8 @@ async function loadCase() {
   const plans = current.protocol_coverage.plans;
   const hopping = current.hopping_evidence || [];
   $('#coverage-note').textContent = `协议计划检查：${plans.map(plan => `${plan.completed_units}/${plan.total_units} 项，失败 ${plan.failed_units}`).join('；')}。图传候选检查：${hopping.map(e => `${e.coverage.completed_units}/${e.coverage.total_units} 个时间单元，${format(e.coverage.reference_checks)} 次参考检查`).join('；')}。完整检查仅指声明的窗口/候选频点与配置，不表示全部信号已识别，也不确认发射机身份。`;
-  $('#original-image').src = 'images/' + current.screenshot;
-  $('#original-link').href = 'images/' + current.screenshot;
+  $('#original-image').src = 'images/' + current.screenshot + '?v=complete-layers';
+  $('#original-link').href = 'images/' + current.screenshot + '?v=complete-layers';
   renderEvidence();
   $('#case-detail').setAttribute('aria-busy', 'false');
 }

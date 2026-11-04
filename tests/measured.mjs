@@ -47,6 +47,22 @@ assert.equal(task.hopping_evidence[0].coverage.total_units, 100);
 assert.equal(task.hopping_evidence[0].sequence.transitions.length, 2);
 assert.equal(task.hopping_evidence[0].sequence.multiple_bandwidth_candidates, false);
 assert.ok(task.signals.some(s => s.status === 'signature' && s.time_start_ms > 990 && (s.frequency_low_mhz + s.frequency_high_mhz) / 2 === 5755.5));
+const screenshotRecords = JSON.parse(await readFile(new URL('../dist/measured/images/screenshot-records.json', import.meta.url), 'utf8'));
+assert.equal(screenshotRecords.task_id, taskID);
+assert.deepEqual(screenshotRecords.snapshots.map(s => s.start_ms), [10, 500, 980, 990]);
+assert.equal(screenshotRecords.writes, 0);
+assert.deepEqual(screenshotRecords.errors, []);
+for (const snapshot of screenshotRecords.snapshots) {
+  const count = signals => signals.reduce((out, s) => { out[s.status] = (out[s.status] || 0) + 1; return out; }, {});
+  const visible = task.signals.filter(s => s.time_start_ms < snapshot.end_ms && s.time_stop_ms > snapshot.start_ms && s.frequency_high_mhz > task.acquisition.analysis_low_mhz && s.frequency_low_mhz < task.acquisition.analysis_high_mhz);
+  assert.deepEqual(snapshot.visible_counts, count(visible));
+  assert.deepEqual(snapshot.enabled_counts, count(task.signals));
+  assert.ok(snapshot.layers.length === 4 && snapshot.layers.every(layer => layer.enabled));
+  assert.equal(snapshot.all_visible_ids_included, true);
+  assert.equal(snapshot.stft.sample_start, snapshot.start_ms * 200000);
+  assert.equal(snapshot.stft.sample_stop, snapshot.end_ms * 200000);
+  await access(new URL('../dist/measured/images/' + snapshot.image, import.meta.url));
+}
 
 const server = createServer();
 await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
@@ -94,6 +110,14 @@ try {
   await page.locator('#overlay').check();
   await page.locator('#original-image').scrollIntoViewIfNeeded();
   await page.waitForFunction(() => document.querySelector('#original-image').complete && document.querySelector('#original-image').naturalWidth > 0);
+  assert.equal(await page.locator('.original-ui').count(), 4);
+  for (const panel of await page.locator('.original-ui').all()) {
+    await panel.evaluate(element => { element.open = true; });
+    await panel.locator('img').scrollIntoViewIfNeeded();
+    await panel.locator('img').evaluate(async image => { await image.decode(); });
+    await panel.evaluate(element => { element.open = false; });
+  }
+  await page.locator('.original-ui').first().evaluate(element => { element.open = true; });
   await page.evaluate(() => window.scrollTo(0, 0));
   if (process.argv.includes('--screenshots')) await page.screenshot({ path: 'docs/screenshots/measured-archive.png', fullPage: true });
   await page.setViewportSize({ width: 390, height: 844 });

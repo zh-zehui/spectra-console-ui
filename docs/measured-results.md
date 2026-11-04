@@ -44,13 +44,34 @@ GitHub 实采展示仅使用 **`task_agile_full_292630d126a1`**，原来的四�
 
 两处关联均标为 `temporal_compatibility_only_not_emitter_identity`。多处相容频率可能来自一个变频链路，也可能来自多个发射机；尚未解码跳频规律、协议 CRC、载荷或视频，不能确认飞机身份。
 
+## 多时段完整图层截图
+
+截图读取自本机 `8782` 的原工作台。每次先等待对应窗口的原 IQ 局部 STFT 返回，核对起止采样索引，完成重绘后再截图。校验帧、PHY 报头、图传特征和粗分割四个图层均开启。
+
+| 窗口 | Wi-Fi 校验帧 | PHY 报头 | 图传候选 | 粗活动区域 |
+| --- | --- | --- | --- | --- |
+| 10–20 ms | 69 | 4 | 5 | 18 |
+| 500–510 ms | 100 | 8 | 5 | 10 |
+| 980–990 ms | 75 | 6 | 5 | 14 |
+| 990–1000 ms | 51 | 10 | 4 | 15 |
+
+这是与当前窗口有重叠的证据条目数，不是全任务总数；同一时频位置可能有多条观测。核对记录保存在 [截图记录 JSON](../dist/measured/images/screenshot-records.json)。
+
+**10–20 ms：**
+
+![前段 10–20 ms 的全部识别与分割图层](../dist/measured/images/measured-agile-10.png)
+
+**500–510 ms：**
+
+![中段 500–510 ms 的全部识别与分割图层](../dist/measured/images/measured-agile-500.png)
+
 **980–990 ms：**
 
-![指定任务 980–990 ms 的原 IQ 局部 STFT 与图传特征证据](../dist/measured/images/measured-agile-980.png)
+![指定任务 980–990 ms 的全部识别与分割图层](../dist/measured/images/measured-agile-980.png?v=complete-layers)
 
 **990–1000 ms：**
 
-![同一任务 990–1000 ms 的原 IQ 局部 STFT 与变化后的候选频率](../dist/measured/images/measured-agile-990.png)
+![同一任务 990–1000 ms 的全部识别与分割图层](../dist/measured/images/measured-agile-990.png?v=complete-layers)
 
 ## 公开数据的范围
 
