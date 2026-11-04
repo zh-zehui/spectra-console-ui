@@ -9,7 +9,7 @@ const pair = (label, value) => `<div><dt>${escapeHTML(label)}</dt><dd>${escapeHT
 const format = value => Number(value).toLocaleString('en-US');
 
 async function readJSON(path) {
-  const response = await fetch(path);
+  const response = await fetch(path, { cache: 'no-store' });
   if (!response.ok) throw Error(`归档读取失败 (${response.status})`);
   return response.json();
 }
@@ -17,8 +17,8 @@ async function readJSON(path) {
 function renderIndex() {
   const index = state.index;
   $('#case-count').textContent = index.cases.length;
-  const partial = index.history.filter(t => t.status === 'partial').length;
-  $('#archive-stats').innerHTML = [[index.history.length, '条可见任务记录'], [index.cases.length, '个精选分析案例'], [index.unique_capture_count, '份独立采集记录'], [partial, '条 partial 状态保留']].map(([n, label]) => `<div class="stat"><strong>${n}</strong><span>${label}</span></div>`).join('');
+  const task = index.cases[0];
+  $('#archive-stats').innerHTML = [[index.history.length, '个指定历史任务'], [task.acquisition.duration_ms + ' ms', '实采记录时长'], [format(task.counts.wifi_frames), '条 Wi-Fi 校验帧'], [task.counts.signature_matches, '条参考特征候选']].map(([n, label]) => `<div class="stat"><strong>${n}</strong><span>${label}</span></div>`).join('');
   $('#case-list').innerHTML = index.cases.map(c => `<button class="case-button" data-case="${escapeHTML(c.slug)}"><strong>${escapeHTML(c.title)}</strong><span>${c.acquisition.analysis_bandwidth_mhz} MHz · ${c.acquisition.duration_ms} ms · ${c.acquisition.sample_rate_msps} MS/s</span><small>实采 IQ · 历史分析 ↗</small></button>`).join('');
   document.querySelectorAll('[data-case]').forEach(button => button.onclick = () => { location.hash = button.dataset.case; });
   $('#exported-at').textContent = '记录导出于 ' + date(index.exported_at_utc);
@@ -29,7 +29,7 @@ function renderHistory() {
   const filter = $('#history-filter').value;
   const rows = state.index.history.filter(t => filter === 'all' || t.status === filter);
   $('#history-rows').innerHTML = rows.map(t => `<tr><td>${escapeHTML(t.task_id)}</td><td>${t.center_mhz} / ${t.bandwidth_mhz} MHz</td><td>${escapeHTML(date(t.recorded_at_utc))}</td><td><span class="status ${t.status === 'partial' ? 'partial' : ''}">${escapeHTML(t.status)}</span></td><td>${t.case_slug ? `<button class="case-open" data-open="${escapeHTML(t.case_slug)}">查看实采 ↗</button>` : '仅记录摘要'}</td></tr>`).join('');
-  $('#history-summary').textContent = `显示 ${rows.length} / ${state.index.history.length} 条；这是导出时网关可见的任务列表，非全部历史运行目录。`;
+  $('#history-summary').textContent = `显示 ${rows.length} / ${state.index.history.length} 条；本页仅公开指定任务 task_agile_full_292630d126a1。`;
   document.querySelectorAll('[data-open]').forEach(button => button.onclick = () => { location.hash = button.dataset.open; $('#case-detail').scrollIntoView({ behavior: 'smooth' }); });
 }
 
@@ -41,7 +41,7 @@ async function loadCase() {
   const current = await readJSON('data/' + definition.dataset);
   if (id !== state.loadId) return;
   state.current = current;
-  state.filter = current.counts.wifi_frames + current.counts.ble_frames ? 'verified' : 'signature';
+  state.filter = current.default_filter || (current.counts.wifi_frames + current.counts.ble_frames ? 'verified' : 'signature');
   state.selected = null;
   document.querySelectorAll('[data-case]').forEach(button => { const active = button.dataset.case === current.slug; button.classList.toggle('active', active); button.setAttribute('aria-pressed', String(active)); });
   $('#case-kind').textContent = current.provenance.analysis_mode === 'continue_recorded_analysis' ? 'RECORDED IQ · CONTINUED ANALYSIS' : 'RECORDED IQ · REANALYSIS';
@@ -59,7 +59,8 @@ async function loadCase() {
   const p = current.provenance;
   $('#provenance').innerHTML = pair('原始采集时间 / UTC', date(p.captured_at_utc)) + pair('任务记录时间 / UTC', date(current.task_recorded_at_utc)) + pair('采集记录 ID', p.capture_id) + pair('来源任务 ID', p.source_task_id) + pair('接收机 / 采集完整性', `${a.receiver_model} · complete=${a.complete} · overflows=${a.overflow_count} · gaps=${a.gap_count}`) + pair('分析方式', p.analysis_mode === 'continue_recorded_analysis' ? '延续已有分析；复用实采 IQ' : '复用实采 IQ 重新分析') + pair('原 IQ SHA-256', p.capture_sha256 || '未记录');
   const plans = current.protocol_coverage.plans;
-  $('#coverage-note').textContent = plans.length ? `协议计划检查：${plans.map(plan => `${plan.completed_units}/${plan.total_units} 项，失败 ${plan.failed_units}`).join('；')}。计划完成不表示全部信号已识别；来自同一 IQ 的不同任务不能相加当作独立样本。` : '此任务未记录完整协议批量检查计划；特征候选不具备协议 CRC 或视频解码证据。';
+  const hopping = current.hopping_evidence || [];
+  $('#coverage-note').textContent = `协议计划检查：${plans.map(plan => `${plan.completed_units}/${plan.total_units} 项，失败 ${plan.failed_units}`).join('；')}。图传候选检查：${hopping.map(e => `${e.coverage.completed_units}/${e.coverage.total_units} 个时间单元，${format(e.coverage.reference_checks)} 次参考检查`).join('；')}。完整检查仅指声明的窗口/候选频点与配置，不表示全部信号已识别，也不确认发射机身份。`;
   $('#original-image').src = 'images/' + current.screenshot;
   $('#original-link').href = 'images/' + current.screenshot;
   renderEvidence();
@@ -148,4 +149,4 @@ document.querySelectorAll('[data-filter]').forEach(button => button.onclick = ()
 window.addEventListener('resize', draw);
 const showError = error => { $('#load-error').hidden = false; $('#load-error').textContent = error.message + '。请刷新页面，或从 GitHub 查看实采案例说明。'; $('#case-detail').setAttribute('aria-busy', 'false'); };
 window.addEventListener('hashchange', () => loadCase().catch(showError));
-readJSON('data/index.json').then(async index => { state.index = index; renderIndex(); await loadCase(); }).catch(showError);
+readJSON('data/index.json?v=agile-full').then(async index => { state.index = index; renderIndex(); await loadCase(); }).catch(showError);

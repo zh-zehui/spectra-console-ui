@@ -8,13 +8,10 @@ import assert from 'node:assert/strict';
 const input = resolve(process.argv[2] || 'qa');
 const output = resolve('dist/measured/data');
 const definitions = [
-  { id: 'task_batch24_dsh_31b06ee649b1', slug: 'wifi-ble-24', title: '2.4 GHz · Wi-Fi 与 BLE', description: '同一段实采 IQ 中并行查看 Wi-Fi MAC FCS 与 BLE CRC 证据，保留未解释的粗活动。', screenshot: 'measured-24ghz.png' },
-  { id: 'task_batch_dsh_b02578c6283b', slug: 'wifi-58', title: '5.8 GHz · 宽带协议检查', description: '160 MHz 分析范围内的 Wi-Fi 校验帧与独立 PHY 报头证据。计划检查完成不代表所有信号均已识别。', screenshot: 'measured-58ghz.png' },
-  { id: 'task_drone_dsh_5b1ddaa81022', slug: 'mixed-link', title: '5.8 GHz · Wi-Fi 与图传候选', description: '在已有 Wi-Fi 证据上追加 196 条样本特征匹配，保持两类证据独立；此任务与宽带协议案例复用同一段 IQ。', screenshot: 'measured-mixed-link.png' },
-  { id: 'task_drone_third_368a63db4548', slug: 'link-candidate', title: '5.8 GHz · 20 MHz 图传候选', description: '另一段实采记录中的 ZC601/root252 特征匹配。190 条参考符号匹配仍不等于协议 CRC 或视频解码。', screenshot: 'measured-link-candidate.png' }
+  { id: 'task_agile_full_292630d126a1', slug: 'agile-full', title: '5.8 GHz · 全时段实采分析', description: '指定历史任务：1 秒实采 IQ，5720–5880 MHz 分析范围。保留 Wi-Fi 校验帧、PHY 报头与变频图传参考特征候选，检查覆盖及频率变化均可核对。', screenshot: 'measured-agile-990.png', default_filter: 'signature' }
 ];
 const parse = async path => JSON.parse((await readFile(path, 'utf8')).replace(/^\uFEFF/, ''));
-const history = await parse(resolve(input, 'measured-task-history.json'));
+const history = await parse(resolve(input, 'agile-task-history.json'));
 await mkdir(output, { recursive: true });
 const cases = [];
 for (const definition of definitions) {
@@ -94,6 +91,37 @@ for (const definition of definitions) {
       training_interval_s: e.profile?.training?.interval_s || null,
       coverage_complete: e.coverage?.complete || false
     })),
+    hopping_evidence: (report.drone_hopping_evidence || []).map(e => ({
+      evidence_id: e.evidence_id,
+      matched_references: e.matched_references,
+      coverage: {
+        complete: e.coverage.complete,
+        total_units: e.coverage.total_units,
+        completed_units: e.coverage.completed_units,
+        reference_checks: e.coverage.reference_checks,
+        pending_current_unit_checks: e.coverage.pending_current_unit_checks,
+        processed_samples: e.coverage.processed_samples,
+        search_scope: e.coverage.search_scope
+      },
+      sequence: {
+        center_clusters: e.sequence.center_clusters.map(c => ({ center_mhz: c.center_hz / 1e6, observations: c.observations })),
+        bandwidth_observation_counts: e.sequence.bandwidth_observation_counts,
+        multiple_frequency_candidates: e.sequence.multiple_frequency_candidates,
+        multiple_bandwidth_candidates: e.sequence.multiple_bandwidth_candidates,
+        aircraft_identity_confirmed: e.sequence.aircraft_identity_confirmed,
+        transitions: e.sequence.transitions.map(t => ({
+          from_reference_ms: t.from_sample / metadata.sample_rate_hz * 1000,
+          to_reference_ms: t.to_sample / metadata.sample_rate_hz * 1000,
+          from_center_mhz: t.from_center_hz / 1e6,
+          to_center_mhz: t.to_center_hz / 1e6,
+          from_nominal_bandwidth_mhz: t.from_bandwidth_hz / 1e6,
+          to_nominal_bandwidth_mhz: t.to_bandwidth_hz / 1e6,
+          association: t.association
+        }))
+      },
+      profiles: Object.values(e.profiles).map(p => ({ profile_id: p.profile_id, nominal_channel_bandwidth_mhz: p.nominal_channel_bandwidth_hz / 1e6, zc_length: p.zc_length, zc_root: p.zc_root })),
+      protocol_confirmed: false
+    })),
     signals: raw.map(s => ({
       id: s.id,
       type: s.type,
@@ -123,7 +151,8 @@ for (const definition of definitions) {
       'PHY headers, integrity-checked frames and recording signature matches are separate evidence levels.',
       'Coarse activity regions are not packet boundaries. All remaining activity can remain unknown.',
       'The 192-row maximum-pooled STFT preview does not replace original IQ; power and timing are not independently calibrated.',
-      'Signature profiles were fitted on short windows of the same recording; match counts include the training interval and are not independent test accuracy.',
+      'Reference profiles are recording-derived candidates, not independently measured recognition accuracy or universal aircraft identifiers.',
+      'Completed checking covers energy-proposed centers/windows and selected installed profiles; unproposed or unsupported signals can remain unresolved.',
       'The published extraction omits device serials, network addresses, decoded identifiers, payload bytes, local paths and credentials.'
     ]
   };
@@ -134,11 +163,11 @@ const index = {
   schema: 'spectra-measured-index/v1',
   exported_at_utc: new Date().toISOString(),
   source: 'GET /edge/tasks and GET /edge/tasks/{id}/visual from the existing Jetson gateway',
-  history_scope: 'Tasks visible in the gateway history response at export time, not all runs or all past captures.',
+  history_scope: 'Only the user-selected task is published; other gateway history records are excluded.',
   history_date_semantics: 'The gateway list date is a task record timestamp, not necessarily the RF capture timestamp.',
   unique_capture_count: new Set(cases.map(c => c.provenance.capture_id)).size,
   cases,
-  history: history.tasks.map(t => ({ task_id: t.id, center_mhz: t.center, bandwidth_mhz: t.bandwidth, recorded_at_utc: t.date || null, status: t.status, case_slug: definitions.find(c => c.id === t.id)?.slug || null }))
+  history: history.tasks.filter(t => definitions.some(c => c.id === t.id)).map(t => ({ task_id: t.id, center_mhz: t.center, bandwidth_mhz: t.bandwidth, recorded_at_utc: t.date || null, status: t.status, case_slug: definitions.find(c => c.id === t.id).slug }))
 };
 await writeFile(resolve(output, 'index.json'), JSON.stringify(index, null, 2) + '\n');
 console.log(`Exported ${cases.length} cases from ${index.unique_capture_count} recordings and ${index.history.length} visible task records.`);

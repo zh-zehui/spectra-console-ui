@@ -1,98 +1,73 @@
-# 历史实采任务与证据
+# 指定历史实采任务
 
-[打开在线实采任务页](https://zh-zehui.github.io/spectra-console-ui/measured/) · [任务索引 JSON](../dist/measured/data/index.json) · [返回首页](../README.md)
+[打开实采展示页](https://zh-zehui.github.io/spectra-console-ui/measured/) · [任务 JSON](../dist/measured/data/agile-full.json) · [任务索引](../dist/measured/data/index.json)
 
-本页根据现有 Jetson 网关返回的任务记录整理。读取采用 `GET /edge/tasks` 和 `GET /edge/tasks/{id}/visual`；截图采用历史任务的原工作台与 `GET /edge/tasks/{id}/waterfall-window`。这次整理没有提交新任务或执行新的 RF 采集。
+GitHub 实采展示仅使用 **`task_agile_full_292630d126a1`**，原来的四个案例已从当前展示和公开数据目录移除。此次替换只调整 GitHub 发布内容，没有修改 Jetson 上的部署代码、任务记录或原始 IQ。
 
-网关在导出时返回 19 条可见任务，包含 17 条 `succeeded` 和 2 条 `partial`；这是当前可见列表，并非所有历史运行目录。完整可见列表及原始状态见索引 JSON 和在线页底部“任务记录”。
+## 来源与采集参数
 
-## 可核对的来源
+| 项目 | 原始记录 |
+| --- | --- |
+| 任务 ID / 状态 | `task_agile_full_292630d126a1` / `succeeded` |
+| 继续分析的来源任务 | `task_49fb52faa41f40f8a492211d85969bad` |
+| 采集 ID | `capture_9d59d4bd10474035` |
+| 实采来源 | `data_origin=rf`、`kind=rf_capture`、`simulated=false` |
+| 原始采集时间（UTC） | 2026-10-30 01:46:58.157869 |
+| 任务记录时间（UTC） | 2026-10-30 02:57:20.948765 |
+| 接收机 | USRP X310 |
+| 中心 / 分析范围 | 5800 MHz / 5720–5880 MHz |
+| 采样率 / 记录时长 | 200 MS/s / 1000 ms |
+| 样本数 | 200,000,000 个复样本 |
+| 采集完整性 | `complete=true`、`overflow_count=0`、无采集间隙 |
+| 原 IQ SHA-256 | `5548d1f1805b973e19cf142a8199e79c4ea44aa3f10eab41ea5b4f5deb4dc98b` |
 
-精选任务均满足 `data_origin=rf`，采集元数据中 `kind=rf_capture`、`simulated=false`。四个分析案例来自三份 IQ；其中两个案例使用同一采集记录，不应当作独立测量相加。三份采集记录均为 USRP X310、200 MS/s，元数据记载 `complete=true`、`overflow_count=0`、`gaps=[]`。这描述采集完整性，不等于协议识别完整或准确。
+该任务延续对已保存 IQ 的分析，采集时间和任务记录时间分别保留，不代表新执行了一次采集。
 
-| 案例 | 分析任务 ID | 来源任务 ID | 原始采集时间（UTC） |
-| --- | --- | --- | --- |
-| Wi-Fi / BLE | `task_batch24_dsh_31b06ee649b1` | `task_6642f2a7797a4dd7acdb81ec243c7009` | 2026-10-23 11:54:59.814965 |
-| 5.8 GHz 协议检查 | `task_batch_dsh_b02578c6283b` | `task_4d7af074d5bd406e9d9dd781f242cd17` | 2026-10-28 10:48:49.112247 |
-| Wi-Fi 与图传候选 | `task_drone_dsh_5b1ddaa81022` | `task_9668c13363904f8092ca082554958600` | 2026-10-28 10:48:49.112247 |
-| 20 MHz 图传候选 | `task_drone_third_368a63db4548` | `task_e7bb08a92f9440da91c043ab85f5b1b6` | 2026-10-28 10:41:22.599701 |
+## 分析结果
 
-“来源任务”表示当前分析任务的重分析或继续分析入口。不同来源任务本身也可能共用 IQ，因此以 `capture_id` 和 `capture_sha256` 判断采集记录是否相同。JSON 同时保留原始采集时间、网关列表中的任务记录时间，二者含义不同。
+| 证据类别 | 网关输出 |
+| --- | --- |
+| Wi-Fi 完整性校验帧 | 5767 条 |
+| 独立 PHY 报头 | 492 条 |
+| 图传参考特征候选 | 395 条 |
+| 粗活动区域 | 1683 个 |
+| 协议计划检查 | 70/70 项，失败 0 |
+| 图传候选检查 | 100/100 个时间单元，49,831 次参考检查，无待检查项 |
 
-## 1. 2.4 GHz：Wi-Fi 与 BLE
+图传特征候选均为名义 20 MHz 配置。本次记录的结果包含多个候选频率，但 `multiple_bandwidth_candidates=false`，因此不宣称已经观察到带宽变化。
 
-[在线查看](https://zh-zehui.github.io/spectra-console-ui/measured/#wifi-ble-24) · [公开数据 JSON](../dist/measured/data/wifi-ble-24.json)
+检查完整性只描述已声明时间范围内的能量提议窗口、候选中心与选定配置，不证明发现或识别了全部 RF 信号。
 
-- 分析频率 2350–2450 MHz，记录 100 ms，共 20,000,000 个复样本。
-- 网关导出 141 个粗活动区域、81 条 Wi-Fi 校验帧、71 条 BLE 校验帧，以及 7 条独立 PHY 报头。
-- 计划协议检查 29/29 项完成、失败 0；计划完成不证明所有协议均被识别。
-- 原始采集为 `capture_ff299a60dd584a3b`，分析复用了已保存 IQ。
+## 记录末段的候选频率变化
 
-![2.4 GHz 实采局部 STFT 与 BLE 帧级证据](../dist/measured/images/measured-24ghz.png)
+参考序列保留两处变化：约 987.48–989.98 ms 为 **5736 → 5758 MHz**；约 989.98–992.48 ms 为 **5758 → 5755.5 MHz**。这些时间来自原始参考样本索引；图中关联能量包络的起止时间与参考符号位置不同。
 
-## 2. 5.8 GHz：宽带协议检查
+两处关联均标为 `temporal_compatibility_only_not_emitter_identity`。多处相容频率可能来自一个变频链路，也可能来自多个发射机；尚未解码跳频规律、协议 CRC、载荷或视频，不能确认飞机身份。
 
-[在线查看](https://zh-zehui.github.io/spectra-console-ui/measured/#wifi-58) · [公开数据 JSON](../dist/measured/data/wifi-58.json)
+**980–990 ms：**
 
-- 分析频率 5720–5880 MHz，记录 500 ms，共 100,000,000 个复样本。
-- 网关导出 493 个粗活动区域、1007 条 Wi-Fi 校验帧、99 条独立 PHY 报头。
-- 计划协议检查 35/35 项完成、失败 0；PHY 报头不计作 MAC FCS 通过帧。
-- 原始采集为 `capture_bae61ab9ed89459e`。
+![指定任务 980–990 ms 的原 IQ 局部 STFT 与图传特征证据](../dist/measured/images/measured-agile-980.png)
 
-![5.8 GHz 实采局部 STFT 与 Wi-Fi 校验帧证据](../dist/measured/images/measured-58ghz.png)
+**990–1000 ms：**
 
-## 3. 在已有 Wi-Fi 证据上追加图传候选
+![同一任务 990–1000 ms 的原 IQ 局部 STFT 与变化后的候选频率](../dist/measured/images/measured-agile-990.png)
 
-[在线查看](https://zh-zehui.github.io/spectra-console-ui/measured/#mixed-link) · [公开数据 JSON](../dist/measured/data/mixed-link.json)
+## 公开数据的范围
 
-此任务复用上一案例相同的 `capture_bae61ab9ed89459e`，但分析流程及继承证据不同，计数不必相同。当前网关输出 1240 条 Wi-Fi 校验帧、99 条独立 PHY 报头和 196 条参考特征匹配；粗活动区域为 331 个。
+`agile-full.json` 从该任务的 `/visual` GET 响应提取，包含真实 STFT 数值、8337 条分层证据记录、采集参数、来源、检查进度和参考频率变化摘要。192×512 的最大池化 STFT 覆盖整段 1000 ms；上方截图则是从同一原 IQ 读取的 10 ms 局部 STFT，分辨率不同。
 
-参考特征配置为 `zc293_u123_30k_observed_v1`，中心约 5803.5 MHz，名义通道 10 MHz，重复间隔估计约 2.5 ms。图传特征与 Wi-Fi 校验帧保存在独立层，重叠区域不整体改名。
+原始数值保持不变。公开文件不携带解码地址、载荷、设备序列号、私人路径或凭据；原始 IQ 文件仍未上传。`source_visual_sha256` 对应本机保存的完整网关响应，可供持有原响应的人核对。
 
-![实采中的 Wi-Fi 校验帧、PHY 报头与图传特征候选分别叠加](../dist/measured/images/measured-mixed-link.png)
+校验帧、PHY 报头、参考特征匹配和粗活动区域分别统计，不是设备数或识别准确率。相对功率没有校准为 dBm，时间位置为未独立标定的同步估计，名义 20 MHz 配置不等于独立标定的占用带宽。模板是已有记录推导的特征配置，不能泛化为全部机型或通用协议解码。
 
-## 4. 另一份 IQ 中的 20 MHz 图传候选
+## 更新这一个任务
 
-[在线查看](https://zh-zehui.github.io/spectra-console-ui/measured/#link-candidate) · [公开数据 JSON](../dist/measured/data/link-candidate.json)
-
-- 另一份采集记录 `capture_36c0da36e5a14595`，分析范围 5720–5880 MHz，记录 500 ms。
-- 459 个粗活动区域，`zc601_u252_30k_observed_v1` 在 5798.5 MHz 附近得到 190 条参考匹配；名义通道 20 MHz，重复间隔估计约 2.5 ms。
-- 同一频点的 ZC1201/root504、ZC293/root123 配置以及 5750 MHz 的对照配置均为 0 条匹配，完整摘要保留在 JSON 的 `signature_profiles`。
-- 本任务没有校验通过的协议帧；190 条特征匹配不能写成 190 条协议 CRC 通过帧，也不能当作无人机数量。
-
-![另一份实采记录中的 20 MHz 图传参考特征候选](../dist/measured/images/measured-link-candidate.png)
-
-## 展示数据的范围
-
-归档页使用 `/visual` 返回的原始数值绘制 STFT：192 行、512 列、FFT 大小 2048，时间与频率按最大池化生成预览。数据中的第 0 行对应最早文件采样时间，页面将最新时间显示在上方；频率只展示该任务的分析范围。JSON 中保留完整的数字采样频率预览。
-
-工作台截图则来自原 IQ 的 10–20 ms 局部 STFT，分辨率高于全记录预览，两者不是同一缩放级别。归档页不会读取原 IQ 或现场设备，不以放大预览代替重新计算更高时间分辨率的数据。
-
-每案 JSON 包含来源任务、采集 ID、原 IQ SHA-256、采集参数、证据分类计数、全部公开证据条目的频率/时间范围、STFT 预览数值和证据限制。`source_visual_sha256` 对应本机保存的完整 `/visual` 响应，供持有原响应的人核对；完整响应本身不随仓库公开。
-
-公开导出使用字段白名单，不包含设备序列号、网络地址、解码出的标识符、载荷字节、私人路径、凭据或原始 IQ 文件。证据条目的 UI ID 为项目内部索引。
-
-<details>
-<summary>查看只读归档页及任务列表预览</summary>
-
-![历史实采归档页、证据条目与 19 条任务记录](screenshots/measured-archive.png)
-
-</details>
-
-## 证据限制
-
-1. 校验帧、PHY 报头、参考特征匹配、粗活动区域分别统计，不能互相替代，也不是设备数或准确率。
-2. 图传样本的机型归属依赖原任务的现场描述。参考特征模板来自同一采集记录的 0–30 ms 窗口，匹配总数包含该区间，不能当作独立测试集准确率，也不是通用机型识别能力。
-3. 图传候选尚未完成协议 CRC、载荷或视频解码；名义 10/20 MHz 配置不等于独立标定的整段占用带宽。
-4. 功率为相对值，非校准 dBm；同步估计的时间位置未独立标定。PHY 聚合帧可能共享 PPDU 时间范围。
-5. 粗区域不是单帧边界，帧与区域重叠不能确认整个区域的协议。短快照中的 0 帧或 0 匹配不能证明信号不存在。
-
-## 更新归档
-
-先把历史列表与精选 `/visual` GET 响应保存在本机忽略目录中，再执行：
+将任务列表保存在本地忽略目录的 `qa/agile-task-history.json`，将指定任务的 `/visual` 响应保存在 `qa/history-task_agile_full_292630d126a1.json`，然后执行：
 
 ```sh
 node scripts/export-measured.mjs qa
+npm run check
+npm test
 ```
 
-输入分别为 `qa/measured-task-history.json` 和 `qa/history-<task_id>.json`。导出脚本不会连接设备或提交任务，只验证实采来源并从本地文件提取公开字段。截图仍需从相应历史任务读取，不能用示例截图替代。更新后执行 `npm run check` 和 `npm test`，核对文档中的快照计数。
+导出器只读取本地响应文件，公开索引只保留这一个任务。更新只读展示截图可运行 `node tests/measured.mjs --screenshots`；原工作台截图需读取该历史任务的相应时间窗口。

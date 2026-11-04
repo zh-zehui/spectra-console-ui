@@ -12,7 +12,7 @@
 
 [**查看历史实采任务 ↗**](https://zh-zehui.github.io/spectra-console-ui/measured/) · [交互演示](https://zh-zehui.github.io/spectra-console-ui/) · [边缘端源码](edge/) · [Jetson 部署](docs/edge-deployment.md)
 
-![历史实采：5.8 GHz 原 IQ 的局部 STFT、Wi-Fi 校验帧与独立图传候选证据](dist/measured/images/measured-mixed-link.png)
+![task_agile_full_292630d126a1：990–1000 ms 原 IQ 局部时频图与变频图传特征候选](dist/measured/images/measured-agile-990.png)
 
 </div>
 
@@ -22,22 +22,23 @@ SPECTRA 是面向频谱分析的独立可视化操作层，将任务描述、时
 
 ## 历史实采任务
 
-从 Jetson 的任务记录读取 **19 条当前可见历史任务**，保留 `succeeded` / `partial` 状态，并整理 **4 个分析案例、3 份独立采集记录**。全部精选案例的采集元数据均为 `kind=rf_capture`、`simulated=false`，接收机为 USRP X310。
+仅展示指定任务 **[`task_agile_full_292630d126a1`](https://zh-zehui.github.io/spectra-console-ui/measured/)**：USRP X310 的真实 RF 记录，`kind=rf_capture`、`simulated=false`，状态 `succeeded`。
 
-| 历史分析案例 | 实采记录参数 | 网关导出的证据观测 |
-| --- | --- | --- |
-| [2.4 GHz · Wi-Fi 与 BLE](https://zh-zehui.github.io/spectra-console-ui/measured/#wifi-ble-24) | 100 MHz 分析范围 · 200 MS/s · 100 ms | Wi-Fi 校验帧 81，BLE 校验帧 71，独立 PHY 报头 7 |
-| [5.8 GHz · 宽带协议检查](https://zh-zehui.github.io/spectra-console-ui/measured/#wifi-58) | 160 MHz 分析范围 · 200 MS/s · 500 ms | Wi-Fi 校验帧 1007，独立 PHY 报头 99 |
-| [5.8 GHz · Wi-Fi 与图传候选](https://zh-zehui.github.io/spectra-console-ui/measured/#mixed-link) | 与上一案例复用同一份 IQ · 500 ms | Wi-Fi 校验帧 1240，参考特征匹配 196；两类证据独立保留 |
-| [5.8 GHz · 20 MHz 图传候选](https://zh-zehui.github.io/spectra-console-ui/measured/#link-candidate) | 另一份 160 MHz 范围的实采 IQ · 500 ms | ZC601/root252 特征匹配 190；尚无协议 CRC 或视频解码 |
+| 记录与证据 | 网关原始结果 |
+| --- | --- |
+| 采集与分析范围 | 中心 5800 MHz · 分析范围 5720–5880 MHz · 200 MS/s · 1000 ms |
+| 原始样本 | 200,000,000 个复样本，记录完整，无 overflow / gap |
+| Wi-Fi / PHY | 5767 条 Wi-Fi 校验帧，492 条独立 PHY 报头 |
+| 图传参考特征 | 395 条候选，名义 20 MHz；候选频率在记录末段发生变化 |
+| 检查范围 | 协议计划 70/70 项；图传候选检查 100/100 时间单元 |
 
-**2.4 GHz 的真实局部 STFT 与 BLE 校验帧证据：**
+**同一任务 980–990 ms 的局部 STFT，可与上方 990–1000 ms 对照：**
 
-![历史实采任务：2.4 GHz 的时频图与 Bluetooth LE 完整性校验面板](dist/measured/images/measured-24ghz.png)
+![task_agile_full_292630d126a1：980–990 ms 原 IQ 局部时频图](dist/measured/images/measured-agile-980.png)
 
-实采页可切换案例、查看真实 STFT 预览数值、筛选证据层级、下载筛选字段后的 JSON，并查看原始采集时间与来源任务 ID。上面的工作台截图为从原 IQ 重新读取 **10–20 ms 局部窗口**后的结果；归档页提供的是 **完整记录的 192×512 最大池化预览**。
+实采页可查看这一个任务的完整时频预览、筛选证据、下载公开 JSON，并核对采集时间与来源。局部截图从原 IQ 读取相应窗口；页面预览覆盖完整 1000 ms。
 
-图传候选属于样本参考特征匹配，不能等同于完整协议识别；模板来自同一采集记录的短窗口，匹配数包含该区间，不是独立测试准确率。任务复用 IQ 不等于重新采集，计数不能当作设备数。[查看任务来源、各案例截图与限制](docs/measured-results.md)。
+参考序列在约 987.48–992.48 ms 出现 5736 → 5758 → 5755.5 MHz 的候选变化，关联仅依据时序相容性，不确认同一发射机或解码跳频规律。本任务没有检出带宽变化；特征匹配也不等于协议 CRC 或视频解码。[查看此任务的来源与证据限制](docs/measured-results.md)。
 
 ## 看点
 

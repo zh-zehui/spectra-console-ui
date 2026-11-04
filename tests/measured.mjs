@@ -5,10 +5,12 @@ import { chromium } from 'playwright';
 import { createServer } from '../scripts/serve.mjs';
 
 const index = JSON.parse(await readFile(new URL('../dist/measured/data/index.json', import.meta.url), 'utf8'));
-assert.equal(index.history.length, 19);
-assert.equal(index.history.filter(t => t.status === 'partial').length, 2);
-assert.equal(index.cases.length, 4);
-assert.equal(index.unique_capture_count, 3);
+const taskID = 'task_agile_full_292630d126a1';
+assert.equal(index.history.length, 1);
+assert.equal(index.history[0].task_id, taskID);
+assert.equal(index.cases.length, 1);
+assert.equal(index.cases[0].task_id, taskID);
+assert.equal(index.unique_capture_count, 1);
 const privateKeys = new Set(['payload', 'payload_hex', 'mac_address', 'device_info', 'mboard_serial', 'module_serial', 'api_key', 'password', 'iq_path', 'path', 'report']);
 function assertPublicFields(value) {
   if (!value || typeof value !== 'object') return;
@@ -32,13 +34,19 @@ for (const item of index.cases) {
   await access(new URL('../dist/measured/images/' + value.screenshot, import.meta.url));
   datasets.set(value.slug, value);
 }
-// Two analysis cases share one recording; never invent another acquisition.
-assert.equal(datasets.get('mixed-link').provenance.capture_id, datasets.get('wifi-58').provenance.capture_id);
-assert.deepEqual(datasets.get('mixed-link').spectrogram.db, datasets.get('wifi-58').spectrogram.db);
-assert.equal(datasets.get('wifi-ble-24').counts.wifi_frames, 81);
-assert.equal(datasets.get('wifi-ble-24').counts.ble_frames, 71);
-assert.equal(datasets.get('link-candidate').counts.signature_matches, 190);
-assert.equal(datasets.get('link-candidate').counts.wifi_frames, 0);
+const task = datasets.get('agile-full');
+assert.equal(task.counts.wifi_frames, 5767);
+assert.equal(task.counts.phy_headers, 492);
+assert.equal(task.counts.signature_matches, 395);
+assert.equal(task.counts.detected_regions, 1683);
+assert.equal(task.acquisition.duration_ms, 1000);
+assert.equal(task.acquisition.sample_count, 200000000);
+assert.equal(task.protocol_coverage.plans[0].completed_units, 70);
+assert.equal(task.hopping_evidence[0].coverage.completed_units, 100);
+assert.equal(task.hopping_evidence[0].coverage.total_units, 100);
+assert.equal(task.hopping_evidence[0].sequence.transitions.length, 2);
+assert.equal(task.hopping_evidence[0].sequence.multiple_bandwidth_candidates, false);
+assert.ok(task.signals.some(s => s.status === 'signature' && s.time_start_ms > 990 && (s.frequency_low_mhz + s.frequency_high_mhz) / 2 === 5755.5));
 
 const server = createServer();
 await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
@@ -54,9 +62,11 @@ try {
   page.on('response', response => { if (!response.ok() && response.url().startsWith(base)) failedAssets.push(response.url()); });
   await page.goto(base + '/measured/', { waitUntil: 'networkidle' });
   await page.waitForFunction(() => document.querySelector('#case-detail').getAttribute('aria-busy') === 'false');
-  assert.equal(await page.locator('#history-rows tr').count(), 19);
-  assert.match(await page.locator('#case-title').innerText(), /2.4 GHz/);
-  assert.match(await page.locator('#evidence-counts').innerText(), /152/);
+  assert.equal(await page.locator('#history-rows tr').count(), 1);
+  assert.equal(await page.locator('[data-case]').count(), 1);
+  assert.match(await page.locator('#case-id').innerText(), new RegExp(taskID));
+  assert.match(await page.locator('#evidence-counts').innerText(), /5,767/);
+  assert.match(await page.locator('#coverage-note').innerText(), /100\/100/);
   assert.ok(await page.locator('#spectrogram').evaluate(canvas => { const d = canvas.getContext('2d').getImageData(100, 100, 1, 1).data; return d[3] === 255; }));
   const box = await page.locator('#spectrogram').boundingBox();
   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
@@ -72,23 +82,24 @@ try {
     }
   }
   await page.locator('[data-filter="verified"]').click();
-  assert.match(await page.locator('#evidence-rows').innerText(), /未记录/);
+  assert.equal(await page.locator('#evidence-rows [data-signal]').count(), 12);
   await page.locator('#history-filter').selectOption('partial');
-  assert.equal(await page.locator('#history-rows tr').count(), 2);
+  assert.equal(await page.locator('#history-rows tr').count(), 0);
   assert.equal(await page.locator('#history-rows .case-open').count(), 0);
   await page.locator('#history-filter').selectOption('all');
-  await page.locator('[data-case="mixed-link"]').click();
-  await page.waitForFunction(() => document.querySelector('#case-title').textContent.includes('Wi-Fi 与图传') && document.querySelector('#case-detail').getAttribute('aria-busy') === 'false');
+  await page.locator('[data-case="agile-full"]').click();
+  await page.waitForFunction(() => document.querySelector('#case-title').textContent.includes('全时段') && document.querySelector('#case-detail').getAttribute('aria-busy') === 'false');
   await page.locator('[data-filter="signature"]').click();
   await page.locator('#overlay').uncheck();
   await page.locator('#overlay').check();
-  if (process.argv.includes('--screenshots')) await page.screenshot({ path: 'docs/screenshots/measured-archive.png', fullPage: true });
-  await page.locator('.original-ui summary').click();
+  await page.locator('#original-image').scrollIntoViewIfNeeded();
   await page.waitForFunction(() => document.querySelector('#original-image').complete && document.querySelector('#original-image').naturalWidth > 0);
+  await page.evaluate(() => window.scrollTo(0, 0));
+  if (process.argv.includes('--screenshots')) await page.screenshot({ path: 'docs/screenshots/measured-archive.png', fullPage: true });
   await page.setViewportSize({ width: 390, height: 844 });
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 2), false);
   assert.deepEqual(errors, []); assert.deepEqual(writes, []); assert.deepEqual(hardware, []); assert.deepEqual(failedAssets, []);
-  console.log('PASS: measured provenance, evidence counts, shared IQ, 4 task views, history states, filters, STFT, images and mobile; zero device requests or writes');
+  console.log('PASS: only task_agile_full_292630d126a1 is published; provenance, counts, coverage, transitions, STFT, image, filters and mobile; zero device requests or writes');
 } finally {
   await browser?.close();
   await new Promise(resolve => server.close(resolve));
