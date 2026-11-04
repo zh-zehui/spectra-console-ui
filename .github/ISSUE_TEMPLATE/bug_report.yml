@@ -1,0 +1,24 @@
+name: 问题反馈
+description: 报告界面或交互问题
+body:
+  - type: dropdown
+    id: mode
+    attributes:
+      label: 使用模式
+      options:
+        - 在线演示
+        - 本地静态演示
+        - 真实设备
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤、预期结果与实际结果
+      description: 可以附截图；请移除密钥和私人设备信息。
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: 系统与浏览器版本

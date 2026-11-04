@@ -1,26 +1,109 @@
-# SPECTRA · 频谱智能观测台
+<div align="center">
 
-独立可视化操作层；官方 DeepSeek Harness 保持 headless。dist 为不依赖构建的 HTML/CSS/JavaScript，云端发布版仅提供明确标注的交互演示。本机入口通过 SSH 隧道连接 Jetson 上的独立可视化网关，可查看真实历史任务并提交、取消接收分析任务。
+# SPECTRA
 
-界面支持提示词与采集参数、时频图缩放平移、分割边界和识别证据叠加、阶段切换及迭代回放、信号筛选、证据联动、历史任务、阶段耗时、JSON 报告导出、展示模式和响应式布局。
+### 频谱智能观测台 · Spectrum Intelligence Console
 
-## 本机连接真实设备
+从时频活动到识别证据，让信号分析过程可观察、可交互、可回溯。
 
-在这台 Windows 本机运行 `Open-Spectra.ps1`。使用已有 SSH 别名 Jetson-server-new，不改 SSH 配置。浏览器入口为 http://127.0.0.1:8780 。真实模式下手动点击“启动真实任务”才采集。
+[![Checks](https://github.com/zh-zehui/spectra-console-ui/actions/workflows/checks.yml/badge.svg)](https://github.com/zh-zehui/spectra-console-ui/actions/workflows/checks.yml)
+[![Demo](https://img.shields.io/badge/Live_Demo-GitHub_Pages-6cd8bf?style=flat-square)](https://zh-zehui.github.io/spectra-console-ui/)
+![Stack](https://img.shields.io/badge/Stack-HTML_%C2%B7_CSS_%C2%B7_JavaScript-d8c69c?style=flat-square)
 
-Jetson 网关：/home/sribd/spectrum_agent/src/spectrum_agent/ui_gateway.py，静态页面：/home/sribd/spectrum_agent/ui/dist。网关只监听 127.0.0.1:8780；调用本机任务 API 127.0.0.1:8765。DeepSeek 和任务 API 密钥始终留在服务端。云端演示站不代理访问私网设备。
+[**打开在线演示 ↗**](https://zh-zehui.github.io/spectra-console-ui/) · [本地运行](#本地运行) · [设备接入](docs/device-setup.md) · [参与维护](CONTRIBUTING.md)
 
-## 数据与边界
+![SPECTRA 桌面工作台：任务参数、时频图、信号证据及活动目录](docs/screenshots/workbench.png)
 
-真实时频图由任务 IQ 分段计算 STFT 并按显示分辨率最大池化，功率未做绝对校准，纵轴为文件采样时间。初始检测、局部替代候选及有效帧证据分开保存；复查候选不自动替换初始分割。目录默认展示最强200个初始谱迹及有效帧，提示展示数量；完整原始事件保存在导出报告中。有效帧与谱迹重叠不等于整条谱迹已确认为该协议。名义时间容差未经过所有真实信道条件校准。
+</div>
 
-历史 v0.5 Wi-Fi 接收器存在未完成排查的重复采样偏移稳定性问题，因此接收器仍标记实验性；没有有效帧不代表该协议不存在。界面不掩盖 partial/failed/unknown，不以图像外观确认协议。
+SPECTRA 是面向频谱分析的独立可视化操作层，将任务描述、时频观测、候选分割、识别证据和历史报告放到同一工作台。前端使用原生 HTML / CSS / JavaScript，静态演示无需后端或硬件。
 
-瀑布图操作：最新采样时间在上方。图内滚轮同时缩放频率和时间；横轴或 PSD 上滚轮只缩放频率，纵轴或 Shift+滚轮只缩放时间。拖动图面可沿双轴平移，复位视图恢复完整范围。坐标、分割框和点击选区共用时间映射，原始报告的时间仍按采集先后记录。
-2026-10-23：已通过浏览器双轴/单轴缩放、鼠标锚点、反向时间刻度与点击选区、真实 STFT 行顺序及历史实测结果缩放检查；桌面与移动端交互回归通过。
+> 在线演示使用明确标注的示例数据，不执行射频采集。真实设备模式需要额外部署 Jetson 网关与任务 API；这些服务和底层分析工具不包含在本仓库中。项目不隶属于 DeepSeek。
 
-2026-10-23 v0.7：真实结果默认活动概览，仅绘制校验帧及选中活动最多40个成员框；检测区域视图保留全部工作边界。目录区分尚未验证、局部验证未通过与存在有效帧重叠，不据此确认整组协议。活动索引按频率/带宽组织，仅用于导航；分割区域数、活动索引数、有效帧数分别显示。真实IQ回放归并1579→1312个工作区域，所有成员保留，22条有效帧重叠覆盖不变，准确率未测量。
+## 看点
 
-v0.8：单帧位置以5位小数ms显示，RTS主体28μs明确标为同步估计且未标定，验证通带与实测占用带宽分开。低分辨率下的短帧画细线标记，取消强制4px矩形和±1%时间命中；同像素多帧先放大，再选具体帧。画面按像素区间最大池化，避免跳过后端行。时间缩放后读取原IQ局部STFT，最多20ms/4M样本，不再仅放大全带192行预览。历史分割显示需复核，不把任务完成当作分割合格。
+| 能力 | 交互体验 |
+| --- | --- |
+| 自然语言任务 | 输入观测描述，精确设置中心频率、带宽、采样率和观测时间 |
+| 可交互时频图 | 频率/时间缩放、拖动平移、候选边界和识别标签叠加 |
+| 分割与证据联动 | 在初始分割、反馈复查和最终结果之间切换，查看边界变化 |
+| 信号证据面板 | 点击目录或图中区域，查看频率范围、验证依据与待确认项 |
+| 任务回溯 | 查看历史任务、阶段耗时，并导出带来源标记的 JSON 报告 |
+| 展示与移动端 | 一键收起导航进入展示模式，适配窄屏浏览 |
 
-v0.9：新任务先整段IQ STFT再粗分割，由Harness选择粗父区域和时间窗口作局部细查。初始粗区域、局部细候选、已校验帧分层计数；粗工作结果默认不叠加帧，帧证据有独立开关。真实回放task_coarse_f7b10d72f92c：144个粗区域、22条帧证据、2处局部细查；局部细候选仍需质量验证，未当作全局信号边界。全段粗分割显示144/144，局部细层按窗口显示数量/总量，不混算为信号数量。
+## 界面预览
+
+**初始分割：保留碎片化候选，观察分析起点。**
+
+![初始分割阶段，宽带活动被分为多个候选区域](docs/screenshots/initial-segmentation.png)
+
+**证据复查：选择未知活动，查看依据和仍需验证的部分。**
+
+![信号目录与证据面板联动，保留未知候选](docs/screenshots/evidence.png)
+
+<details>
+<summary>查看移动端长截图</summary>
+
+<img src="docs/screenshots/mobile.png" alt="390 像素宽屏幕下的 SPECTRA 交互界面" width="360">
+
+</details>
+
+截图来自本仓库的静态演示，通过浏览器实际运行生成。更新方式见 [维护指南](CONTRIBUTING.md)。
+
+## 一分钟体验
+
+1. 打开 [在线演示](https://zh-zehui.github.io/spectra-console-ui/)，在 2.4 GHz 与 5.8 GHz 示例间切换。
+2. 点击“发送提示词”，观察演示任务的阶段变化。
+3. 切换“初始分割 / 反馈复查 / 最终结果”，点击信号目录中的一行查看对应证据。
+4. 滚轮缩放、拖动平移；点击“重置视图”恢复范围。
+5. 使用“展示模式”讲解界面，按 Esc 恢复；导出 JSON 报告或打开任务记录。
+
+## 本地运行
+
+安装 Node.js 22 或更高版本后：
+
+```sh
+git clone https://github.com/zh-zehui/spectra-console-ui.git
+cd spectra-console-ui
+npm start
+```
+
+打开 **http://127.0.0.1:4173/**。演示运行不需要安装 npm 依赖，也不需要 API Key。`npm ci` 和 Playwright 仅用于开发检查与截图。
+
+也可使用任意静态服务器托管 `dist/`。外部字体无法加载时会使用系统字体。
+
+## 工作方式
+
+```mermaid
+flowchart LR
+    Visitor[浏览器] --> UI[SPECTRA 静态前端]
+    UI --> Demo[演示模式 · 示例数据]
+    UI -->|真实模式 · 本机 SSH 隧道| Gateway[Jetson 可视化网关]
+    Gateway --> API[任务 API]
+    API --> Harness[Headless Harness / 分析工具]
+    Harness --> Results[IQ / STFT / 任务报告]
+    Results --> Gateway
+```
+
+本仓库包含静态前端和 Windows 连接脚本。在线演示只托管静态文件；真实任务由设备端服务执行。详见 [真实设备启动、停止与数据边界](docs/device-setup.md)。
+
+## 工程结构
+
+```text
+dist/                     静态前端，直接编辑、直接运行
+docs/screenshots/         README 使用的真实界面截图
+docs/device-setup.md      现有 Jetson 环境接入说明与历史验证记录
+scripts/serve.mjs         本地演示服务器，仅监听本机
+tests/demo.mjs            桌面/移动端浏览器交互检查与截图
+.github/workflows/        自动检查与 Pages 演示部署
+Open-Spectra.cmd/.ps1     连接已部署的 Jetson 服务
+Stop-Spectra.cmd/.ps1     检查/停止设备服务与匹配的独立隧道
+```
+
+## 结果如何解读
+
+- 演示中的信号、协议标签、校验结果与耗时均为示意，不是现场测量或性能基准。
+- 波形外观、频段匹配及区域重叠不能单独确认协议或设备身份；unknown、partial、failed 状态按原意保留。
+- 真实时频图功率未做绝对校准，部分接收器与边界估计仍属实验性；具体限制见设备说明。
+
+欢迎通过 [Issues](https://github.com/zh-zehui/spectra-console-ui/issues) 提交问题或建议；界面贡献请附截图与验证结果。

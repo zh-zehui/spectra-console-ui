@@ -4,3 +4,13 @@ node_modules/
 *.log
 *.zip
 .openai/*local*
+.spectra-launcher.json
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+.DS_Store
+Thumbs.db
+test-results/
+.openai/

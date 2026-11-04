@@ -1,0 +1,14 @@
+{
+  "name": "spectra-console-ui",
+  "version": "0.1.0",
+  "private": true,
+  "description": "SPECTRA spectrum intelligence console and interactive demo",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "start": "node scripts/serve.mjs",
+    "check": "node --check dist/app.js && node --check scripts/serve.mjs && node --check tests/demo.mjs",
+    "test": "node tests/demo.mjs",
+    "screenshots": "node tests/demo.mjs --screenshots"
+  },
+  "devDependencies": { "playwright": "1.56.1" }
+}
