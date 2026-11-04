@@ -4,3 +4,14 @@
 .catalog-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 16px;border-bottom:1px solid var(--line)}.catalog-bar[hidden]{display:none}.catalog-bar>span{font-size:10px;color:var(--muted);line-height:1.8;flex:1;min-width:140px}
 
 #frame-layer-control[hidden],#fine-window-filter[hidden],#catalog-bar .segmented[hidden]{display:none}#fine-window-filter{max-width:210px;background:var(--panel2);color:var(--text);border:1px solid var(--line);padding:7px;border-radius:4px;font-size:10px}
+/* Saved-IQ analysis actions. */
+.history-actions{display:flex;gap:8px;flex-wrap:wrap}
+#recording-dialog{width:min(680px,92vw);max-height:90vh;overflow:auto}
+#recording-dialog textarea{display:block;width:100%;margin:12px 0;padding:12px;background:var(--bg);color:inherit;border:1px solid var(--line);font:inherit;box-sizing:border-box}
+#recording-error{color:#f4a694}
+.frequency-scope-bar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:12px 20px;border-bottom:1px solid var(--line);font-size:11px}
+.frequency-scope-bar select{background:#142219;color:#c6d6c7;border:1px solid #39513f;padding:6px}
+#frequency-scope-note{color:#9bb19f;font-size:10px}
+#recording-dialog input{display:block;background:#142219;color:#c6d6c7;border:1px solid #39513f;padding:8px;margin:6px 0 14px}
+.button.danger-outline{color:#e7aa96;border-color:#855b4d}
+.history-delete-note{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;border:1px solid #486449;color:#bad0b8;margin-bottom:12px;font-size:12px}
