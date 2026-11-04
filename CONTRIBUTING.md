@@ -1,6 +1,6 @@
 # 参与维护
 
-本仓库维护 SPECTRA 的静态前端、历史实采记录的公开摘录与 Windows 设备连接入口。Jetson 任务 API、可视化网关和协议分析工具不在本仓库中。
+本仓库维护 SPECTRA 的静态前端、历史实采摘录、Windows 连接入口，以及 `edge/` 中从 Jetson 导出的后端与部署代码。部署范围和环境限制见 [边缘端部署指南](docs/edge-deployment.md)。
 
 ## 开发与检查
 
@@ -27,6 +27,8 @@ npm start
 保持演示模式的示例标记；真实结果中的 unknown、partial、failed 状态需要如实保留。不要把设备地址、访问令牌、SSH 私钥、原始 IQ 或本地任务报告加入提交。`qa/`、`outputs/` 和 `.spectra-launcher.json` 为本地工作文件。
 
 `dist/measured/` 是历史实采数据的只读公开摘录，更新时遵循 [实采说明](docs/measured-results.md) 的字段白名单与来源检查。不要把 PHY 报头或特征候选计作校验帧；复用同一段 IQ 的任务不算独立采集。浏览器检查会同时验证归档来源、计数和零设备请求行为。
+
+`edge/deploy/source-snapshot.json` 记录原 Jetson 导出文件的校验值。修改后端时应保留来源信息并记录后续改动；CI 的源码快照检查会提示与导出版本的差异。第三方源码由 `edge/deploy/vendor-lock.json` 及补丁恢复，避免提交环境、node_modules、编译产物或运行数据。独立的后端语法/来源检查为 `python3 edge/deploy/verify.py --source-only`；原始回归测试中部分案例依赖既有环境或历史 IQ，不能把整目录测试当作通用无设备检查。
 
 ## 展示部署
 

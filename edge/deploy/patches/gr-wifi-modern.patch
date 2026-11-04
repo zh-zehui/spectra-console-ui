@@ -1,0 +1,274 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 50a0085..7206eee 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -60,6 +60,9 @@ include(GrCompilerSettings)
+ find_package(Gnuradio COMPONENTS fft)   #added by cloud
+ find_package(UHD "3.9.7")               #added by cloud
+ 
++# Spectrum local interpreter fix
++set(PYTHON_EXECUTABLE "/home/sribd/spectrum_agent/.venv/bin/python" CACHE FILEPATH "Spectrum Python" FORCE)
++set(ENABLE_PYTHON ON)
+ include(GrVersion)
+ 
+ include(GrPlatform) #define LIB_SUFFIX
+diff --git a/lib/decode_impl.cc b/lib/decode_impl.cc
+index f2e27f5..8b3e9a9 100644
+--- a/lib/decode_impl.cc
++++ b/lib/decode_impl.cc
+@@ -1,3 +1,4 @@
++// Spectrum evidence v1
+ /*
+  *
+  *     GNU Radio IEEE 802.11a/g/n/ac 2x2
+@@ -37,6 +38,7 @@ namespace gr {
+               d_debug(ifdebug)
+     {
+       message_port_register_out(pmt::mp("out"));
++      message_port_register_out(pmt::mp("spectrum_status"));
+ 
+       d_sDecode = DECODE_S_IDLE;
+       d_nPktCorrect = 0;
+@@ -74,6 +76,8 @@ namespace gr {
+           for (auto tag : tags){
+             d_meta = pmt::dict_add(d_meta, tag.key, tag.value);
+           }
++          spectrum_start=pmt::to_uint64(pmt::dict_ref(d_meta,pmt::mp("spectrum_start"),pmt::from_uint64(0)));
++          spectrum_stop=pmt::to_uint64(pmt::dict_ref(d_meta,pmt::mp("spectrum_stop"),pmt::from_uint64(0)));
+           t_format = pmt::to_long(pmt::dict_ref(d_meta, pmt::mp("format"), pmt::from_long(99999)));
+           t_len = pmt::to_long(pmt::dict_ref(d_meta, pmt::mp("len"), pmt::from_long(99999)));
+           t_nTotal = pmt::to_long(pmt::dict_ref(d_meta, pmt::mp("total"), pmt::from_long(99999)));
+@@ -115,6 +119,8 @@ namespace gr {
+               }
+               // dout<<"ieee80211 decode, vht NDP 2x1 channel report:"<<tmpLen<<std::endl;
+               pmt::pmt_t tmpMeta = pmt::make_dict();
++              tmpMeta=pmt::dict_add(tmpMeta,pmt::mp("spectrum_start"),pmt::from_uint64(spectrum_start));
++              tmpMeta=pmt::dict_add(tmpMeta,pmt::mp("spectrum_stop"),pmt::from_uint64(spectrum_stop));
+               tmpMeta = pmt::dict_add(tmpMeta, pmt::mp("len"), pmt::from_long(tmpLen+3));
+               pmt::pmt_t tmpPayload = pmt::make_blob((uint8_t*)d_mu2x1ChanFloatBytes, tmpLen+3);
+               message_port_pub(pmt::mp("out"), pmt::cons(tmpMeta, tmpPayload));
+@@ -342,6 +348,7 @@ namespace gr {
+               //dout<<"ieee80211 decode, ampdu error"<<std::endl;
+               break;
+             }
++            tmpLen=0; // Reset each A-MPDU delimiter, upstream otherwise ORs lengths.
+             tmpEof = tmpBitP[0];
+             tmpLen |= (((int)tmpBitP[2])<<12);
+             tmpLen |= (((int)tmpBitP[3])<<13);
+@@ -371,7 +378,9 @@ namespace gr {
+ 
+             d_crc32.reset();
+             d_crc32.process_bytes(d_pktBytes + 3, tmpLen);
+-            if (d_crc32.checksum() != 558161692) {
++            const bool spectrum_crc_ok=d_crc32.checksum()==558161692;
++            message_port_pub(pmt::mp("spectrum_status"),pmt::mp(spectrum_crc_ok ? "fcs_pass" : "fcs_failed"));
++            if (!spectrum_crc_ok) {
+               if(d_debug)
+               {
+                 std::string dbgStr("ieee80211 decode, vht crc32 wrong, total:");
+@@ -414,6 +423,8 @@ namespace gr {
+               d_pktBytes[tmpLen + 3] = t_mcs;
+               tmpLen += 4;
+               pmt::pmt_t tmpMeta = pmt::make_dict();
++              tmpMeta=pmt::dict_add(tmpMeta,pmt::mp("spectrum_start"),pmt::from_uint64(spectrum_start));
++              tmpMeta=pmt::dict_add(tmpMeta,pmt::mp("spectrum_stop"),pmt::from_uint64(spectrum_stop));
+               tmpMeta = pmt::dict_add(tmpMeta, pmt::mp("len"), pmt::from_long(tmpLen));
+               pmt::pmt_t tmpPayload = pmt::make_blob(d_pktBytes, tmpLen);
+               message_port_pub(pmt::mp("out"), pmt::cons(tmpMeta, tmpPayload));
+@@ -450,7 +461,9 @@ namespace gr {
+           
+           d_crc32.reset();
+           d_crc32.process_bytes(d_pktBytes + 3, t_len);
+-          if (d_crc32.checksum() != 558161692) {
++          const bool spectrum_crc_ok=d_crc32.checksum()==558161692;
++            message_port_pub(pmt::mp("spectrum_status"),pmt::mp(spectrum_crc_ok ? "fcs_pass" : "fcs_failed"));
++            if (!spectrum_crc_ok) {
+             if(d_debug)
+             {
+               std::string dbgStr;
+@@ -511,6 +524,8 @@ namespace gr {
+ 
+             d_pktBytes[3+t_len] = t_mcs;
+             pmt::pmt_t tmpMeta = pmt::make_dict();
++              tmpMeta=pmt::dict_add(tmpMeta,pmt::mp("spectrum_start"),pmt::from_uint64(spectrum_start));
++              tmpMeta=pmt::dict_add(tmpMeta,pmt::mp("spectrum_stop"),pmt::from_uint64(spectrum_stop));
+             tmpMeta = pmt::dict_add(tmpMeta, pmt::mp("len"), pmt::from_long(t_len+4));
+             pmt::pmt_t tmpPayload = pmt::make_blob(d_pktBytes, t_len+4);
+             message_port_pub(pmt::mp("out"), pmt::cons(tmpMeta, tmpPayload));
+diff --git a/lib/decode_impl.h b/lib/decode_impl.h
+index 8bdbb01..f004a29 100644
+--- a/lib/decode_impl.h
++++ b/lib/decode_impl.h
+@@ -1,3 +1,4 @@
++// Spectrum evidence v1
+ /*
+  *
+  *     GNU Radio IEEE 802.11a/g/n/ac 2x2
+@@ -42,6 +43,9 @@ namespace gr {
+     {
+     private:
+       // block
++      uint64_t spectrum_start = 0;
++      uint64_t spectrum_stop = 0;
++
+       int d_nProc;
+       int d_nGen;
+       int d_sDecode;
+diff --git a/lib/demod_impl.cc b/lib/demod_impl.cc
+index ccf9268..8791eab 100644
+--- a/lib/demod_impl.cc
++++ b/lib/demod_impl.cc
+@@ -1,3 +1,5 @@
++// Spectrum finite-stream scheduler fix
++// Spectrum evidence v1
+ /*
+  *
+  *     GNU Radio IEEE 802.11a/g/n/ac 2x2, for SISO
+@@ -39,6 +41,9 @@ namespace gr {
+               d_muGroupId(mugid),
+               d_ofdm_fft(64,1)
+     {
++      message_port_register_out(pmt::mp("spectrum_status"));
++      message_port_register_out(pmt::mp("spectrum_headers"));
++      set_min_noutput_items(624);
+       d_nProc = 0;
+       d_debug = false;
+       d_sDemod = DEMOD_S_RDTAG;
+@@ -53,7 +58,13 @@ namespace gr {
+     void
+     demod_impl::forecast (int noutput_items, gr_vector_int &ninput_items_required)
+     {
+-      ninput_items_required[0] = noutput_items;
++      // One OFDM input symbol can expand into hundreds of coded output bits.
++      // Requesting noutput input samples deadlocks finite high-MCS recordings.
++      if(d_sDemod==DEMOD_S_DEMOD) ninput_items_required[0]=d_m.nSymSamp+1;
++      else if(d_sDemod==DEMOD_S_FORMAT) ninput_items_required[0]=160;
++      else if(d_sDemod==DEMOD_S_VHT) ninput_items_required[0]=80+d_m.nLTF*80+80;
++      else if(d_sDemod==DEMOD_S_HT) ninput_items_required[0]=80+d_m.nLTF*80;
++      else ninput_items_required[0]=1;
+     }
+ 
+     int
+@@ -82,7 +93,9 @@ namespace gr {
+             d_cfo = pmt::to_float(pmt::dict_ref(d_meta, pmt::mp("cfo"), pmt::from_float(0.0f)));
+             d_snr = pmt::to_float(pmt::dict_ref(d_meta, pmt::mp("snr"), pmt::from_float(0.0f)));
+             d_rssi = pmt::to_float(pmt::dict_ref(d_meta, pmt::mp("rssi"), pmt::from_float(0.0f)));
+-            int tmpPktSeq = pmt::to_long(pmt::dict_ref(d_meta, pmt::mp("seq"), pmt::from_long(-1)));
++            spectrum_start=pmt::to_uint64(pmt::dict_ref(d_meta,pmt::mp("spectrum_start"),pmt::from_uint64(0)));
++          spectrum_stop=pmt::to_uint64(pmt::dict_ref(d_meta,pmt::mp("spectrum_stop"),pmt::from_uint64(0)));
++          int tmpPktSeq = pmt::to_long(pmt::dict_ref(d_meta, pmt::mp("seq"), pmt::from_long(-1)));
+             d_nSigLMcs = pmt::to_long(pmt::dict_ref(d_meta, pmt::mp("mcs"), pmt::from_long(-1)));
+             d_nSigLLen = pmt::to_long(pmt::dict_ref(d_meta, pmt::mp("len"), pmt::from_long(-1)));
+             d_nSigLSamp = pmt::to_long(pmt::dict_ref(d_meta, pmt::mp("nsamp"), pmt::from_long(-1)));
+@@ -111,8 +124,23 @@ namespace gr {
+             fftDemod(&inSig1[C8P_SYM_SAMP_SHIFT+80], d_fftLtfOut2);
+             procNLSigDemodDeint(d_fftLtfOut1, d_fftLtfOut2, d_HL, d_sigHtCodedLlr, d_sigVhtACodedLlr);
+             d_decoder.decode(d_sigVhtACodedLlr, d_sigVhtABits, 48);
++            // Header observation is independent from payload-decoder support.
++            auto publish_header = [&](const char* format, const uint8_t* bits) {
++              pmt::pmt_t h=pmt::make_dict();
++              h=pmt::dict_add(h,pmt::mp("format"),pmt::mp(format));
++              h=pmt::dict_add(h,pmt::mp("bits"),pmt::init_u8vector(48,bits));
++              h=pmt::dict_add(h,pmt::mp("sample_start"),pmt::from_uint64(spectrum_start));
++              h=pmt::dict_add(h,pmt::mp("sample_stop"),pmt::from_uint64(spectrum_stop));
++              h=pmt::dict_add(h,pmt::mp("lsig_mcs"),pmt::from_long(d_nSigLMcs));
++              h=pmt::dict_add(h,pmt::mp("lsig_length"),pmt::from_long(d_nSigLLen));
++              message_port_pub(pmt::mp("spectrum_headers"),h);
++            };
++            const bool wide_vht_valid = d_sigVhtABits[2]==1 && d_sigVhtABits[23]==1 && d_sigVhtABits[33]==1
++              && checkBitCrc8(d_sigVhtABits,34,&d_sigVhtABits[34]);
++            if(wide_vht_valid) publish_header("VHT",d_sigVhtABits);
+             if(signalCheckVhtA(d_sigVhtABits))
+             {
++              message_port_pub(pmt::mp("spectrum_status"),pmt::mp("vht_sig_a_pass"));
+               // go to vht
+               signalParserVhtA(d_sigVhtABits, &d_m, &d_sigVhtA);
+               dout<<"ieee80211 demod, vht a check pass nSS:"<<d_m.nSS<<", nLTF:"<<d_m.nLTF<<std::endl;
+@@ -124,8 +152,11 @@ namespace gr {
+             else
+             {
+               d_decoder.decode(d_sigHtCodedLlr, d_sigHtBits, 48);
++              if(!wide_vht_valid && d_sigHtBits[26]==1 && checkBitCrc8(d_sigHtBits,34,&d_sigHtBits[34]))
++                publish_header("HT",d_sigHtBits);
+               if(signalCheckHt(d_sigHtBits))
+               {
++                message_port_pub(pmt::mp("spectrum_status"),pmt::mp("ht_sig_pass"));
+                 // go to ht
+                 signalParserHt(d_sigHtBits, &d_m, &d_sigHt);
+                 dout<<"ieee80211 demod, ht check pass nSS:"<<d_m.nSS<<", nLTF:"<<d_m.nLTF<<", len:"<<d_m.len<<std::endl;
+@@ -222,6 +253,9 @@ namespace gr {
+         {
+           dout<<"ieee80211 demod, wr tag f:"<<d_m.format<<", ampdu:"<<d_m.ampdu<<", len:"<<d_m.len<<", mcs:"<<d_m.mcs<<", total:"<<d_m.nSym * d_m.nCBPS<<", tr:"<<d_nTrellis<<", nsym:"<<d_m.nSym<<", nSS:"<<d_m.nSS<<std::endl;
+           pmt::pmt_t dict = pmt::make_dict();
++          dict = pmt::dict_add(dict,pmt::mp("spectrum_start"),pmt::from_uint64(spectrum_start));
++          dict = pmt::dict_add(dict,pmt::mp("spectrum_stop"),pmt::from_uint64(spectrum_stop));
++          
+           dict = pmt::dict_add(dict, pmt::mp("cfo"), pmt::from_float(d_cfo));
+           dict = pmt::dict_add(dict, pmt::mp("snr"), pmt::from_float(d_snr));
+           if(d_m.format == C8P_F_VHT)
+@@ -413,7 +447,8 @@ namespace gr {
+     void
+     demod_impl::nonLegacyChanUpdate(const gr_complex* sig1)
+     {
+-      fftDemod(&sig1[C8P_SYM_SAMP_SHIFT], d_fftLtfOut1);
++      // Spectrum short-GI FFT reference fix
++      fftDemod(&sig1[d_m.nSymSamp==72 ? 0 : C8P_SYM_SAMP_SHIFT], d_fftLtfOut1);
+       for(int i=0;i<64;i++)
+       {
+         if(i==0 || (i>=29 && i<=35))
+diff --git a/lib/demod_impl.h b/lib/demod_impl.h
+index cee0f0b..59bec1e 100644
+--- a/lib/demod_impl.h
++++ b/lib/demod_impl.h
+@@ -1,3 +1,4 @@
++// Spectrum evidence v1
+ /*
+  *
+  *     GNU Radio IEEE 802.11a/g/n/ac 2x2, for SISO
+@@ -44,6 +45,9 @@ namespace gr {
+     {
+      private:
+       // block
++      uint64_t spectrum_start = 0;
++      uint64_t spectrum_stop = 0;
++
+       bool d_debug;
+       int d_nProc;
+       int d_nGen;
+diff --git a/lib/signal_impl.cc b/lib/signal_impl.cc
+index 88ef255..bbce18f 100644
+--- a/lib/signal_impl.cc
++++ b/lib/signal_impl.cc
+@@ -1,3 +1,4 @@
++// Spectrum evidence v1
+ /*
+  *
+  *     GNU Radio IEEE 802.11a/g/n/ac 2x2, for SISO
+@@ -37,6 +38,7 @@ namespace gr {
+               gr::io_signature::make(1, 1, sizeof(gr_complex))),
+               d_ofdm_fft1(64,1), d_ofdm_fft2(64,1), d_ofdm_ffts(64,1)
+     {
++      message_port_register_out(pmt::mp("spectrum_status"));
+       d_nProc = 0;
+       d_nSigPktSeq = 0;
+       d_sSignal = S_TRIGGER;
+@@ -123,7 +125,9 @@ namespace gr {
+           d_ofdm_ffts.execute();
+           procLHSigDemodDeint(d_ofdm_fft1.get_outbuf(), d_ofdm_fft2.get_outbuf(), d_ofdm_ffts.get_outbuf(), d_h, d_sigLegacyCodedLlr);
+           d_decoder.decode(d_sigLegacyCodedLlr, d_sigLegacyBits, 24);
+-          if(signalCheckLegacy(d_sigLegacyBits, &d_nSigMcs, &d_nSigLen, &d_nSigDBPS))
++          const bool spectrum_lsig_ok=signalCheckLegacy(d_sigLegacyBits, &d_nSigMcs, &d_nSigLen, &d_nSigDBPS);
++          message_port_pub(pmt::mp("spectrum_status"),pmt::mp(spectrum_lsig_ok ? "lsig_pass" : "lsig_failed"));
++          if(spectrum_lsig_ok)
+           {
+             d_nSymbol = (d_nSigLen*8 + 22 + d_nSigDBPS - 1)/d_nSigDBPS;
+             d_nSample = d_nSymbol * 80;
+@@ -136,6 +140,8 @@ namespace gr {
+             dict = pmt::dict_add(dict, pmt::mp("cfo"), pmt::from_float(d_cfoRad * 3183098.8618379068f));  // rad * 20e6 / 2pi
+             dict = pmt::dict_add(dict, pmt::mp("snr"), pmt::from_float(d_snr));
+             dict = pmt::dict_add(dict, pmt::mp("rssi"), pmt::from_float(d_rssi));
++            dict = pmt::dict_add(dict, pmt::mp("spectrum_start"), pmt::from_uint64(nitems_read(1)+d_nUsed>176 ? nitems_read(1)+d_nUsed-176 : 0));
++            dict = pmt::dict_add(dict,pmt::mp("spectrum_stop"),pmt::from_uint64(nitems_read(1)+d_nUsed+224+d_nSample));
+             dict = pmt::dict_add(dict, pmt::mp("seq"), pmt::from_long(d_nSigPktSeq));
+             dict = pmt::dict_add(dict, pmt::mp("mcs"), pmt::from_long(d_nSigMcs));
+             dict = pmt::dict_add(dict, pmt::mp("len"), pmt::from_long(d_nSigLen));

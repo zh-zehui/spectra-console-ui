@@ -1,0 +1,31 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b7ef935..be295a3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -74,7 +74,11 @@ ENDIF()
+ # Install directories
+ ########################################################################
+ include(FindPkgConfig)
++set(ENABLE_PYTHON OFF)
+ find_package(Gnuradio "3.9" REQUIRED COMPONENTS blocks)
++set(PYTHON_EXECUTABLE "/home/sribd/spectrum_agent/.venv/bin/python" CACHE FILEPATH "" FORCE)
++set(ENABLE_PYTHON ON)
++include(GrPython)
+ include(GrVersion)
+ 
+ include(GrPlatform) #define LIB_SUFFIX
+diff --git a/lib/packet_sink.cc b/lib/packet_sink.cc
+index 42c3bd1..45427e9 100644
+--- a/lib/packet_sink.cc
++++ b/lib/packet_sink.cc
+@@ -390,6 +390,10 @@ public:
+                                 pmt::pmt_t meta = pmt::make_dict();
+                                 meta = pmt::dict_add(
+                                     meta, pmt::mp("lqi"), pmt::from_long(lqi));
++                                // Project-local RX instrumentation: absolute recovered-chip
++                                // stream position, NOT an exact source-IQ timestamp.
++                                meta = pmt::dict_add(meta, pmt::mp("spectrum_chip_stop"),
++                                    pmt::from_uint64(nitems_read(0) + count));
+ 
+                                 std::memcpy(buf, d_packet, d_packetlen_cnt);
+                                 pmt::pmt_t payload = pmt::make_blob(buf, d_packetlen_cnt);

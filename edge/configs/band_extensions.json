@@ -1,0 +1,202 @@
+{
+  "version": "2026-10-23.16",
+  "scope": "Candidate envelopes only; not proof of presence or a regional allocation database",
+  "entries": [
+    {
+      "id": "wifi_58",
+      "name": "IEEE 802.11 5.8 GHz family",
+      "low_hz": 5725000000,
+      "high_hz": 5850000000,
+      "waveforms": [
+        "OFDM-like",
+        "OFDMA-like"
+      ],
+      "typical_bandwidth_hz": [
+        20000000,
+        40000000,
+        80000000,
+        160000000
+      ],
+      "verification": "PHY synchronization and integrity-checked packet decoding; only legacy20MHz OFDM receiver installed, other PHYs not covered",
+      "decoder_status": "experimental-legacy20MHz-only-5.8GHz-RF-unqualified",
+      "sources": [
+        "https://www.cisco.com/c/en/us/td/docs/wireless/controller/9800/technical-reference/wireless-rf-reference-guide.html"
+      ],
+      "notes": "Broad envelope, channel availability and occupied bandwidth require regional and observed evidence"
+    },
+    {
+      "id": "proprietary_24",
+      "name": "Proprietary2.4GHz radios including ESB-like links",
+      "low_hz": 2400000000,
+      "high_hz": 2483500000,
+      "waveforms": [
+        "FSK-like",
+        "PSK-like",
+        "unknown"
+      ],
+      "typical_bandwidth_hz": [],
+      "verification": "Generic burst/modulation features first; require protocol-specific sync, packet fields and integrity to confirm ESB or another private protocol",
+      "decoder_status": "not_installed",
+      "sources": [
+        "https://www.nordicsemi.com/Products/nRF24-series"
+      ],
+      "notes": "Device purpose such as mouse, remote or sensor cannot be inferred from GFSK alone"
+    },
+    {
+      "id": "ant_24",
+      "name": "ANT/ANT+ candidate",
+      "low_hz": 2400000000,
+      "high_hz": 2483500000,
+      "waveforms": [
+        "FSK-like"
+      ],
+      "typical_bandwidth_hz": [],
+      "verification": "Protocol-specific synchronization and integrity checks; periodic short bursts alone do not confirm ANT",
+      "decoder_status": "not_installed",
+      "sources": [
+        "https://www.nordicsemi.com/Products/Wireless"
+      ]
+    },
+    {
+      "id": "lora_flrc_24",
+      "name": "2.4GHz LoRa/FLRC family candidate",
+      "low_hz": 2400000000,
+      "high_hz": 2483500000,
+      "waveforms": [
+        "chirp-like",
+        "FSK-like",
+        "unknown"
+      ],
+      "typical_bandwidth_hz": [],
+      "verification": "Test repeated chirp or modulation structure, then require profile-specific synchronization and checked frames",
+      "decoder_status": "not_installed",
+      "sources": [
+        "https://www.semtech.com/products/wireless-rf/lora-connect/sx1280"
+      ],
+      "notes": "LoRa, FLRC and GFSK are different modes; a linear sweep does not identify any one of them"
+    },
+    {
+      "id": "digital_video_24",
+      "name": "Private digital video/telemetry2.4GHz candidate",
+      "low_hz": 2400000000,
+      "high_hz": 2483500000,
+      "waveforms": [
+        "OFDM-like",
+        "unknown"
+      ],
+      "typical_bandwidth_hz": [],
+      "verification": "Generic waveform characterization, then validated protocol evidence if available; cannot identify drone/vendor by OFDM alone",
+      "decoder_status": "not_installed",
+      "sources": [
+        "https://www.dji.com/support/product/transmission"
+      ]
+    },
+    {
+      "id": "digital_video_58",
+      "name": "Private digital video/telemetry5.8GHz candidate",
+      "low_hz": 5725000000,
+      "high_hz": 5850000000,
+      "waveforms": [
+        "OFDM-like",
+        "unknown"
+      ],
+      "typical_bandwidth_hz": [],
+      "verification": "Analyze wideband burst and synchronization structure; vendor or device identity needs independent evidence",
+      "decoder_status": "not_installed",
+      "sources": [
+        "https://www.dji.com/support/product/transmission"
+      ]
+    },
+    {
+      "id": "analog_video_58",
+      "name": "Analog5.8GHz video candidate",
+      "low_hz": 5725000000,
+      "high_hz": 5875000000,
+      "waveforms": [
+        "FM-like",
+        "continuous-wideband"
+      ],
+      "typical_bandwidth_hz": [],
+      "verification": "FM demodulation plus validated analog-video timing; continuity alone does not confirm video",
+      "decoder_status": "not_installed",
+      "sources": [
+        "https://www.immersionrc.com/manuals/ImmersionRC%205.8GHz%20600mW%20Tx.pdf"
+      ],
+      "notes": "Candidate RF envelope only; vendor channels and regional availability vary"
+    },
+    {
+      "id": "traffic_dsrc_58",
+      "name": "Regional5.8GHz short-range traffic communication candidate",
+      "low_hz": 5795000000,
+      "high_hz": 5815000000,
+      "waveforms": [
+        "unknown"
+      ],
+      "typical_bandwidth_hz": [],
+      "verification": "Require region/site context and an applicable protocol profile; not a generic5.8GHz default classification",
+      "decoder_status": "not_installed",
+      "sources": [
+        "https://docbox.etsi.org/workshop/2012/201202_ITSWORKSHOP/07_RADIOWAVEShaveNOBORDERS/ECC_Weilacher.pdf"
+      ],
+      "notes": "Historical technical frequency context, NOT a verified current regional authorization"
+    },
+    {
+      "id": "microwave_like_24",
+      "name": "Microwave-oven-like leakage/interference candidate",
+      "low_hz": 2400000000,
+      "high_hz": 2483500000,
+      "waveforms": [
+        "noise-like",
+        "periodic-envelope"
+      ],
+      "typical_bandwidth_hz": [],
+      "verification": "Noise-like spectrum and periodic envelope are only hints; source attribution requires controlled on/off or independent corroboration",
+      "decoder_status": "not_applicable",
+      "sources": [
+        "https://team-development.cisco.com/c/en/us/td/docs/wireless/controller/technotes/8-1/mobility_express/b_RRM_White_Paper/b_RRM_White_Paper_chapter_0100.html"
+      ]
+    },
+    {
+      "id": "other_58",
+      "name": "Other private5.8GHz links or noncommunication activity",
+      "low_hz": 5725000000,
+      "high_hz": 5875000000,
+      "waveforms": [
+        "CW-like",
+        "FSK-like",
+        "PSK-QAM-like",
+        "chirp-like",
+        "noise-like",
+        "unknown"
+      ],
+      "typical_bandwidth_hz": [],
+      "verification": "Generic structure, temporal activity, signal quality and repeatability; retain unknown protocol and source",
+      "decoder_status": "not_installed",
+      "sources": [],
+      "notes": "Does not claim radar or intentional jamming merely from spectral appearance"
+    },
+    {
+      "id": "cellular_tdd_2300_2400",
+      "name": "LTE Band40 / NR n40 technical-band candidates",
+      "low_hz": 2300000000.0,
+      "high_hz": 2400000000.0,
+      "waveforms": [
+        "OFDM-like",
+        "TDD-like"
+      ],
+      "typical_bandwidth_hz": [
+        5000000.0,
+        10000000.0,
+        15000000.0,
+        20000000.0
+      ],
+      "decoder_status": "LTE-PBCH-MIB and NR-FR1-SSB-PBCH-MIB installed; limited validated profiles",
+      "verification": "LTE:lte_pbch central1.4MHz/1.92MSps. NR n40:nr_pbch,30kHz CaseC,8.8MHz/15.36MSps, GSCN5762..5989. Only CRC-passed MIB validates broadcast evidence. Technical band/raster does not prove regional allocation or a campus deployment.",
+      "sources": [
+        "https://www.3gpp.org/ftp/Information/presentations/presentations_2011/2011_09_LTE_Asia/2011_LTEAsia_3GPP%20RAN.pdf",
+        "https://www.etsi.org/deliver/etsi_TS/138100_138199/13810101/18.05.00_60/ts_13810101v180500p.pdf"
+      ],
+      "notes": "Technical band envelopes only. In a2400MHz-center100MHz recording the2350..2400MHz part is outside the Wi-Fi/Bluetooth2.4GHz candidate envelope. Do not classify all such activity as noise or assume any operator/site deployment. Listed widths are representative LTE hypotheses, not the full NR bandwidth list."
+    }
+  ]
+}

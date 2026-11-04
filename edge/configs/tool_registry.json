@@ -1,0 +1,251 @@
+{
+  "schema_version": "0.18",
+  "runtime": "official dsh0.2.1-rc.2",
+  "source": "plugins/spectrum-tools/index.mjs",
+  "tools": [
+    {
+      "name": "analyze_drone_hopping",
+      "status": "implemented",
+      "callable": true,
+      "scope": "Independent full-time energy-guided frequency/bandwidth-agile reference scan; checkpointed proposals; no payload decoding or aircraft identity; live hopping validation pending"
+    },
+    {
+      "name": "list_drone_video_profiles",
+      "status": "implemented",
+      "callable": true,
+      "scope": "Installed recording-derived reference modes; parameters and validation scope,not evidence of current presence"
+    },
+    {
+      "name": "analyze_drone_video_link",
+      "status": "implemented",
+      "callable": true,
+      "scope": "Full-time checkpointed selected drone recording signature from installed profile catalog; separate from Wi-Fi CRC; not universal identity or video decoding"
+    },
+    {
+      "name": "resolve_task_intent",
+      "status": "implemented",
+      "callable": true,
+      "scope": "Model interprets full original prompt; validates numeric task scope separately from target hypotheses before observation"
+    },
+    {
+      "name": "query_band_priors",
+      "status": "implemented",
+      "callable": true
+    },
+    {
+      "name": "inspect_capabilities",
+      "status": "implemented",
+      "callable": true
+    },
+    {
+      "name": "make_synthetic_capture",
+      "status": "implemented",
+      "callable": true
+    },
+    {
+      "name": "capture_iq",
+      "status": "implemented",
+      "callable": true
+    },
+    {
+      "name": "coarse_segment_spectrum",
+      "status": "implemented",
+      "callable": true
+    },
+    {
+      "name": "inspect_spectrum",
+      "status": "implemented",
+      "callable": true
+    },
+    {
+      "name": "segment_spectrum",
+      "status": "implemented",
+      "callable": true
+    },
+    {
+      "name": "compare_segmentations",
+      "status": "implemented",
+      "callable": true
+    },
+    {
+      "name": "consolidate_signal_regions",
+      "status": "implemented",
+      "callable": true
+    },
+    {
+      "name": "fuse_refined_regions",
+      "status": "implemented",
+      "callable": true
+    },
+    {
+      "name": "select_segmentation",
+      "status": "implemented",
+      "callable": true
+    },
+    {
+      "name": "extract_subband",
+      "status": "implemented",
+      "callable": true
+    },
+    {
+      "name": "profile_signal",
+      "status": "implemented",
+      "callable": true
+    },
+    {
+      "name": "analyze_iq_quality",
+      "status": "implemented",
+      "callable": true
+    },
+    {
+      "name": "analyze_burst_timing",
+      "status": "implemented",
+      "callable": true
+    },
+    {
+      "name": "analyze_sweep_structure",
+      "status": "implemented",
+      "callable": true
+    },
+    {
+      "name": "summarize_spectral_activity",
+      "status": "implemented",
+      "callable": true
+    },
+    {
+      "name": "export_sigmf_recording",
+      "status": "implemented",
+      "callable": true
+    },
+    {
+      "name": "match_signal_hypotheses",
+      "status": "implemented",
+      "callable": true
+    },
+    {
+      "name": "list_signal_groups",
+      "status": "implemented",
+      "callable": true
+    },
+    {
+      "name": "analyze_bluetooth_classic",
+      "status": "implemented",
+      "callable": true,
+      "evidence_level": "access_code_candidate_only",
+      "protocol_confirmed": false,
+      "backend": "project-local libbtbb"
+    },
+    {
+      "name": "verify_protocol",
+      "ble_1m_advertising_scope": "LE1M primary37..39 legacy/extended; ble_aux_1m/ble_aux_2m non-periodic type7 CRC on0..36; no coded/connected/periodic decoding or automatic chain following",
+      "status": "implemented",
+      "callable": true,
+      "supported_profiles": [
+        "ble_1m_advertising",
+        "ble_aux_1m",
+        "ble_aux_2m",
+        "wifi_legacy_ofdm",
+        "wifi_gr20_siso",
+        "wifi_crafter_dsss",
+        "wifi_crafter_all",
+        "ieee802154_oqpsk",
+        "lte_pbch",
+        "nr_pbch"
+      ]
+    },
+    {
+      "name": "follow_ble_aux",
+      "status": "implemented",
+      "callable": true,
+      "scope": "One model-selected AuxPtr follow-up in saved IQ, LE1M/LE2M; candidate chain association only"
+    },
+    {
+      "name": "assess_signal_scene",
+      "status": "implemented",
+      "callable": true
+    },
+    {
+      "name": "refine_signal_region",
+      "status": "implemented",
+      "callable": true
+    },
+    {
+      "name": "compare_local_refinements",
+      "status": "implemented",
+      "callable": true
+    },
+    {
+      "name": "plan_unknown_investigations",
+      "status": "implemented",
+      "callable": true
+    },
+    {
+      "name": "record_investigation_decision",
+      "status": "implemented",
+      "callable": true
+    },
+    {
+      "name": "build_report",
+      "status": "implemented",
+      "callable": true
+    },
+    {
+      "name": "review_activity_batch",
+      "status": "implemented",
+      "callable": true
+    },
+    {
+      "name": "localize_verified_frames",
+      "status": "implemented",
+      "callable": true
+    },
+    {
+      "name": "plot_spectrogram",
+      "status": "implemented",
+      "callable": true,
+      "scope": "Full-record STFT in existing web waterfall; independent of detection/recognition; saved-task replay supported"
+    },
+    {
+      "name": "analyze_spectrum_windows",
+      "status": "implemented",
+      "callable": true,
+      "scope": "Checkpointed10ms main-window STFT with context and conservative overlap association; original coordinates retained"
+    },
+    {
+      "name": "inspect_wifi_headers",
+      "status": "implemented",
+      "callable": true,
+      "scope": "HT/VHT SIG CRC checked independently,including HT40 and VHT80 from20MHz observation; not full wide MAC decode"
+    },
+    {
+      "name": "analyze_ofdm_structure",
+      "status": "implemented",
+      "callable": true,
+      "scope": "CP and subcarrier-spacing candidates on filtered IQ; not protocol confirmation"
+    },
+    {
+      "name": "plan_protocol_checks",
+      "status": "implemented",
+      "callable": true,
+      "scope": "Model-selected protocol/channel plan over the full explicit intent time interval"
+    },
+    {
+      "name": "run_protocol_batch",
+      "status": "implemented",
+      "callable": true,
+      "scope": "Checkpointed batch execution across selected profiles including2.4GHz Wi-Fi,BLE,IEEE802.15.4 and5.8GHz Wi-Fi; errors remain incomplete"
+    },
+    {
+      "name": "inspect_protocol_progress",
+      "status": "implemented",
+      "callable": true,
+      "scope": "Exact planned vs completed protocol time/frequency units"
+    },
+    {
+      "name": "analyze_signal_windows",
+      "status": "implemented",
+      "callable": true,
+      "scope": "Model-selected batch of numerical residual-window measurements; retains coverage and unknown labels"
+    }
+  ]
+}

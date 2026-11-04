@@ -1,0 +1,49 @@
+{
+  "default_algorithm": "traditional",
+  "plugin_modules": [],
+  "algorithms": {
+    "traditional": {
+      "params": {
+        "noise_percentile": 20.0,
+        "global_noise_percentile": 20.0,
+        "global_margin_db": 12.0,
+        "persistent_threshold_db": 12.0,
+        "frequency_smoothing_bins": 5,
+        "cfar_training_bins": 12,
+        "cfar_guard_bins": 2,
+        "cfar_threshold_db": 10.0,
+        "min_event_frames": 4,
+        "min_event_bins": 3,
+        "morphology_iterations": 1,
+        "persistence_window_frames": 5,
+        "persistence_min_hits": 3,
+        "persistent_min_fraction": 0.5,
+        "min_snr_db": 8.0,
+        "max_box_freq_fraction": 0.85,
+        "min_box_occupancy": 0.25,
+        "fuse_freq_iou": 0.2,
+        "fuse_freq_gap_bins": 2,
+        "fuse_time_gap_frames": 4,
+        "max_events_per_window": 20
+      }
+    },
+    "model": {
+      "params": {
+        "threshold": 0.1,
+        "detect_imgsz": 672,
+        "model_name": "fasterrcnn_vitdet",
+        "weights": "outputs/training/fasterrcnn_timmvit_new_rect_my_data_aug_weightdecay1e-3_mosaic/best_model.pth",
+        "device": "cuda:0",
+        "venv_activate": "~/For_torch_installation/.sglang/bin/activate",
+        "jetson_dir": "~/jetson",
+        "detect_timeout": 15.0,
+        "ready_timeout": 120.0,
+        "pct_low": 20.0,
+        "pct_high": 99.0,
+        "cmap": "viridis",
+        "transpose": true,
+        "iou_threshold": 0.2
+      }
+    }
+  }
+}

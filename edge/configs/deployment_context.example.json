@@ -1,0 +1,16 @@
+{
+  "schema_version": "1",
+  "country": null,
+  "province": null,
+  "city": null,
+  "district": null,
+  "site": null,
+  "environment": "unknown",
+  "provenance": "operator_configured",
+  "sensor_verified": false,
+  "reported_date": null,
+  "building": null,
+  "room": null,
+  "coordinates": null,
+  "note": "Fill only the context you intend to use; deployment context is a prior, not evidence of observed protocols."
+}

@@ -1,0 +1,125 @@
+{
+  "version": "2026-10-22.5",
+  "scope": "Initial receive-analysis knowledge, not an exhaustive frequency allocation database",
+  "entries": [
+    {
+      "id": "wifi_24",
+      "name": "IEEE 802.11 2.4 GHz family",
+      "low_hz": 2400000000,
+      "high_hz": 2483500000,
+      "waveforms": [
+        "OFDM-like",
+        "DSSS-like"
+      ],
+      "typical_bandwidth_hz": [
+        20000000,
+        40000000
+      ],
+      "verification": "Pinned gr-ieee802-11 legacy20MHz OFDM preamble, PHY decoding and CRC32 frame integrity; other PHYs unsupported",
+      "sources": [
+        "https://github.com/bastibl/gr-ieee802-11"
+      ],
+      "decoder_status": "experimental-tested-legacy20MHz-OFDM",
+      "notes": "Broad prior envelope, not channel availability or regional allocation; a/g/p reference does not cover all Wi-Fi PHYs"
+    },
+    {
+      "id": "bluetooth_le",
+      "name": "Bluetooth LE",
+      "low_hz": 2401000000,
+      "high_hz": 2481000000,
+      "waveforms": [
+        "FSK-like"
+      ],
+      "typical_bandwidth_hz": [
+        1000000,
+        2000000
+      ],
+      "channel_centers_hz": [
+        2402000000,
+        2426000000,
+        2480000000
+      ],
+      "verification": "LE1M advertising access address, dewhitening, valid header, CRC24",
+      "sources": [
+        "https://www.bluetooth.com/learn-about-bluetooth/tech-overview/"
+      ],
+      "notes": "Listed centers are primary advertising channels, not all 40 LE channels"
+    },
+    {
+      "id": "bluetooth_classic",
+      "name": "Bluetooth BR/EDR",
+      "low_hz": 2401500000,
+      "high_hz": 2480500000,
+      "waveforms": [
+        "FSK-like",
+        "PSK-like"
+      ],
+      "typical_bandwidth_hz": [
+        1000000
+      ],
+      "verification": "analyze_bluetooth_classic searches exact libbtbb BR/EDR syncwords in focused1MHz channels at4MS/s. Synchronization candidates are not HEC/payload-CRC-validated frames. Full protocol confirmation still requires independent header/payload integrity evidence.",
+      "sources": [
+        "https://www.bluetooth.com/learn-about-bluetooth/tech-overview/",
+        "https://github.com/greatscottgadgets/libbtbb"
+      ],
+      "decoder_status": "access-code-candidate-tool-installed-full-decoder-not-validated"
+    },
+    {
+      "id": "ieee802154",
+      "name": "IEEE 802.15.4 2.4 GHz family (Zigbee/Thread candidates)",
+      "low_hz": 2400000000,
+      "high_hz": 2483500000,
+      "waveforms": [
+        "DSSS-like",
+        "PSK-like"
+      ],
+      "typical_bandwidth_hz": [
+        2000000
+      ],
+      "verification": "O-QPSK DSSS250kb/s synchronization, MAC FCF checks and CRC16/KERMIT; upper-layer identity remains unknown",
+      "sources": [
+        "https://github.com/bastibl/gr-ieee802-15-4",
+        "https://software-dl.ti.com/simplelink/esd/simplelink_cc13xx_cc26xx_sdk/8.31.00.11/exports/docs/ti154stack/html/ti154stack/ti154stack-overview-cc13xx_cc26xx.html"
+      ],
+      "decoder_status": "experimental-offline-IQ-tested",
+      "notes": "Channels11..26 at2405+5*(channel-11)MHz; no Zigbee/Thread inference from PHY alone; controlled RF-positive qualification pending",
+      "channel_centers_hz": [
+        2405000000,
+        2410000000,
+        2415000000,
+        2420000000,
+        2425000000,
+        2430000000,
+        2435000000,
+        2440000000,
+        2445000000,
+        2450000000,
+        2455000000,
+        2460000000,
+        2465000000,
+        2470000000,
+        2475000000,
+        2480000000
+      ]
+    },
+    {
+      "id": "other_ism",
+      "name": "Other/custom radios or noncommunication interference",
+      "low_hz": 2400000000,
+      "high_hz": 2500000000,
+      "waveforms": [
+        "CW-like",
+        "FSK-like",
+        "PSK-QAM-like",
+        "chirp-like",
+        "noise-like",
+        "unknown"
+      ],
+      "typical_bandwidth_hz": [],
+      "verification": "Generic features, repetition and temporal behavior; unknown is an allowed result",
+      "sources": [],
+      "notes": "Unverified generic hypothesis; not a specific protocol or allocation claim"
+    }
+  ],
+  "fallback": "Always analyze all detected events, including those outside these priors."
+}

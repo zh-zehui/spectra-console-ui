@@ -6,6 +6,15 @@ on:
 permissions:
   contents: read
 jobs:
+  edge-source:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - name: Verify Jetson source snapshot and Python syntax
+        run: python3 edge/deploy/verify.py --source-only
+      - name: Check deployment shell syntax
+        run: find edge -type f -name '*.sh' -print0 | xargs -0 -r -n 1 bash -n
   demo:
     runs-on: ubuntu-24.04
     timeout-minutes: 10

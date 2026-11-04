@@ -1,0 +1,102 @@
+{
+  "schema_version": "1",
+  "profiles": {
+    "zc601_u252_30k_observed_v1": {
+      "label": "DJI video-link recording signature,20MHz observation profile",
+      "sample_rate_hz": 30720000,
+      "subcarrier_spacing_hz": 30000,
+      "fft_size": 1024,
+      "cyclic_prefix_samples": 72,
+      "zc_length": 601,
+      "zc_root": 252,
+      "acquisition_reference_samples": 128,
+      "nominal_channel_bandwidth_hz": 20000000,
+      "nominal_bandwidth_source": "inferred_observation_envelope_from_reference_grid_not_controller_readback",
+      "expected_repetition_s": 0.0025,
+      "attribution": {
+        "manufacturer": "DJI",
+        "model": "Mavic 4 Pro",
+        "source": "user_reported_drone_presence_and_project_device_context",
+        "protocol_confirmed": false,
+        "universal_model_signature": false
+      },
+      "training": {
+        "task_id": "task_e7bb08a92f9440da91c043ab85f5b1b6",
+        "capture_id": "capture_36c0da36e5a14595",
+        "interval_s": [0, 0.03],
+        "method": "Independent CP/quadratic-reference fit found601/root252 at30kHz. Nominal20MHz envelope inferred from18.03MHz reference grid,not controller readback."
+      },
+      "limitations": [
+        "Recording-validated20MHz observation profile,not a universal DJI/O4+ or Mavic4 protocol decoder",
+        "Reference signature matching is not MAC CRC,payload decryption,video recovery or aircraft identity",
+        "30kHz CP structure alone does not establish DJI or NR",
+        "20MHz box is a nominal observation envelope; reference-active span is18.03MHz; full burst occupied width is not calibrated",
+        "Other mode real-time performance measurements do not establish continuous20MHz hardware performance"
+      ]
+    },
+    "zc1201_u504_30k_observed_v1": {
+      "label": "DJI video-link recording signature,40MHz observation profile",
+      "sample_rate_hz": 61440000,
+      "subcarrier_spacing_hz": 30000,
+      "fft_size": 2048,
+      "cyclic_prefix_samples": 144,
+      "zc_length": 1201,
+      "zc_root": 504,
+      "acquisition_reference_samples": 128,
+      "nominal_channel_bandwidth_hz": 40000000,
+      "nominal_bandwidth_source": "inferred_observation_envelope_from_reference_grid_not_controller_readback",
+      "expected_repetition_s": 0.0025,
+      "attribution": {
+        "manufacturer": "DJI",
+        "model": "Mavic 4 Pro",
+        "source": "user_reported_drone_presence_and_project_device_context",
+        "protocol_confirmed": false,
+        "universal_model_signature": false
+      },
+      "training": {
+        "task_id": "task_962288f3229a48468017cdd4dca54aab",
+        "capture_id": "capture_125f3f094dda4ee5",
+        "interval_s": [0, 0.03],
+        "method": "Independent CP/quadratic-reference fit found1201/root504 at30kHz. Nominal40MHz envelope inferred from36.03MHz reference grid,not user controller setting."
+      },
+      "limitations": [
+        "Recording-validated40MHz observation profile,not a universal DJI/O4+ or Mavic4 protocol decoder",
+        "Reference signature matching is not MAC CRC,payload decryption,video recovery or aircraft identity",
+        "30kHz CP structure alone does not establish DJI or NR",
+        "40MHz box is a nominal observation envelope; reference-active span is36.03MHz; full burst occupied width is not calibrated",
+        "Previous10MHz real-time performance measurements do not apply to this wider profile"
+      ]
+    },
+    "zc293_u123_30k_observed_v1": {
+      "label": "DJI video-link recording signature",
+      "sample_rate_hz": 15360000,
+      "subcarrier_spacing_hz": 30000,
+      "fft_size": 512,
+      "cyclic_prefix_samples": 36,
+      "zc_length": 293,
+      "zc_root": 123,
+      "acquisition_reference_samples": 128,
+      "nominal_channel_bandwidth_hz": 10000000,
+      "expected_repetition_s": 0.0025,
+      "attribution": {
+        "manufacturer": "DJI",
+        "model": "Mavic 4 Pro",
+        "source": "user_reported_controlled_own_device",
+        "protocol_confirmed": false,
+        "universal_model_signature": false
+      },
+      "training": {
+        "task_id": "task_9668c13363904f8092ca082554958600",
+        "capture_id": "capture_bae61ab9ed89459e",
+        "interval_s": [0, 0.03],
+        "method": "Independent CP and quadratic-phase root search; ZC293/root123 matched measured spectra. No copied receiver code."
+      },
+      "limitations": [
+        "Single user-confirmed recording profile,not a universal Mavic4/O4+ decoder",
+        "Reference signature matching is not MAC CRC,payload decryption,video recovery or aircraft identity",
+        "30kHz CP structure alone does not establish DJI or NR",
+        "Reference power is relative and requires receiver calibration before cross-node absolute RSSI comparison"
+      ]
+    }
+  }
+}

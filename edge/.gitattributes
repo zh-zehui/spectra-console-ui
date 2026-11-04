@@ -1,0 +1,14 @@
+# Preserve the byte-for-byte Jetson snapshot, including original mixed newlines.
+# -text disables newline conversion while retaining Git's normal text diff.
+configs/* -text
+plugins/** -text
+src/** -text
+tests/** -text
+vendor/usrp_client/** -text
+adapters/** -text
+requirements.txt -text
+runtime/dsh/package*.json -text
+docs/backend-history.md -text
+deploy/licenses/** -text
+deploy/patches/** -text
+deploy/vendor-lock.json -text

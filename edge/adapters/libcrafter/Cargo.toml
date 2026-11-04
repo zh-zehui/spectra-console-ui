@@ -1,0 +1,14 @@
+[package]
+name = "spectra-crafter-rx"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[workspace]
+
+[dependencies]
+crafter = { path = "../../vendor/libcrafter/crafter", features = ["radio"] }
+serde_json = "1"
+
+[profile.release]
+opt-level = 3

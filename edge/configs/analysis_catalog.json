@@ -1,0 +1,169 @@
+{
+  "version": "2026-10-23.18",
+  "installed_and_registered": [
+    {
+      "backend": "Independent NumPy/SciPy observed-reference detector",
+      "tools": ["list_drone_video_profiles", "analyze_drone_video_link", "analyze_drone_hopping"],
+      "status": "experimental-recording-signature",
+      "purpose": "Additive recording-derived reference matching using installed profile catalog; no payload CRC,video decryption or universal aircraft identification",
+      "profile_registry": "configs/drone_video_signatures.json"
+    },
+    {
+      "backend": "Official DeepSeek Harness + NumPy/SciPy spectrum tools",
+      "tools": [
+        "coarse_segment_spectrum",
+        "inspect_spectrum",
+        "segment_spectrum",
+        "compare_segmentations",
+        "select_segmentation",
+        "consolidate_signal_regions",
+        "fuse_refined_regions",
+        "plan_unknown_investigations",
+        "record_investigation_decision",
+        "compare_local_refinements",
+        "review_activity_batch",
+        "localize_verified_frames"
+      ],
+      "status": "experimental-real-IQ-replay-tested",
+      "purpose": "Harness chooses detector strategy, FFT size, threshold, comparisons and working hypothesis; original alternatives retained, accuracy not calibrated"
+    },
+    {
+      "backend": "NumPy/SciPy",
+      "tools": [
+        "analyze_iq_quality",
+        "analyze_burst_timing",
+        "analyze_sweep_structure",
+        "summarize_spectral_activity"
+      ],
+      "status": "experimental-tested",
+      "purpose": "Protocol-independent measurements and waveform candidates, not decoded protocol labels",
+      "source": "https://docs.scipy.org/doc/scipy/reference/signal.html"
+    },
+    {
+      "backend": "SigMF1.13.0/spec1.2.6",
+      "tools": [
+        "export_sigmf_recording"
+      ],
+      "status": "schema-validation-tested",
+      "purpose": "Local IQ export with reproducible metadata and unknown detection annotations",
+      "source": "https://sigmf.org/sigmf-spec.pdf"
+    },
+    {
+      "backend": "gr-ieee802-15-4",
+      "source": "https://github.com/bastibl/gr-ieee802-15-4",
+      "purpose": "2.4GHz O-QPSK DSSS250kb/s checked frames; Zigbee/Thread identity unknown",
+      "limitations": "Controlled RF-positive qualification pending; packet timestamp unavailable",
+      "tools": [
+        "verify_protocol(protocol=ieee802154_oqpsk)"
+      ],
+      "commit": "a210b11fed2d307ef797ea79842b54f4e8ed3dd5",
+      "status": "experimental-offline-IQ-tested"
+    },
+    {
+      "backend": "libbtbb + bounded numerical GFSK demodulation",
+      "tools": [
+        "analyze_bluetooth_classic"
+      ],
+      "status": "access-code-positive-negative-tested-not-full-decoder",
+      "purpose": "Classic Bluetooth synchronization candidate evidence only; no HEC/payload CRC confirmation",
+      "source": "https://github.com/greatscottgadgets/libbtbb",
+      "commit": "f0fe1768b080b1333a5357e8308d900e1273ec7f",
+      "license": "GPL-2.0-or-later"
+    },
+    {
+      "backend": "srsRAN_4G LTE receive-only file adapter",
+      "tools": [
+        "verify_protocol"
+      ],
+      "protocol": "lte_pbch",
+      "status": "FDD-TDD-sync-PBCH-MIB-positive-negative-tested",
+      "source": "https://github.com/srsran/srsRAN_4G",
+      "commit": "bef8680d5f9714f3e040e6f9cbc88d7888439b6d",
+      "license": "AGPL-3.0-or-later",
+      "input": "Central1.4MHz passband at1.92MS/s,40ms..1s continuous recording",
+      "limitations": "No NR5G, SIB/operator identity, subscriber payload or precise PBCH timestamp. Sync alone never confirms LTE."
+    },
+    {
+      "backend": "srsRAN_4G NR FR1 SSB file adapter",
+      "tools": [
+        "verify_protocol"
+      ],
+      "protocol": "nr_pbch",
+      "status": "15kHz-A-30kHz-B-C-SSB-PBCH-CRC24C-MIB-tested",
+      "source": "https://github.com/srsran/srsRAN_4G",
+      "commit": "bef8680d5f9714f3e040e6f9cbc88d7888439b6d",
+      "license": "AGPL-3.0-or-later",
+      "limitations": "FR1 subset only; no FR2,60/120/240kHz SSB, SIB/PLMN/operator identification or subscriber traffic. Extraction-window recognition boundaries only."
+    }
+  ],
+  "evaluated_not_registered": [
+    {
+      "backend": "libbtbb",
+      "status": "not_installed",
+      "priority": 2,
+      "purpose": "Classic Bluetooth baseband evidence",
+      "required_before_registration": "Demodulated-bit frontend, packet synchronization, integrity handling, hop-state and USRP integration tests; library alone is not an IQ decoder",
+      "source": "https://github.com/greatscottgadgets/libbtbb"
+    },
+    {
+      "backend": "TorchSig/PyTorch",
+      "status": "not_installed_no_qualified_model",
+      "priority": 3,
+      "purpose": "Labeled synthetic datasets and a future waveform detector/classifier",
+      "required_before_registration": "Separate model artifact, real-IQ evaluation, unknown rejection and Jetson runtime qualification; framework installation is not trained recognition",
+      "source": "https://github.com/TorchDSP/torchsig"
+    },
+    {
+      "backend": "URH",
+      "status": "evaluated_not_installed",
+      "priority": 4,
+      "purpose": "Reference for proprietary signal modulation and bitstream investigation",
+      "required_before_registration": "Pinned compatible headless receive-only adapter; repository archived2026-03-29, assess maintenance before adoption",
+      "source": "https://github.com/jopohl/urh"
+    },
+    {
+      "backend": "inspectrum",
+      "status": "offline_review_only_not_registered",
+      "priority": 5,
+      "purpose": "Human review of IQ timing and modulation; optional workstation use, no GUI dependency in edge harness",
+      "required_before_registration": "No runtime integration planned at present",
+      "source": "https://github.com/miek/inspectrum"
+    }
+  ],
+  "policy": "Only implemented and tested callable adapters are registered. Priors and installed frameworks never imply protocol coverage.",
+  "segmentation_strategies": {
+    "traditional": "requested-band-background; experimental",
+    "adaptive_hysteresis": "requested-band-background; may suppress continuous energy",
+    "multiscale_energy": "experimental full-segment broad/narrow scales; known-frame coverage failed on recorded regression; compare, do not blindly adopt"
+  },
+  "segmentation_workflow": {
+    "default": "coarse_to_fine",
+    "first_tool": "coarse_segment_spectrum",
+    "coarse_power_aggregation": "mean and separately normalized peak; full continuous recording",
+    "fine_tool": "refine_signal_region with offset_s/duration_s",
+    "level_counts": "separate coarse parents, local fine candidates, decoded frames; no signal-count sum"
+  },
+  "boundary_fusion": {
+    "tool": "fuse_refined_regions",
+    "post_refinement_review_required": true,
+    "explicit_comparison_and_selection": true,
+    "unknown_residual_preserved": true,
+    "accuracy_improvement": "not_measured"
+  },
+  "unknown_investigation": {
+    "queue_tool": "plan_unknown_investigations",
+    "decision_tool": "record_investigation_decision",
+    "verification_attempt_audit": true,
+    "unknowns_preserved": true,
+    "representative_scheduling": "width-duration-strength-and-similarity",
+    "whole_region_protocol_confirmation": false
+  },
+  "local_fine_analysis": {
+    "strategy": "local_power_tiles",
+    "background": "whole continuous local window",
+    "target_scope_excludes_filter_context": true,
+    "model_selects_subband_and_fft": true,
+    "human_boundary_labels": "pending",
+    "accuracy_improvement": "not_measured"
+  }
+}

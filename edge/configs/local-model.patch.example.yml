@@ -1,0 +1,20 @@
+# Copy to local-model.patch.yml and set the endpoint/model of an actual local inference service.
+# This uses the official dsh adapter, not a custom model loop. Native tool-call support is required.
+- id: llm-pi-ai
+  config:
+    providers:
+      local-spectrum:
+        api: openai-completions
+        apiKeyEnv: LOCAL_MODEL_API_KEY
+        baseURL: http://127.0.0.1:8000/v1
+        models:
+          - id: replace-with-local-model-id
+            name: Local spectrum planning model
+            contextWindow: 32768
+        retryPolicy:
+          mode: normal
+          maxRetries: 0
+- id: agent-default-model
+  config:
+    provider: local-spectrum
+    model: replace-with-local-model-id

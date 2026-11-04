@@ -1,0 +1,128 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d1ce753..801e46e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -75,7 +75,13 @@ ENDIF()
+ ########################################################################
+ include(FindPkgConfig)
+ find_package(Volk)
++set(ENABLE_PYTHON OFF)
+ find_package(Gnuradio "3.9" REQUIRED COMPONENTS filter fft digital analog blocks)
++# Local integration fix: installed GNU Radio metadata contains a stale interpreter prefix.
++set(PYTHON_EXECUTABLE "/home/sribd/spectrum_agent/.venv/bin/python" CACHE FILEPATH "Spectrum Python" FORCE)
++set(ENABLE_PYTHON ON)
++include(GrPython)
++
+ include(GrVersion)
+ 
+ include(GrPlatform) #define LIB_SUFFIX
+diff --git a/lib/frame_equalizer_impl.cc b/lib/frame_equalizer_impl.cc
+index 253489a..fadc9d1 100644
+--- a/lib/frame_equalizer_impl.cc
++++ b/lib/frame_equalizer_impl.cc
+@@ -1,3 +1,4 @@
++// SPECTRUM_TIMESTAMP_V1 project-local receive provenance
+ /*
+  * Copyright (C) 2016 Bastian Bloessl <bloessl@ccs-labs.org>
+  *
+@@ -139,6 +140,10 @@ int frame_equalizer_impl::general_work(int noutput_items,
+         // new frame
+         if (tags.size()) {
+             d_current_symbol = 0;
++            std::vector<gr::tag_t> source_tags;
++            get_tags_in_window(source_tags, 0, i, i + 1, pmt::mp("spectrum_ltf_sample"));
++            d_source_timestamp_valid = !source_tags.empty();
++            if (d_source_timestamp_valid) d_source_ltf_sample = pmt::to_uint64(source_tags.front().value);
+             d_frame_symbols = 0;
+             d_frame_mod = d_bpsk;
+ 
+@@ -218,6 +223,7 @@ int frame_equalizer_impl::general_work(int noutput_items,
+             if (decode_signal_field(out + o * 48)) {
+ 
+                 pmt::pmt_t dict = pmt::make_dict();
++                if (d_source_timestamp_valid) dict = pmt::dict_add(dict, pmt::mp("spectrum_ltf_sample"), pmt::from_uint64(d_source_ltf_sample));
+                 dict = pmt::dict_add(
+                     dict, pmt::mp("frame bytes"), pmt::from_uint64(d_frame_bytes));
+                 dict = pmt::dict_add(
+diff --git a/lib/frame_equalizer_impl.h b/lib/frame_equalizer_impl.h
+index b9fe931..ea7ccaf 100644
+--- a/lib/frame_equalizer_impl.h
++++ b/lib/frame_equalizer_impl.h
+@@ -1,3 +1,4 @@
++// SPECTRUM_TIMESTAMP_V1 project-local receive provenance
+ /*
+  * Copyright (C) 2016 Bastian Bloessl <bloessl@ccs-labs.org>
+  *
+@@ -65,6 +66,8 @@ private:
+     gr_complex d_prev_pilots[4];
+ 
+     int d_frame_bytes;
++    uint64_t d_source_ltf_sample = 0;
++    bool d_source_timestamp_valid = false;
+     int d_frame_symbols;
+     int d_frame_encoding;
+ 
+diff --git a/lib/sync_long.cc b/lib/sync_long.cc
+index 544fcfd..2e45624 100644
+--- a/lib/sync_long.cc
++++ b/lib/sync_long.cc
+@@ -1,3 +1,4 @@
++// SPECTRUM_TIMESTAMP_V1 project-local receive provenance
+ /*
+  * Copyright (C) 2013, 2016 Bastian Bloessl <bloessl@ccs-labs.org>
+  *
+@@ -74,7 +75,7 @@ public:
+         int ninput = std::min(std::min(ninput_items[0], ninput_items[1]), 8192);
+ 
+         const uint64_t nread = nitems_read(0);
+-        get_tags_in_range(d_tags, 0, nread, nread + ninput);
++        get_tags_in_range(d_tags, 0, nread, nread + ninput, pmt::mp("wifi_start"));
+         if (d_tags.size()) {
+             std::sort(d_tags.begin(), d_tags.end(), gr::tag_t::offset_compare);
+ 
+@@ -90,6 +91,10 @@ public:
+                     d_state = RESET;
+                 }
+                 d_freq_offset_short = pmt::to_double(d_tags.front().value);
++                std::vector<gr::tag_t> source_tags;
++                get_tags_in_range(source_tags, 0, nread, nread + 1, pmt::mp("spectrum_source_sample"));
++                d_source_valid = !source_tags.empty();
++                if (d_source_valid) d_source_sample = pmt::to_uint64(source_tags.front().value);
+             }
+         }
+ 
+@@ -129,6 +134,8 @@ public:
+                 int rel = d_offset - d_frame_start;
+ 
+                 if (!rel) {
++                    if (d_source_valid) add_item_tag(0, nitems_written(0), pmt::mp("spectrum_ltf_sample"),
++                        pmt::from_uint64(d_source_sample + d_frame_start - 16), pmt::mp(name()));
+                     add_item_tag(0,
+                                  nitems_written(0),
+                                  pmt::string_to_symbol("wifi_start"),
+@@ -234,6 +241,8 @@ private:
+     int d_count;
+     int d_offset;
+     int d_frame_start;
++    uint64_t d_source_sample = 0;
++    bool d_source_valid = false;
+     float d_freq_offset;
+     double d_freq_offset_short;
+ 
+diff --git a/lib/sync_short.cc b/lib/sync_short.cc
+index af0988b..95137f1 100644
+--- a/lib/sync_short.cc
++++ b/lib/sync_short.cc
+@@ -1,3 +1,4 @@
++// SPECTRUM_TIMESTAMP_V1 project-local receive provenance
+ /*
+  * Copyright (C) 2013, 2016 Bastian Bloessl <bloessl@ccs-labs.org>
+  *
+@@ -144,6 +145,7 @@ public:
+         const pmt::pmt_t value = pmt::from_double(freq_offset);
+         const pmt::pmt_t srcid = pmt::string_to_symbol(name());
+         add_item_tag(0, item, key, value, srcid);
++        add_item_tag(0, item, pmt::mp("spectrum_source_sample"), pmt::from_uint64(input_item), srcid);
+     }
+ 
+ private:

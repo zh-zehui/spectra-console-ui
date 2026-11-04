@@ -10,7 +10,7 @@
 [![Demo](https://img.shields.io/badge/Live_Demo-GitHub_Pages-6cd8bf?style=flat-square)](https://zh-zehui.github.io/spectra-console-ui/)
 ![Stack](https://img.shields.io/badge/Stack-HTML_%C2%B7_CSS_%C2%B7_JavaScript-d8c69c?style=flat-square)
 
-[**查看历史实采任务 ↗**](https://zh-zehui.github.io/spectra-console-ui/measured/) · [交互演示](https://zh-zehui.github.io/spectra-console-ui/) · [本地运行](#本地运行) · [设备接入](docs/device-setup.md)
+[**查看历史实采任务 ↗**](https://zh-zehui.github.io/spectra-console-ui/measured/) · [交互演示](https://zh-zehui.github.io/spectra-console-ui/) · [边缘端源码](edge/) · [Jetson 部署](docs/edge-deployment.md)
 
 ![历史实采：5.8 GHz 原 IQ 的局部 STFT、Wi-Fi 校验帧与独立图传候选证据](dist/measured/images/measured-mixed-link.png)
 
@@ -18,7 +18,7 @@
 
 SPECTRA 是面向频谱分析的独立可视化操作层，将任务描述、时频观测、候选分割、识别证据和历史报告放到同一工作台。前端使用原生 HTML / CSS / JavaScript，静态演示无需后端或硬件。
 
-> **实采任务页**读取已归档的真实 RF 任务、STFT 数值和证据条目；**交互演示工作台**使用明确标注的示例数据。两者均不发起现场采集。实时设备模式需要额外部署 Jetson 网关与任务 API；这些服务和底层分析工具不包含在本仓库中。项目不隶属于 DeepSeek。
+> **实采任务页**读取已归档的真实 RF 任务、STFT 数值和证据条目；**交互演示工作台**使用明确标注的示例数据。两者均不发起现场采集。`edge/` 包含从实际 Jetson 读取的后端、网关、分析插件及部署代码；实时设备模式仍需安装无线环境和原生依赖。项目不隶属于 DeepSeek。
 
 ## 历史实采任务
 
@@ -107,15 +107,25 @@ flowchart LR
     Results --> Gateway
 ```
 
-本仓库包含静态前端、实采记录的公开摘录和 Windows 连接脚本。在线站点只托管静态文件；实时任务由设备端服务执行。详见 [真实设备启动、停止与数据边界](docs/device-setup.md)。
+本仓库包含静态前端、实采记录的公开摘录、Windows 连接脚本和 `edge/` 边缘端部署源码。在线站点只托管静态文件；实时任务由设备端服务执行。详见 [Jetson 部署指南](docs/edge-deployment.md) 与 [设备启动、停止及数据边界](docs/device-setup.md)。
+
+## 边缘端部署代码
+
+[`edge/`](edge/) 从现有 Jetson 的实际运行目录导出，包含 Python API / 队列 / 采集 / DSP / 报告、可视化网关、DSH 工具插件、原生接收工具、构建与启停脚本，以及 Python / npm / Cargo 依赖文件。六个第三方仓库固定到原设备提交，其中三个保留部署补丁及上游许可证。
+
+源码快照附有逐文件 SHA-256，可运行 `python3 edge/deploy/verify.py --source-only` 核对。环境准备、第三方源码恢复、凭据配置、原生构建、SSH 访问和服务启停见 [部署指南](docs/edge-deployment.md)。
+
+当前快照保留 `/home/sribd/spectrum_agent` 和 `usrp_dev` 的已验证布局；系统无线环境、编译产物、密钥与原始 IQ 需在目标设备另行准备。尚未在空白 Jetson 上完成全流程安装验收。
 
 ## 工程结构
 
 ```text
 dist/                     静态前端，直接编辑、直接运行
+edge/                     Jetson 后端、分析插件、依赖锁及部署脚本
 dist/measured/            只读实采归档页、STFT 数值、证据条目与实采截图
 docs/screenshots/         README 使用的真实界面截图
 docs/measured-results.md  历史实采案例、来源与证据限制
+docs/edge-deployment.md   当前 Jetson 部署布局、环境准备及服务操作
 docs/device-setup.md      现有 Jetson 环境接入说明与历史验证记录
 scripts/serve.mjs         本地演示服务器，仅监听本机
 tests/demo.mjs            桌面/移动端浏览器交互检查与截图

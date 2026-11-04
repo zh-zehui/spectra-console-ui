@@ -1,0 +1,1176 @@
+{
+  "schema": "spectra-edge-source-snapshot/v1",
+  "exported_at_utc": "2026-11-04T09:12:20.122980+00:00",
+  "source": "Source files read from the running Jetson deployment; not a fresh-machine installation test.",
+  "architecture": "aarch64",
+  "python": "3.11.9",
+  "node": "24.22.1",
+  "dsh": "0.2.1-rc.2",
+  "verified_project_path": "/home/sribd/spectrum_agent",
+  "files": [
+    {
+      "path": "adapters/libcrafter/Cargo.lock",
+      "bytes": 20716,
+      "sha256": "876aa6b2ec7ffa778a25df12b64ddeb417ec55b5d6a23674f4c4d40b0b050eba"
+    },
+    {
+      "path": "adapters/libcrafter/Cargo.toml",
+      "bytes": 245,
+      "sha256": "a94505d50b6e3be1392bfb09872d4f4dd6f91cedffc51a0192a211c3256573c8"
+    },
+    {
+      "path": "adapters/libcrafter/src/main.rs",
+      "bytes": 5615,
+      "sha256": "dbfd0869c160d618b2444f9253a9d3a0531fd839f126f7c13bf097ffe8f42053"
+    },
+    {
+      "path": "configs/analysis_catalog.json",
+      "bytes": 7674,
+      "sha256": "1041efb8c41a98c56a3fa871ae3fb456afa42b1a8aadd68419aeb4989980594a"
+    },
+    {
+      "path": "configs/band_extensions.json",
+      "bytes": 7973,
+      "sha256": "64f33f920f90ee0829d3a079df53f1885f55033eb55b067760e04900192cf185"
+    },
+    {
+      "path": "configs/band_priors.json",
+      "bytes": 4297,
+      "sha256": "7b38d0ff4d5e7dd1462e38e58b1658218e7cb87ca8f33a5d73e620e65ea43a0d"
+    },
+    {
+      "path": "configs/drone_video_signatures.json",
+      "bytes": 4769,
+      "sha256": "4f8f0ee77e130d8b64558f3631eda8f6f667d7a3f1197c0291b434c5c48c84be"
+    },
+    {
+      "path": "configs/local-model.patch.example.yml",
+      "bytes": 687,
+      "sha256": "5e4c3dac242e8defa2889d46452bd026fa2117be19885351fd76aaac464b0385"
+    },
+    {
+      "path": "configs/spectrum.patch.yml",
+      "bytes": 7360,
+      "sha256": "4d33dba1ff7cb0107aab6a733c54eafe86b955826269c28e079841841230d12d"
+    },
+    {
+      "path": "configs/tool_registry.json",
+      "bytes": 7209,
+      "sha256": "21319c788aebbc67b34b3f54adf9a1037a20403d5a2bbd29915c969b1f6bbfed"
+    },
+    {
+      "path": "deploy/licenses/gr-ieee802-11-LICENSE",
+      "bytes": 35141,
+      "sha256": "589ed823e9a84c56feb95ac58e7cf384626b9cbf4fda2a907bc36e103de1bad2"
+    },
+    {
+      "path": "deploy/licenses/gr-ieee802-15-4-LICENSE",
+      "bytes": 35141,
+      "sha256": "589ed823e9a84c56feb95ac58e7cf384626b9cbf4fda2a907bc36e103de1bad2"
+    },
+    {
+      "path": "deploy/licenses/gr-wifi-modern-LICENSE",
+      "bytes": 34523,
+      "sha256": "8486a10c4393cee1c25392769ddd3b2d6c242d6ec7928e1414efff7dfb2f07ef"
+    },
+    {
+      "path": "deploy/licenses/libbtbb-LICENSE",
+      "bytes": 18092,
+      "sha256": "8177f97513213526df2cf6184d8ff986c675afb514d4e68a404010521b880643"
+    },
+    {
+      "path": "deploy/licenses/libcrafter-LICENSE",
+      "bytes": 1083,
+      "sha256": "b43f1a07972b167e9c0d5dd17da4422c0aa724329d30e2b63d8f6e3ab9a27fe2"
+    },
+    {
+      "path": "deploy/licenses/srsRAN_4G-COPYRIGHT",
+      "bytes": 6217,
+      "sha256": "a41abb0b6fd8d5a7a990d6281172c54db53e76efd4d623cab4c76bc7e9ceb23b"
+    },
+    {
+      "path": "deploy/licenses/srsRAN_4G-LICENSE",
+      "bytes": 34520,
+      "sha256": "57c8ff33c9c0cfc3ef00e650a1cc910d7ee479a8bc509f6c9209a7c2a11399d6"
+    },
+    {
+      "path": "deploy/patches/gr-ieee802-11.patch",
+      "bytes": 5073,
+      "sha256": "a3c5966a4aa43abd6907c5d1abd3ff3d3faa4ff54c653d9bc718a0487a70bf3c"
+    },
+    {
+      "path": "deploy/patches/gr-ieee802-15-4.patch",
+      "bytes": 1435,
+      "sha256": "75c9ebcbb58d45c697a18cdfc8c98efb7cb12b1af7692557b28434077387b726"
+    },
+    {
+      "path": "deploy/patches/gr-wifi-modern.patch",
+      "bytes": 13657,
+      "sha256": "f3126a5ba9c8cbd330e5b43c2a33e56779dbcdf6ded1f1a829d318f53ff7f913"
+    },
+    {
+      "path": "deploy/vendor-lock.json",
+      "bytes": 1763,
+      "sha256": "7bbea6f167cfaac1c3fd3619671485a0bc7de7ec6faf583cf92c920943e161d9"
+    },
+    {
+      "path": "docs/backend-history.md",
+      "bytes": 19410,
+      "sha256": "dae3db23d8287e9a895e1191c17db73e54906b20066299784ecc9cec979230b1"
+    },
+    {
+      "path": "plugins/drone-video/acquire_cf32.cpp",
+      "bytes": 3322,
+      "sha256": "cf4b13ec625d4a74c7f07fce0a5221f36deb7a8f29d8e5c459a6dcc748b61101"
+    },
+    {
+      "path": "plugins/drone-video/resample_cf32.cpp",
+      "bytes": 2165,
+      "sha256": "189f0023236ebf94ad489c98aa43a4b2be9f298293a84f805e9ab0685233450b"
+    },
+    {
+      "path": "plugins/ieee154/packet_sink.cc",
+      "bytes": 18563,
+      "sha256": "5f6815d99e11c8621abf9e28c0776b225733ba4d0c4258fdf6380b82be3e7d4d"
+    },
+    {
+      "path": "plugins/lte/lte_fixture.c",
+      "bytes": 1920,
+      "sha256": "eba26be28009253be2f78beff1cdb16846a9df7f8e7cd1244e0522d548fa1c71"
+    },
+    {
+      "path": "plugins/lte/nr_fixture.c",
+      "bytes": 1927,
+      "sha256": "4187750517163d394328bb692803905dcba54cd745154ac5dde53bb99f002aca"
+    },
+    {
+      "path": "plugins/lte/spectrum_lte_rx.c",
+      "bytes": 4989,
+      "sha256": "38ec87a557d849e8aea6b9cea9c6734b9a84f25b5cf475aed33fdbec10d45ec4"
+    },
+    {
+      "path": "plugins/lte/spectrum_nr_rx.c",
+      "bytes": 3517,
+      "sha256": "56d74ab6e5fc3e6d2816c8e691e4b926e2c3adf8243e2b79362788355ea7d72b"
+    },
+    {
+      "path": "plugins/spectrum-tools/index.mjs",
+      "bytes": 36289,
+      "sha256": "e919c08c8467e695a7a1fe1191f12b3cc63f5d8f9bef4d74c9dcf4ef166d7f1b"
+    },
+    {
+      "path": "plugins/spectrum-tools/package.json",
+      "bytes": 94,
+      "sha256": "10bb810cd559502c527ae4a41c94bdc73d380423c3a4a2c9a9b0340b0b3013a2"
+    },
+    {
+      "path": "requirements.txt",
+      "bytes": 207,
+      "sha256": "d9e85f67ef8aad3900b7c0a97ecff018ff746a8540453473441e0e8d35acb6e8"
+    },
+    {
+      "path": "runtime/dsh/package-lock.json",
+      "bytes": 407233,
+      "sha256": "65d1781a2785776a06f979484a2308c47008f1408d84126f9e0b2e397cdb5083"
+    },
+    {
+      "path": "runtime/dsh/package.json",
+      "bytes": 65,
+      "sha256": "88fc2faeede1d22b4ab2e650717029a9ac52016459e6caeb058b779c64548756"
+    },
+    {
+      "path": "scripts/accept-agile-real-full-v2.py",
+      "bytes": 4179,
+      "sha256": "1d651cd6113bf2b365c071df55b90dcaae44a90f59cc7b90a5ea9365eb2c32f3"
+    },
+    {
+      "path": "scripts/accept-drone-hopping-dsh.py",
+      "bytes": 3090,
+      "sha256": "22d80e7ff133efac463f066f841a3fd0e9f0d9abde04df417dff572d3150b37e"
+    },
+    {
+      "path": "scripts/accept-drone-second-dsh.py",
+      "bytes": 3256,
+      "sha256": "2c4f485677328f1e2df75409da2662b7c4962123607a216e17aa3b0dd7d4cd69"
+    },
+    {
+      "path": "scripts/accept-drone-stream.py",
+      "bytes": 3303,
+      "sha256": "a91c1497a975cde3fe45356dc8e81ada03df33195d03c8590a67456a4c57c614"
+    },
+    {
+      "path": "scripts/accept-drone-third-dsh.py",
+      "bytes": 2636,
+      "sha256": "4102efa0ed394aefbb445b5d20413d97d162550075b4194d67cf27b46b619702"
+    },
+    {
+      "path": "scripts/accept-drone-video-dsh.py",
+      "bytes": 3356,
+      "sha256": "8b3cc51d5bac245d05b4f142a9582032b15704f7f78923974d93185302198c1c"
+    },
+    {
+      "path": "scripts/accept-drone-video-offline.py",
+      "bytes": 2026,
+      "sha256": "699def3625cb6260daff7d8698cd3555c99caa8063f41cc664da1ada29cfeebe"
+    },
+    {
+      "path": "scripts/accept-libcrafter-harness.py",
+      "bytes": 2894,
+      "sha256": "731d99c1626a7517d6222e61ee05a37ebb1a794c6934e052f1348707e5f87e96"
+    },
+    {
+      "path": "scripts/accept-libcrafter-report.py",
+      "bytes": 2845,
+      "sha256": "8033b45af06379e3d176ee379708d7871ef49781ce6347f86772cdc3c9e838f4"
+    },
+    {
+      "path": "scripts/accept-plot-replay.py",
+      "bytes": 1779,
+      "sha256": "e431ad8c22f161d2f333a0746f37e377c2a415e6408e42a68a209d9e321810ee"
+    },
+    {
+      "path": "scripts/accept-protocol-batch-24-dsh.py",
+      "bytes": 1916,
+      "sha256": "0c02ab91000128ff612a93eb536a896f5dd60e910256d36a53e8789410426ebb"
+    },
+    {
+      "path": "scripts/accept-protocol-batch-24.py",
+      "bytes": 3402,
+      "sha256": "6e757c49222a1c88a31cc7986adce78129e4a7e8bc98900cbd03def0c0664c5b"
+    },
+    {
+      "path": "scripts/accept-protocol-batch-dsh.py",
+      "bytes": 2102,
+      "sha256": "2a184ce3584ac796686f776d8f827d737bcb7e2eff69816629d4b5144fc2a03a"
+    },
+    {
+      "path": "scripts/accept-wifi-modern-report.py",
+      "bytes": 1983,
+      "sha256": "a1f106bf92ad128d8e5f8be6ffdfcbffe6d7705542f9042f99f4c55e31bbedfb"
+    },
+    {
+      "path": "scripts/accept-window-header-harness.py",
+      "bytes": 1927,
+      "sha256": "85ea1fa8941b3b17b3f8db5622282ebf453fa66ae35a48d7d41fe18cb2340b35"
+    },
+    {
+      "path": "scripts/accept-window-wide-iq.py",
+      "bytes": 5975,
+      "sha256": "a213167fc86bc38102251354f635b2e34c2b6da610e8281c94731098f9567201"
+    },
+    {
+      "path": "scripts/accept_continuation_v14.py",
+      "bytes": 4144,
+      "sha256": "44301f9e033f893023d5541dff85e794f34a3c9e05de7bfd25abbe11bdcd7d90"
+    },
+    {
+      "path": "scripts/accept_lte_v15.py",
+      "bytes": 3482,
+      "sha256": "6defe8f9d9d628d44d64c8d099175a7b8feb857e63fcc3d1a757047a4656c263"
+    },
+    {
+      "path": "scripts/accept_nr_v16.py",
+      "bytes": 3332,
+      "sha256": "650063a793317552ac27073c78484e15302d7e5288663a279a42123363331b57"
+    },
+    {
+      "path": "scripts/archive-wifi-modern-acceptance.py",
+      "bytes": 679,
+      "sha256": "17ac0804e97648dc1dd1ff266fe4e7cff9d9c09748ec26e4b30379f30b9a8632"
+    },
+    {
+      "path": "scripts/archive_system.py",
+      "bytes": 9850,
+      "sha256": "5bbbdbaa3ea46a48e1087b31ab5a9883ca37b475b6cde213071d4e27aac8f081"
+    },
+    {
+      "path": "scripts/audit-artifact-cleanup.py",
+      "bytes": 6204,
+      "sha256": "091a8c591817aa16ca02f790fc22b35e0929b43d97a28c0705396b8df4f6b1f6"
+    },
+    {
+      "path": "scripts/audit-runs-cleanup.py",
+      "bytes": 6381,
+      "sha256": "65fd9d1a85f70eb7a55e17d84da3c0816ca289a498a39ef66fd120160653dc44"
+    },
+    {
+      "path": "scripts/benchmark-drone-frontends.py",
+      "bytes": 2270,
+      "sha256": "c4799684814c807498c7e37a315cd9acd1e50f21508d2ec202551487066f6b52"
+    },
+    {
+      "path": "scripts/benchmark-drone-native.py",
+      "bytes": 1869,
+      "sha256": "064da898ac500e0aa949507fef0719a4db490ca45d40751ccce79cc293dc7df5"
+    },
+    {
+      "path": "scripts/benchmark_boundaries_v08.py",
+      "bytes": 1884,
+      "sha256": "354dc3cd134a34addb3c21db398ffdeb53c73a680ed9ca7d2a8b4b1a907de27a"
+    },
+    {
+      "path": "scripts/benchmark_catalog.py",
+      "bytes": 2941,
+      "sha256": "0ce07a41e7bfa358400291cc60eb523bf01fda12d40f32dcc1ca2a8e3a008cbd"
+    },
+    {
+      "path": "scripts/benchmark_classic_v14.py",
+      "bytes": 1633,
+      "sha256": "e079495f6e428c512aabd28835f4acc7d630a73bc93b9afa03fd4e2c28154170"
+    },
+    {
+      "path": "scripts/benchmark_coarse_v09.py",
+      "bytes": 1849,
+      "sha256": "6025d1da8f6d116108801f05e85e016f65d923f7d239b80b1b9c0feb9261cc10"
+    },
+    {
+      "path": "scripts/benchmark_local_v12.py",
+      "bytes": 4598,
+      "sha256": "ce5fb0d6e25528ae8e83b4c4b5a8da05c560aba211a8ea3a2ee38def30551268"
+    },
+    {
+      "path": "scripts/benchmark_lte_v15.py",
+      "bytes": 2480,
+      "sha256": "f92166f8d6092ef7ff19497b3cf7b8bc922479ff4adee6ab8290911bc33616a1"
+    },
+    {
+      "path": "scripts/benchmark_nr_v16.py",
+      "bytes": 2125,
+      "sha256": "d47fe5539af7ad93bb01d62b1c7b3fbe0fc88d7ab64b95131e86abe7dc4b58c1"
+    },
+    {
+      "path": "scripts/build-drone-video-native.sh",
+      "bytes": 518,
+      "sha256": "e6874e67c953706452fc172bb3ec59d81cbe615a59ca1b07d7b8230461e2ecc9"
+    },
+    {
+      "path": "scripts/build-ieee154-timing.sh",
+      "bytes": 469,
+      "sha256": "e04e7d3620238eda17f30728d15bbd4b726895e36274b188a8dbde807010d41a"
+    },
+    {
+      "path": "scripts/build-ieee154.sh",
+      "bytes": 855,
+      "sha256": "1b3d885a736ad11bdf0598f1cdfaa3848db53008ece2ffb8bf3fec8091401fd2"
+    },
+    {
+      "path": "scripts/build-libbtbb.sh",
+      "bytes": 533,
+      "sha256": "e1cc2224feff3db7070cd5acde00a23876c5a6bc6fdb72d907a4737e3f8d6178"
+    },
+    {
+      "path": "scripts/build-libcrafter.sh",
+      "bytes": 954,
+      "sha256": "254e267e4d16e934e3a69249a2e170bf2a44e2404d8b5196207f4eb04469124a"
+    },
+    {
+      "path": "scripts/build-lte.sh",
+      "bytes": 1793,
+      "sha256": "8994bd2c4cab9d1f6e3e9295a23558fe8e43f359c08fce7f91062aa88f3c68ae"
+    },
+    {
+      "path": "scripts/build-wifi-modern.sh",
+      "bytes": 1218,
+      "sha256": "4f9cd4c9ac7c61093771ee6ab4e2d43639fb52ea33a2789af64a7b4e1099bc71"
+    },
+    {
+      "path": "scripts/build-wifi.sh",
+      "bytes": 1440,
+      "sha256": "791e35ad5fefeeac572d240ce1b907d61fa94338cc95335205049f0cb04ef405"
+    },
+    {
+      "path": "scripts/check-active-intent-phase.py",
+      "bytes": 674,
+      "sha256": "4986bfd5588e070ca652f788800b77b6687473ecd9d57f89f042e92f16673527"
+    },
+    {
+      "path": "scripts/check-ble-extended-replay.py",
+      "bytes": 1825,
+      "sha256": "593432bd9702092f4b7a182bced9c4c5273f349d4afacfcbacef3376e70307cc"
+    },
+    {
+      "path": "scripts/check-protocol-baseline-retention.py",
+      "bytes": 1663,
+      "sha256": "d7f32cd7b5d83e88869c35e3f48dcb5cc773eaedd7a4146c22338b3ea212837e"
+    },
+    {
+      "path": "scripts/check-three-prompt-intents.py",
+      "bytes": 5740,
+      "sha256": "af404d6ea11ee69f4e6971fe100143f5f947415634373d6ae5623df9d98f9f09"
+    },
+    {
+      "path": "scripts/check-wide-wifi-headers.py",
+      "bytes": 2658,
+      "sha256": "654f9769baf8277721d5fa498e53cf08effbe97017dc628ee4f76fbadf8d164c"
+    },
+    {
+      "path": "scripts/check-wifi-modern-impairments.py",
+      "bytes": 393,
+      "sha256": "f8b3df4cae2ac67c9033ce20f11252b2c1bc1fb948c27af76a29bf68e17fe439"
+    },
+    {
+      "path": "scripts/check-wifi-modern-saved-iq.py",
+      "bytes": 1869,
+      "sha256": "b31e038839a71cc5e9556a348462d5bffd0033e2eae2c5fcc5c59e4abcd98e96"
+    },
+    {
+      "path": "scripts/check-wifi-modern.py",
+      "bytes": 1554,
+      "sha256": "932185ef2815aba41224666b25a1cfa435a6df20de93cca2193f7b3f1e26f447"
+    },
+    {
+      "path": "scripts/compare-all-wifi-receivers.py",
+      "bytes": 4535,
+      "sha256": "e8574c385ab9042f1b4388669d2a733df167f1b7347a59d56bb1054656feb4ab"
+    },
+    {
+      "path": "scripts/compare-wide-mac-regression.py",
+      "bytes": 2637,
+      "sha256": "a11eaa5ff2a7b79c7eddb5aa7aece277343d4e2e98ec9839229dc9d4230ef05d"
+    },
+    {
+      "path": "scripts/compare-window-harness.py",
+      "bytes": 2883,
+      "sha256": "0b1d493629198fe354348aa364210b3fb76dc1925783fb1f0ae6b3d68ccdcd59"
+    },
+    {
+      "path": "scripts/deploy-history-prompt.py",
+      "bytes": 738,
+      "sha256": "f048af5bbbdd6eb197e280c08465ecb9c27f2fe2c2f9a3c1f7468073be7f1fa5"
+    },
+    {
+      "path": "scripts/diagnose_b40_v17.py",
+      "bytes": 3749,
+      "sha256": "298ee580ca246c7b50f65da10f76c05bee338b4723166c2636e7c11706ba87b1"
+    },
+    {
+      "path": "scripts/ensure-ui-stack.sh",
+      "bytes": 1018,
+      "sha256": "426e1b152b5bf9473031ff301ad4d804ce4ce807d71f5d4041171858c3360012"
+    },
+    {
+      "path": "scripts/evaluate_local_v13.py",
+      "bytes": 700,
+      "sha256": "0172b791d6393e87f66508cbba8c96e7fdc544f6ad5367733b890abcbf369463"
+    },
+    {
+      "path": "scripts/execute-approved-artifact-cleanup.py",
+      "bytes": 5866,
+      "sha256": "4515836b3debc866d0b914cdc68a2ebf0079f00fcb6cbf3f4f638dac28606645"
+    },
+    {
+      "path": "scripts/export_public_task.py",
+      "bytes": 3285,
+      "sha256": "c0ad117366a402943fa76ee6746b2f5d920515ee257e1248452ac23262a749c9"
+    },
+    {
+      "path": "scripts/install-libcrafter-toolchain.sh",
+      "bytes": 456,
+      "sha256": "af94f1221d16edffaeec71d66736dae8f795f5bee401003d9d13f80e4f87e482"
+    },
+    {
+      "path": "scripts/patch-ieee154-build.py",
+      "bytes": 614,
+      "sha256": "031400293b4d8f8243953678e33759ace37e970c994953b313698dbf974ff91b"
+    },
+    {
+      "path": "scripts/patch-wide-wifi-headers.py",
+      "bytes": 2040,
+      "sha256": "7b16d508512fd42219604d0abd282868d26454e368f8eb5b8fb5c2388fd7e75c"
+    },
+    {
+      "path": "scripts/patch-wifi-modern-build.py",
+      "bytes": 453,
+      "sha256": "3818a12b55ebaf6ee4bfb7dd0ea4db93679b7a126486c42c723f9a230afe6165"
+    },
+    {
+      "path": "scripts/patch-wifi-modern-evidence.py",
+      "bytes": 3455,
+      "sha256": "97ef43984c34a4401d4bf3d5567b34e9fa842b634d274e319254906eabfa0767"
+    },
+    {
+      "path": "scripts/patch-wifi-modern-scheduler.py",
+      "bytes": 1422,
+      "sha256": "0222ec164cc7007a694c3eede3f642fa05532a338ed9b3343ec615a271963ad1"
+    },
+    {
+      "path": "scripts/patch-wifi-timestamps.py",
+      "bytes": 2536,
+      "sha256": "b37d6b2eb6434d192120de578f540e36e2406d931a833863da0a755c3ed64897"
+    },
+    {
+      "path": "scripts/plot_local_review_v12.py",
+      "bytes": 4384,
+      "sha256": "be473aff0431953a46e371a76d869c9962a0c192c6cf749bf250aeea58c939d1"
+    },
+    {
+      "path": "scripts/probe-drone-matched-filter.py",
+      "bytes": 2478,
+      "sha256": "791f744670edcbbe7052e714f361c6958d365f3ded0b6e0763786a7a7f710773"
+    },
+    {
+      "path": "scripts/probe-drone-ofdm.py",
+      "bytes": 1652,
+      "sha256": "3036ed6f221fcd067fa6f565a15ca2cabe6faa9648fff0da6850835a93f06ba5"
+    },
+    {
+      "path": "scripts/probe-drone-root-fit.py",
+      "bytes": 2464,
+      "sha256": "a6d56095a243cddcd36f48055d112f02d4a23f5b43d181d2628ec2d8cd20e8ff"
+    },
+    {
+      "path": "scripts/probe-drone-roots.py",
+      "bytes": 3015,
+      "sha256": "7c07748f64518cfa878b86f215c72dae7d635b5b86fd43f4d5b836762f8e3bf9"
+    },
+    {
+      "path": "scripts/probe-drone-second-full.py",
+      "bytes": 1681,
+      "sha256": "6e216c1267657ceefe1fc5eb53a468f6764d81f4cfabe3031a81029a93af9585"
+    },
+    {
+      "path": "scripts/probe-drone-second-root.py",
+      "bytes": 3151,
+      "sha256": "98ec9ab0d3ddbbbe9010ce1bfb302e69e327bb494877ed6db9009683e8c7b9b0"
+    },
+    {
+      "path": "scripts/probe-drone-second-source.py",
+      "bytes": 1566,
+      "sha256": "5b53262bb00c0d622f03e21cf52c76c1ef48824ba72d5013338b463c6bf77499"
+    },
+    {
+      "path": "scripts/probe-drone-short-reference.py",
+      "bytes": 1834,
+      "sha256": "9f553af8b740d53cc098b7c19d85431cd1475dd2616b3712098d05d4c0e945fa"
+    },
+    {
+      "path": "scripts/probe-drone-third-root.py",
+      "bytes": 2553,
+      "sha256": "9a2b868db4288fa732661d11a5d9aebc355a96382c0d76cbdf884a1b9a91a843"
+    },
+    {
+      "path": "scripts/probe-drone-zc.py",
+      "bytes": 2449,
+      "sha256": "c6f04313628e156fe99efcc63c44fbafb86669e5c95f9a21d209a593fa8f00c3"
+    },
+    {
+      "path": "scripts/reconcile-agile-inherited-coverage.py",
+      "bytes": 4057,
+      "sha256": "99ec290e514a6abe1ac2b258384cdd1cff4f7a1ccb7b73e5de6d505a40e3127e"
+    },
+    {
+      "path": "scripts/refresh-wide-report.py",
+      "bytes": 1645,
+      "sha256": "8bee6f05f501b9f70316ea6f1d22ecf3485e1aeae1a080d6540b084870db1a25"
+    },
+    {
+      "path": "scripts/reload-ui-stack.py",
+      "bytes": 2006,
+      "sha256": "e9f3c02f4835faf590eab6f18fc4fc62be98b28285b019bcbbd6f91c4a518297"
+    },
+    {
+      "path": "scripts/replay_activity_v07.py",
+      "bytes": 3470,
+      "sha256": "2fac8aba9c8f8befbbb126d59a8ea39d41a134536ebeef97cc41bc0e50dc7f9b"
+    },
+    {
+      "path": "scripts/replay_budget_v13.py",
+      "bytes": 6069,
+      "sha256": "12250ca0480b755b89033b03279400ec34f0371c77be328af2cd813fd2e148a6"
+    },
+    {
+      "path": "scripts/replay_coarse_v09.py",
+      "bytes": 3970,
+      "sha256": "557afc90c81190e79014db4ec508989c21b88afa7d752630f57af2d596d287f9"
+    },
+    {
+      "path": "scripts/replay_feedback.py",
+      "bytes": 2633,
+      "sha256": "1be7c2750625154a570d388b8911a60484e47dce23d5ee1ae65bc30988e4eb50"
+    },
+    {
+      "path": "scripts/replay_fusion_v10.py",
+      "bytes": 3161,
+      "sha256": "a308ade5e7446ef58758faa722a7a9984556b8e038b2d004c433adda9a611cd1"
+    },
+    {
+      "path": "scripts/replay_investigation_v11.py",
+      "bytes": 4065,
+      "sha256": "9a0c92eab678d76b37808bb2ae5aa89014078d63b779a34b86e1c51becc7e412"
+    },
+    {
+      "path": "scripts/replay_local_v12.py",
+      "bytes": 4044,
+      "sha256": "201ba417b6d1392dd5b5f54e3e5e01be84fac8fedf8fa4fff1d7338108c98733"
+    },
+    {
+      "path": "scripts/replay_protocols_v05.py",
+      "bytes": 2688,
+      "sha256": "7769bd0ecee87448b5c19e83cbdca7428e6ea8f0484fa6f52b91c898635029e2"
+    },
+    {
+      "path": "scripts/replay_segmentation_choice.py",
+      "bytes": 3903,
+      "sha256": "f694f96ceb579db16a02c1a098223939df6ee2cc23e1b275f6a0faf14e3a4e2f"
+    },
+    {
+      "path": "scripts/start-api.sh",
+      "bytes": 262,
+      "sha256": "59a3686f115e25811cd9225299f563061a8832a6a2e584d6af215eded4fb838a"
+    },
+    {
+      "path": "scripts/start-ui.sh",
+      "bytes": 221,
+      "sha256": "642cc05004b0bf82207d6d80fd370d85c1587d57795912b61e4744a0e6646437"
+    },
+    {
+      "path": "scripts/stop-ui-stack.py",
+      "bytes": 3679,
+      "sha256": "2d0463ccca7222d5e751987ea3531c98ae6223f18a93d827a71ede318da1d637"
+    },
+    {
+      "path": "scripts/submit_complete_review_v18.py",
+      "bytes": 1584,
+      "sha256": "5c9a709478414dcb98237b617bfd223092b70ac3a027405c962339da858e0018"
+    },
+    {
+      "path": "scripts/submit_final_review_v18.py",
+      "bytes": 2235,
+      "sha256": "395896b977a6c6a4052ca761306db380264a7edaf43660a6d018a1cf5d476ac6"
+    },
+    {
+      "path": "scripts/submit_fresh_rf_v18.py",
+      "bytes": 2287,
+      "sha256": "efbff56567ee5682faa4f3e0f0e2855825231b7d7c4bc8c89699d35412dad8dd"
+    },
+    {
+      "path": "scripts/submit_localization_v18.py",
+      "bytes": 2094,
+      "sha256": "9d58b48ffd190c9b6d703d402796a2e504426b0a4b035779b694537d8f6eb382"
+    },
+    {
+      "path": "scripts/submit_task.py",
+      "bytes": 1452,
+      "sha256": "acc4737ec75f9cd0fba747cff78309883a3f03b7a3bf175a0183fe210431e608"
+    },
+    {
+      "path": "scripts/summarize-protocol-batch-validation.py",
+      "bytes": 2280,
+      "sha256": "9663e8966f533815fc34538c8cbcfb11b8884c05095f66c5830380ff58438d48"
+    },
+    {
+      "path": "scripts/summarize_b40_v17.py",
+      "bytes": 3399,
+      "sha256": "34d8f952c5121830912937685dff73b05b368680428293421ae0621137a54300"
+    },
+    {
+      "path": "scripts/summarize_live_test.py",
+      "bytes": 1951,
+      "sha256": "f1ef29bd3662b29f06afbe3cc23b6b6375452ef3a93781b0cd0b65881e7d6ca6"
+    },
+    {
+      "path": "scripts/write-window-wide-summary.py",
+      "bytes": 5532,
+      "sha256": "edc331916860ffaa3d71a362e7f920d30291905734f57d3e9af6fa3cda1e3c70"
+    },
+    {
+      "path": "src/spectrum_agent/__init__.py",
+      "bytes": 98,
+      "sha256": "bde6cbf58524c310411d9203b63f2afa6e8065bf42c3b6d476f35aebb06da8b0"
+    },
+    {
+      "path": "src/spectrum_agent/acquisition.py",
+      "bytes": 10813,
+      "sha256": "c074efd8f8f26e816053af8ee729cd244a005e2478e5e4c700cdd82ff1bd1267"
+    },
+    {
+      "path": "src/spectrum_agent/analysis_budget.py",
+      "bytes": 6426,
+      "sha256": "5ef85b58a7bd4d62172f9258f226e016b86231c9e4a07a8c22a8a5bded3216a1"
+    },
+    {
+      "path": "src/spectrum_agent/analysis_tools.py",
+      "bytes": 11660,
+      "sha256": "15f430481051e9f01bd87d5a1eb69700d5f3cb4b2952ef44c240e3cc2a5d2d7a"
+    },
+    {
+      "path": "src/spectrum_agent/api.py",
+      "bytes": 10080,
+      "sha256": "39eec9f8ca211558cab2d6037e8d1a19918e54f7c9e430b938d954705b502783"
+    },
+    {
+      "path": "src/spectrum_agent/ble_followup.py",
+      "bytes": 4820,
+      "sha256": "dfc826f0a03222e39f8e458695ea4ec4f069245f8f76844e526dac65d3b80bfd"
+    },
+    {
+      "path": "src/spectrum_agent/bluetooth_classic.py",
+      "bytes": 5983,
+      "sha256": "ddfac286a26ad48f2031ea0e2937ee7d61aab1522493bd06c40a79a9c56d5b61"
+    },
+    {
+      "path": "src/spectrum_agent/catalog.py",
+      "bytes": 5960,
+      "sha256": "333d80077aadc6910f72a7798fc98745bffebb5525490a2319c9b2d0683742f5"
+    },
+    {
+      "path": "src/spectrum_agent/coarse.py",
+      "bytes": 9925,
+      "sha256": "aa2f0c278d0d58711bd96237adc4f23caf593da5aa14381feaea20e77563c7e0"
+    },
+    {
+      "path": "src/spectrum_agent/common.py",
+      "bytes": 4630,
+      "sha256": "eb11c2c42348099c3f28387cd3fd2bae57d0bb39f777c1cb49661a9c80a89482"
+    },
+    {
+      "path": "src/spectrum_agent/continuation.py",
+      "bytes": 15706,
+      "sha256": "a1a560841c68fef914acf7918235dea7796620eb14247ffcf596ed23e49b9bf6"
+    },
+    {
+      "path": "src/spectrum_agent/coverage.py",
+      "bytes": 5793,
+      "sha256": "1b26e7565f610fc665a4149459e30d9a47f516e71d5962ed1b27555eaea61823"
+    },
+    {
+      "path": "src/spectrum_agent/drone_hopping.py",
+      "bytes": 19973,
+      "sha256": "22ea060fafedf171628c8a85652750c30f9ddc39c5cfdbb67d6a906c02254550"
+    },
+    {
+      "path": "src/spectrum_agent/drone_stream.py",
+      "bytes": 5030,
+      "sha256": "0d1b28600f4a4b5be24db023870db9d20aa24cb00fe273b0fb9cf32d793a684d"
+    },
+    {
+      "path": "src/spectrum_agent/drone_video.py",
+      "bytes": 22918,
+      "sha256": "9f9b89574a453560d46ab28b0b446ff3cb8401af7316237ce49e35dd85b95062"
+    },
+    {
+      "path": "src/spectrum_agent/dsp.py",
+      "bytes": 21448,
+      "sha256": "bcb69f74a995aceab81672c512f7f72f65b6f56c020fe85b8101a1094dbef88b"
+    },
+    {
+      "path": "src/spectrum_agent/evidence_display.py",
+      "bytes": 3244,
+      "sha256": "27bd561ba0d47eafe88c8713674f45e68bef96bcf0ab77daec834fb3b3afd99a"
+    },
+    {
+      "path": "src/spectrum_agent/frame_localization.py",
+      "bytes": 3226,
+      "sha256": "db2066d00dcb2e1939e4411eb9e7de73519f3f6d8f98dcdd2a7329341bab915f"
+    },
+    {
+      "path": "src/spectrum_agent/frequency_scope.py",
+      "bytes": 3432,
+      "sha256": "c1f9398e0851bfbf003f4d5917c9e44e32b380ec9060ccf47c654cfe4639a098"
+    },
+    {
+      "path": "src/spectrum_agent/fusion.py",
+      "bytes": 8115,
+      "sha256": "4d7f00c898de011298a2941a2ea3081c16a1da6c786dca36f8c966128a490d0c"
+    },
+    {
+      "path": "src/spectrum_agent/header_evidence.py",
+      "bytes": 3822,
+      "sha256": "74b68d9605118169e350c7a540ffa74d7f94d8479933a2fc6fd9ad23ee52942f"
+    },
+    {
+      "path": "src/spectrum_agent/ieee154.py",
+      "bytes": 5488,
+      "sha256": "caa7a874f9186540ec96f6a289142844883eff208d64b4bafd1148ec3d9fd268"
+    },
+    {
+      "path": "src/spectrum_agent/investigation.py",
+      "bytes": 23193,
+      "sha256": "bfba7360844d15e0383491e6e4782a5e757fb2b2c0bb156ec31d38b16e098059"
+    },
+    {
+      "path": "src/spectrum_agent/knowledge.py",
+      "bytes": 4351,
+      "sha256": "ed0674a4826ae6015c242d462b9c6464cf5ccf1691bd1c6ebcb7aa397f5edae2"
+    },
+    {
+      "path": "src/spectrum_agent/local_review.py",
+      "bytes": 4952,
+      "sha256": "41736bc9430bba08fad1d518ca00186b6f637759fe917e4fb54a20f5acb715be"
+    },
+    {
+      "path": "src/spectrum_agent/local_tiles.py",
+      "bytes": 2525,
+      "sha256": "9a748a37b539ce8f4905d083e8f9d37df8592652a0a085f8412e558aec7d789e"
+    },
+    {
+      "path": "src/spectrum_agent/lte.py",
+      "bytes": 5318,
+      "sha256": "114a313897183940efde15353827e6abe3a3cd514520482b871d8d962e5069b9"
+    },
+    {
+      "path": "src/spectrum_agent/mac_details.py",
+      "bytes": 1447,
+      "sha256": "240518f5aacc51d647c36fa96690a188b96480628bfd6b1f0ef0c95dc931fe11"
+    },
+    {
+      "path": "src/spectrum_agent/multiscale.py",
+      "bytes": 2833,
+      "sha256": "77f93cf32c50490be798ae11839ea5522550cd6405e43ee3bf5339c6a9b71f3d"
+    },
+    {
+      "path": "src/spectrum_agent/nr.py",
+      "bytes": 6313,
+      "sha256": "32447b6c6238b0a59a25a42efda6e3685a71eb6bd41e3e9e65b040156861838e"
+    },
+    {
+      "path": "src/spectrum_agent/ofdm_structure.py",
+      "bytes": 4023,
+      "sha256": "876ef51fa01ae9f8b82b15d446d93e4a2397260c99a11c70790b8cc5af9508a5"
+    },
+    {
+      "path": "src/spectrum_agent/presentation.py",
+      "bytes": 7486,
+      "sha256": "bb4cdf57657453624c040e875c60e772d860d459e03a96f835bd64bb5a511924"
+    },
+    {
+      "path": "src/spectrum_agent/protocol_batch.py",
+      "bytes": 18468,
+      "sha256": "c4510affce0c7c5b4c3f90fc1376ec422b7fe40201d2ce96f39a7dbc4e8fa108"
+    },
+    {
+      "path": "src/spectrum_agent/protocols.py",
+      "bytes": 11048,
+      "sha256": "410b8e13ddc519595d5270c51713a1d2d8738f2380e7e6d01110c08ee232518c"
+    },
+    {
+      "path": "src/spectrum_agent/scene.py",
+      "bytes": 16550,
+      "sha256": "6f886c09ffe9d1734bf4d1a5fae51c4344a6b8e33b6b97e4b6e216488b61ee06"
+    },
+    {
+      "path": "src/spectrum_agent/segmentation_eval.py",
+      "bytes": 5396,
+      "sha256": "3d7524e0f02ff64bfcff1afcdd92be34abaeb231c7c8770ef7dab9db8067a5cf"
+    },
+    {
+      "path": "src/spectrum_agent/segmentation_tools.py",
+      "bytes": 12938,
+      "sha256": "d434ea3ed24c151368a6f6cd77b75e1ef374969744a09bafae07a586b19968f6"
+    },
+    {
+      "path": "src/spectrum_agent/service.py",
+      "bytes": 57009,
+      "sha256": "c87e1ae79da97fe5df4ad566f0a338a248bdca538f85230d64a00aa7eef5a8c0"
+    },
+    {
+      "path": "src/spectrum_agent/signal_batch.py",
+      "bytes": 3021,
+      "sha256": "571ad330fcb903c2152f0afdc41925e74771cf60c9b58d20b22cd265965d6fcd"
+    },
+    {
+      "path": "src/spectrum_agent/task_intent.py",
+      "bytes": 13206,
+      "sha256": "038d40c145422a43a40e9e94ae1ec7940098e557a391b7fbf30dfbcdf4798d25"
+    },
+    {
+      "path": "src/spectrum_agent/task_records.py",
+      "bytes": 1751,
+      "sha256": "fa9e1001e8d621b6fe61e2e7e932b7635ef8d8416d9b38ab9392137ab66178cd"
+    },
+    {
+      "path": "src/spectrum_agent/ui_gateway.py",
+      "bytes": 34981,
+      "sha256": "7c37b9801a47ddb80fc2bb20741f67c15bcc85c1df6e9df28d1b65a5643a45ec"
+    },
+    {
+      "path": "src/spectrum_agent/visualization.py",
+      "bytes": 1015,
+      "sha256": "22e2e886a830b6bffe60760d0a06d0d05ef3e314e77771dc41550131da3f9c10"
+    },
+    {
+      "path": "src/spectrum_agent/wifi.py",
+      "bytes": 5288,
+      "sha256": "64f64067f4fcb7e769d4d940248e9b0061f61c406d2271584e80d16d4c38c736"
+    },
+    {
+      "path": "src/spectrum_agent/wifi_crafter.py",
+      "bytes": 7502,
+      "sha256": "a6e5f13c1538e1441db18f6da17054c3f8d68b49298d332824455ff5385c3c97"
+    },
+    {
+      "path": "src/spectrum_agent/wifi_headers.py",
+      "bytes": 2254,
+      "sha256": "2ad90df7202fc4270b97a60df7d45e499f1948977959c18f7bab67789e993150"
+    },
+    {
+      "path": "src/spectrum_agent/wifi_modern.py",
+      "bytes": 7279,
+      "sha256": "cd656ba57e252de7d6151755edb6a0c1adc1ed3e2a4f911d8e50741ffe64feb5"
+    },
+    {
+      "path": "src/spectrum_agent/window_analysis.py",
+      "bytes": 6431,
+      "sha256": "2b508874ebb814075a78625b7cc51f77ea28c77654fb3694824a7a443d867368"
+    },
+    {
+      "path": "src/spectrum_agent/worker.py",
+      "bytes": 36768,
+      "sha256": "d0e8c19f86f814af8cd8e48c0617e31aa2d72a354bda60189e86169a09ee2ece"
+    },
+    {
+      "path": "tests/test_activity_presentation.py",
+      "bytes": 2453,
+      "sha256": "d5d3a7da901a92b3304d20d76ade82834897f54410b38526365b93696009f3ac"
+    },
+    {
+      "path": "tests/test_analysis_budget.py",
+      "bytes": 5739,
+      "sha256": "5b5722c15da803c21f97cdab9cb45d7e66011d93c71f7e43e5dfa6edd7af50fe"
+    },
+    {
+      "path": "tests/test_analysis_tools.py",
+      "bytes": 4505,
+      "sha256": "128905bfba02aaf2ca6bdf7436d2883ba7cb671a272a663132862b0e24aa650b"
+    },
+    {
+      "path": "tests/test_api.py",
+      "bytes": 3781,
+      "sha256": "cdaeb147ca30fde8c014788fbf91c8c8f4c7137444b59ca4aec88383a8d65c09"
+    },
+    {
+      "path": "tests/test_ble_extended.py",
+      "bytes": 6836,
+      "sha256": "20d3052433a1ca364c483d9bf1c365c235c6a61aab67bb92ac8c859b99c82678"
+    },
+    {
+      "path": "tests/test_ble_followup.py",
+      "bytes": 3155,
+      "sha256": "641f5b44ecd2cdd999395dc4215bfac1c268c0a20d5e1b8656ff385ec76ed8aa"
+    },
+    {
+      "path": "tests/test_bluetooth_classic.py",
+      "bytes": 3099,
+      "sha256": "bea1b8a249bdcd6d34308e2310d2763915a5270c4c1811b69e0eaa379d466cbb"
+    },
+    {
+      "path": "tests/test_catalog.py",
+      "bytes": 3054,
+      "sha256": "d3e5e663ef959caa6771c56c7721111ec8ba1af73ef169f7a4b2510a30757cf9"
+    },
+    {
+      "path": "tests/test_coarse.py",
+      "bytes": 5151,
+      "sha256": "eec55f0dc9a5addfc893cf94415d81915379bc48cbd96fb39e583cb9f44400bc"
+    },
+    {
+      "path": "tests/test_complete_coverage.py",
+      "bytes": 5207,
+      "sha256": "e15d84bc84649784f452ed4181605808e2badc5309d649a359df547c67fdee96"
+    },
+    {
+      "path": "tests/test_continuation.py",
+      "bytes": 7527,
+      "sha256": "4fa519baa4a9be33031dbef0478348801d6466693dd3817bde3fc4945f93cf04"
+    },
+    {
+      "path": "tests/test_domain.py",
+      "bytes": 8165,
+      "sha256": "d9f7293c18317e93a04362efdd3183d1a3ee07f2b026c3ab552608bee9c1f762"
+    },
+    {
+      "path": "tests/test_drone_hopping.py",
+      "bytes": 7177,
+      "sha256": "84e022b9e7eac3aae53766ab043c297f775e944ae04e38be81e068eec43e5c0d"
+    },
+    {
+      "path": "tests/test_drone_video.py",
+      "bytes": 8495,
+      "sha256": "f6d4cf24753a592602f14b081acd6a21d644d8131dce15bcaf6e49683a2121fb"
+    },
+    {
+      "path": "tests/test_evidence_display.py",
+      "bytes": 1733,
+      "sha256": "20b8123c78b098aa07b74d1bce1b17cfec7691ef18f7292b378c26c062f5b4d8"
+    },
+    {
+      "path": "tests/test_frequency_api.py",
+      "bytes": 4484,
+      "sha256": "53e4ee44eae90086f359215f2b955f7c6d8189f070cf3f7a9a9d9d7cd12fef14"
+    },
+    {
+      "path": "tests/test_frequency_scope.py",
+      "bytes": 7532,
+      "sha256": "04037aeadae637237fbdb715121bb5732d5f0ad9d9f46a0ef1f02e6a1b63396b"
+    },
+    {
+      "path": "tests/test_fusion.py",
+      "bytes": 8650,
+      "sha256": "bc3fce270c769d03eab28272ddd200cf774bfa222aea1fbcb2818ea8f0309502"
+    },
+    {
+      "path": "tests/test_ieee154.py",
+      "bytes": 5163,
+      "sha256": "d9f71f1c494eece467a1a78c0a569c6ae8428716b65d90c35343e82dc955d4e6"
+    },
+    {
+      "path": "tests/test_investigation.py",
+      "bytes": 10148,
+      "sha256": "89928ff823dbbc48035420552eb18a8eb171b324ad1d07db1d93df657d60ae2b"
+    },
+    {
+      "path": "tests/test_local_tiles.py",
+      "bytes": 2164,
+      "sha256": "a86cffbfd9c934fd01183057015fb9a76d402635a53072d59e8dbde717219449"
+    },
+    {
+      "path": "tests/test_lte.py",
+      "bytes": 4638,
+      "sha256": "0a85bd452584e73dcb23104b19e419c0169e153efd362ea177aaefa579ca7b91"
+    },
+    {
+      "path": "tests/test_multiscale.py",
+      "bytes": 1382,
+      "sha256": "d683cdcd13ea8f45b2214494997838542c7a87d36d81fcde6944f5022ba3457a"
+    },
+    {
+      "path": "tests/test_nr.py",
+      "bytes": 5438,
+      "sha256": "0bc22c0660bb3e518a47eeb48f4e5165d483df8c9498d9fa980e0c535f1377e2"
+    },
+    {
+      "path": "tests/test_official_local.py",
+      "bytes": 11414,
+      "sha256": "5525a3f6246dbae208fa42df4657efb3caa444d79b871f19133a37ac0319f373"
+    },
+    {
+      "path": "tests/test_plot_replay.py",
+      "bytes": 3603,
+      "sha256": "47d73ab26acd4a362d113003ab971d8b3d1e5f66a7c61f620064450b67139207"
+    },
+    {
+      "path": "tests/test_protocol_batch.py",
+      "bytes": 10285,
+      "sha256": "a3133678a727232b9478ed13f76e4f15f045ed355d73bf827221799414565073"
+    },
+    {
+      "path": "tests/test_scene.py",
+      "bytes": 4788,
+      "sha256": "74bfa9f3a7dce8e9a9342a43ae8d083a6230415c34a010e5d6fe6badda28eb41"
+    },
+    {
+      "path": "tests/test_segmentation_eval.py",
+      "bytes": 2112,
+      "sha256": "6f43c5b88b8e51b8b320c120499a01d3b93dd1b02204fb0ed707951b8be7a5a7"
+    },
+    {
+      "path": "tests/test_segmentation_tools.py",
+      "bytes": 4538,
+      "sha256": "d5a5dc2a7dc19c5ff419f4dd8826c3b884b4782fa3bfbeac87f6cac5a1fa7007"
+    },
+    {
+      "path": "tests/test_site_context.py",
+      "bytes": 1405,
+      "sha256": "8d2e1bad245955192eec0ea3863a1f88a8ce5176fd25e4e0543f74aafba47ab8"
+    },
+    {
+      "path": "tests/test_task_intent.py",
+      "bytes": 5896,
+      "sha256": "b4a1bbc732beb5abd00fb9ccf7dff8652b469aabe29fcd2729bddf612345f2c5"
+    },
+    {
+      "path": "tests/test_task_records.py",
+      "bytes": 4727,
+      "sha256": "58f0b391682f7a83c1b28db865887fe376605ad3e75bc5df8b5e52883c938997"
+    },
+    {
+      "path": "tests/test_ui_gateway.py",
+      "bytes": 6033,
+      "sha256": "386bfc2e90f681dc63bee292d825642fd6a75d6c840ccf49f34706e39fcdc566"
+    },
+    {
+      "path": "tests/test_wifi.py",
+      "bytes": 4956,
+      "sha256": "6ab922519742539c1f49ec67bf68ee28249444992bf63710c09e5dcdfbd312c2"
+    },
+    {
+      "path": "tests/test_wifi_crafter.py",
+      "bytes": 6659,
+      "sha256": "755fbb7031100d2c43f026c8a3bc403100430516288181627e404c94d6f01150"
+    },
+    {
+      "path": "tests/test_wifi_modern.py",
+      "bytes": 6228,
+      "sha256": "a60a53e97a90751b78d6aa4445255cb9518c7adab642343e034d7c34a39267c7"
+    },
+    {
+      "path": "tests/test_window_headers.py",
+      "bytes": 4346,
+      "sha256": "1ae43df0225589120b7e331d34685b6e3e14b571b7c31b536d12765040fd48f3"
+    },
+    {
+      "path": "vendor/usrp_client/SEGMENTATION_ARCHITECTURE.md",
+      "bytes": 3243,
+      "sha256": "2665b6d6938882c6055e8996d092e03f0cefd03ad6c3ec9bdad2b242970fbbe4"
+    },
+    {
+      "path": "vendor/usrp_client/segmentation_config.json",
+      "bytes": 1472,
+      "sha256": "6b55e9b88b2886abb88c01f7283f0724a98e796c0892cc67526ca5533adadd52"
+    },
+    {
+      "path": "vendor/usrp_client/segmentation_config.py",
+      "bytes": 2260,
+      "sha256": "cce788631a71173e3b7840649441ba6155337a026c6fabaa3855e6a98662383c"
+    },
+    {
+      "path": "vendor/usrp_client/segmentation_contracts.py",
+      "bytes": 1086,
+      "sha256": "59e121b74f159477680a5b26b554e1bc1ce60ae1ae1704cf0e32c3241a64ec2c"
+    },
+    {
+      "path": "vendor/usrp_client/segmentation_registry.py",
+      "bytes": 1937,
+      "sha256": "d030482df67b6fb40b6e6af6e12efea81f17f1e3fd37dcd8e70ffbfa2972c006"
+    },
+    {
+      "path": "vendor/usrp_client/segmentation_semantics.py",
+      "bytes": 4689,
+      "sha256": "f2fbc093bb165cb9a982720280305ad6d8224875647d17237264b27eb09a2049"
+    },
+    {
+      "path": "vendor/usrp_client/segmentation_traditional.md",
+      "bytes": 9290,
+      "sha256": "c29149838f33853edb06cf04e6dd478d024412b3fc8ce79006bd2be554046608"
+    },
+    {
+      "path": "vendor/usrp_client/segmentation_traditional.py",
+      "bytes": 15443,
+      "sha256": "f209964503986c9126e80ba20bc9a00d6ba73550d84d2c07d26913bd883c792b"
+    },
+    {
+      "path": "vendor/usrp_client/stft_protocol.py",
+      "bytes": 14636,
+      "sha256": "df4cb94a3eecd3641cff5710d1ccd6ed59e0cb656fe0aa53e03f69ccb5077fc6"
+    },
+    {
+      "path": "vendor/usrp_client/usrp_module_loader.py",
+      "bytes": 1170,
+      "sha256": "52f0c17fc77a5c6583270f1e2c15411f3a9ea724519fecde35e67cb82d38c1e2"
+    }
+  ],
+  "excluded": [
+    "credentials",
+    "deployment-specific context and device serials",
+    "runtime binaries",
+    "node_modules",
+    "dsh-home",
+    "runs",
+    "artifacts",
+    "IQ",
+    "private model configuration",
+    "Python caches",
+    "Inactive legacy Qt receiver and its old device-specific README; traditional segmentation dependencies retained."
+  ],
+  "frontend": "Use the frontend dist directory from the enclosing GitHub repository as ui/dist."
+}

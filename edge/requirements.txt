@@ -1,0 +1,9 @@
+fastapi==0.159.1
+uvicorn==0.54.0
+httpx==0.28.1
+scapy==2.8.0
+pybind11==2.12.0
+cmake==4.4.4
+ninja==1.13.2
+sigmf==1.13.0
+# numpy/scipy/GNU Radio/UHD are supplied read-only by the existing usrp_dev environment.

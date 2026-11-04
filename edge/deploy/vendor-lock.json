@@ -1,0 +1,60 @@
+{
+  "schema": "spectra-edge-vendor-lock/v1",
+  "vendors": [
+    {
+      "name": "libcrafter",
+      "url": "https://github.com/pellegre/libcrafter.git",
+      "commit": "f9ef000bc402eebc676f6b4708395aa8ac169450",
+      "patch": null,
+      "licenses": [
+        "deploy/licenses/libcrafter-LICENSE"
+      ]
+    },
+    {
+      "name": "gr-ieee802-11",
+      "url": "https://github.com/bastibl/gr-ieee802-11.git",
+      "commit": "ad0598e4a874f4b8e1f391a1e0323e80df2b34ff",
+      "patch": "deploy/patches/gr-ieee802-11.patch",
+      "licenses": [
+        "deploy/licenses/gr-ieee802-11-LICENSE"
+      ]
+    },
+    {
+      "name": "libbtbb",
+      "url": "https://github.com/greatscottgadgets/libbtbb.git",
+      "commit": "f0fe1768b080b1333a5357e8308d900e1273ec7f",
+      "patch": null,
+      "licenses": [
+        "deploy/licenses/libbtbb-LICENSE"
+      ]
+    },
+    {
+      "name": "gr-ieee802-15-4",
+      "url": "https://github.com/bastibl/gr-ieee802-15-4.git",
+      "commit": "a210b11fed2d307ef797ea79842b54f4e8ed3dd5",
+      "patch": "deploy/patches/gr-ieee802-15-4.patch",
+      "licenses": [
+        "deploy/licenses/gr-ieee802-15-4-LICENSE"
+      ]
+    },
+    {
+      "name": "gr-wifi-modern",
+      "url": "https://github.com/cloud9477/gr-ieee80211.git",
+      "commit": "dc93c8f30de46082690d5768d6ad03ea2c11e2cb",
+      "patch": "deploy/patches/gr-wifi-modern.patch",
+      "licenses": [
+        "deploy/licenses/gr-wifi-modern-LICENSE"
+      ]
+    },
+    {
+      "name": "srsRAN_4G",
+      "url": "https://github.com/srsran/srsRAN_4G.git",
+      "commit": "bef8680d5f9714f3e040e6f9cbc88d7888439b6d",
+      "patch": null,
+      "licenses": [
+        "deploy/licenses/srsRAN_4G-LICENSE",
+        "deploy/licenses/srsRAN_4G-COPYRIGHT"
+      ]
+    }
+  ]
+}
